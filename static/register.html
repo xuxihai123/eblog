@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>register page</title>
+	<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
+	<script type="text/javascript" src="js/jquery.js"></script>
+</head>
+<body>
+<div class="container-fluid" style="margin: 120px auto;padding: 20px 15px; border: 1px solid grey;border-radius: 5px">
+	<div class="row-fluid">
+		<div class="span6 offset3">
+			<form class="form-horizontal" name="register" action="/users/register" method="post">
+				<div class="control-group">
+					<label class="control-label" for="inputEmail">username</label>
+
+					<div class="controls">
+						<input type="text" id="inputEmail" placeholder="Email">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="inputPassword">password</label>
+
+					<div class="controls">
+						<input type="password" id="inputPassword" placeholder="Password">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="inputPassword2">password2</label>
+
+					<div class="controls">
+						<input type="password" id="inputPassword2" placeholder="Password2">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="email">email</label>
+
+					<div class="controls">
+						<input type="text" id="email" placeholder="email">
+					</div>
+				</div>
+				<div class="text-center">
+					<button class="btn btn-primary" type="submit">submit</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+</body>
+</html>

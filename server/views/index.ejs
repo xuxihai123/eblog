@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title><%= locals.title %> - Microblog</title>
+    <style>
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+    </style>
+    <link rel='stylesheet' href='/css/style.css'/>
+    <link rel='stylesheet' href='/css/main.css'/>
+    <script src="/js/jquery.js"></script>
+</head>
+<body>
+<div id="header" class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-nav">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/" title="Haorooms">
+                  <span class="logo">
+                   Haorooms
+                  </span>
+            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-collapse-nav" style="height:0px;">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/">首页</a></li>
+                <li><a href="/archives">文章存档</a></li>
+                <li><a href="/about" target="_blank">关于我</a></li>
+                <li><a href="/nav">前端导航</a></li>
+                <li><a href="http://resource.haorooms.com/" target="_blank">前端资料库</a></li>
+                <li><a href="/tools/index">小工具</a></li>
+                <li><a href="/page/guanggaohz">合作</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="main" class="container post">
+    <!--   <section class="posts block a-fadeinL tips" style="margin-bottom:10px;">
+       <a href="http://resource.haorooms.com/"  target="_blank">公告：<span>前端资料库已上线，资料正在完善中！</span></a>
+      </section> -->
+    <section class="posts">
+
+    </section>
+    <div class="sidebar">
+
+    </div>
+</div>
+<div id="footer">
+    <div class="container a-fadeinL">
+        <p>Copyright © Aaron All Rights Reserved</p>
+    </div>
+</div>
+</body>
+</html>
