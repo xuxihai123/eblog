@@ -17,18 +17,18 @@ app.set('port', port);
 var server = http.createServer(app);
 
 
-var MongoClient = require('mongodb').MongoClient;
-var db = require("../server/models/db");
-
-// Initialize connection once
-MongoClient.connect("mongodb://localhost:27017/integration_test", function (err, database) {
-	if (err) throw err;
-	db.mongodb = database;
-
-	server.listen(port);
-	console.log("Listening on port " + port);
-});
-
+//var MongoClient = require('mongodb').MongoClient;
+//var db = require("../server/models/db");
+//
+//// Initialize connection once
+//MongoClient.connect("mongodb://localhost:27017/integration_test", function (err, database) {
+//	if (err) throw err;
+//	db.mongodb = database;
+//
+//	server.listen(port);
+//	console.log("Listening on port " + port);
+//});
+server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 server.on('exit', function () {
