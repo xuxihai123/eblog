@@ -30,12 +30,16 @@ exports.config = function (app) {
 };
 
 exports.autoproxy=function(app) {
-	app.get('/view/:name', function(req, res) {
-		var name = req.params.name;
-		if(/\.c$/.test(name)) {
-			name = name.replace(/\.c$/, "");
+	app.use(function(req, res,next) {
+		var url = req.url||"/index.c";
+		if(req.method=="GET"&&url.substr(-2)===".c"){//auto handle view
+			var viewdirectory = url.replace(/\/(.*)\.c/, "$1");
+			console.log("autoproxy view ===> /" + viewdirectory+".ejs");
+			res.render(viewdirectory,req.session);
+		}else{//skip not view
+			next();
 		}
-		res.render(name,req.session);
+
 	});
 };
 

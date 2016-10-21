@@ -22,7 +22,7 @@ exports.register = function () {
 			if (user_pass != user_pass2) {
 				//req.flash('error', '两次输入的密码不一致!');
 				req.session.error = "两次输入的密码不一致";
-				return res.redirect('/view/signup');//返回主册页
+				return res.redirect('/signup.c');//返回主册页
 			}
 			//生成密码的 md5 值
 			var md5 = crypto.createHash('md5'),
@@ -40,7 +40,7 @@ exports.register = function () {
 			User.get(newUser.user_login, function (err, user) {
 				if (user) {
 					req.session.error = "用户已存在";
-					return res.redirect('/view/signup');//返回注册页
+					return res.redirect('/signup.c');//返回注册页
 				} else {
 					newUser.user_status = "0";
 					newUser.user_activation_key = dateutils.randomStr(16);
@@ -49,7 +49,7 @@ exports.register = function () {
 					User.save(newUser, function (err, user) {
 						if (err) {
 							req.flash('error', err);
-							return res.redirect('/view/signup');//注册失败返回主册页
+							return res.redirect('/signup.c');//注册失败返回主册页
 						}
 						//req.session.user = user;//用户信息存入 session
 						res.redirect('/');//注册成功后返回主页
@@ -81,16 +81,16 @@ exports.login = function () {
 				if (user) {
 					if (user.user_pass == newUser.user_pass) {
 						req.session.user = user;
-						return res.redirect('/view/admin.c');//返回注册页
+						return res.redirect('/admin/index.c');//返回注册页
 					} else {
 						req.session.error = "登录失败";
-						return res.redirect('/view/signin.c');//返回注册页
+						return res.redirect('/signin.c');//返回注册页
 					}
 
 				} else {
 					//如果不存在
 					req.session.error = "用户不存在";
-					return res.redirect('/view/signin.c');//返回注册页
+					return res.redirect('/signin.c');//返回注册页
 				}
 			});
 		}
