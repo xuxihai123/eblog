@@ -1,10 +1,12 @@
-var db = require('./db').mongodb;
+
+
 function User(user) {
 	this.name = user.name;
 	this.password = user.password;
 };
 module.exports = User;
-User.save = function save(user,callback) {
+User.save = function save(user, callback) {
+	var db = process.mongodb;
 	var user2 = {
 		name: user.name,
 		password: user.password
@@ -21,6 +23,7 @@ User.save = function save(user,callback) {
 	});
 };
 User.get = function get(username, callback) {
+	var db = process.mongodb;
 	db.collection('wp_users', function (err, collection) {
 		if (err) {
 			return callback(err);
@@ -36,6 +39,7 @@ User.get = function get(username, callback) {
 	});
 };
 User.getAll = function get(callback) {
+	var db = process.mongodb;
 	db.collection('wp_users', function (err, collection) {
 		if (err) {
 			return callback(err);
