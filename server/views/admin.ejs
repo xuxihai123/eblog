@@ -2,18 +2,59 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title><%= locals.title %> - Microblog</title>
+    <title>x373241884y - Microblog</title>
     <style>
         body {
             padding-top: 60px;
             padding-bottom: 40px;
         }
     </style>
-    <link rel='stylesheet' href='/css/style.css'/>
-    <link rel='stylesheet' href='/css/main.css'/>
+    <link rel='stylesheet' href='/css/bootstrap.min.css'/>
+    <link rel='stylesheet' href='/css/admin.css'/>
     <script src="/js/jquery.js"></script>
 </head>
 <body>
+<div id="header">
+    <% if(user){ %>
+    <span>用户:<%= user.username %></span>
+    <span>上次登录时间:<%= user.lasttime %></span>
+    <span>用户邮箱:<%= user.email %></span>
+    <span>退出:</span>
+    <% } %>
+</div>
+<div id="main">
+    <div id="adminmenu">
+        <ul class="nav nav-list">
+            <li class="active"><a href="#">仪表盘</a></li>
+            <li>
+                <a href="#">文章</a>
+                <ul class="nav">
+                    <li>所有文章</li>
+                    </li>
+                    <li>写文章</li>
+                    </li>
+                    <li>分类目录</li>
+                    </li>
+                    <li>标签</li>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="#">评论</a></li>
+            <li><a href="#">用户</a>
+                <ul class="nav">
+                    <li>所有用户</li>
+                    <li>添加用户</li>
+                    <li>我的个人资料</li>
+                </ul>
+            </li>
+            <li><a href="#">工具</a></li>
+            <li><a href="#">设置</a></li>
+        </ul>
+    </div>
+    <div id="admincontent">
 
+    </div>
+</div>
+<div id="footer"></div>
 </body>
 </html>

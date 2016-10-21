@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var session = require('express-session');
 var settings = require("./config/settings");
 var urls = require("./config/urls");
 
@@ -17,14 +17,26 @@ var app = express();
 app.set('views', path.join(__dirname, 'server/views'));
 app.set('view engine', 'ejs'); //设置视图引擎。
 
+
 // uncomment after placing your favicon in /public
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
+
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
 
+app.use(session({
+	secret: 'blog.xxh123',
+	name:"blog.xxh",
+	resave: false,
+	saveUninitialized: true,
+	cookie: {secure: false, maxAge: 1000 * 60}
+}));
+//auth user
+var auth_intercepter = require('./server/interceptor/authIntercept');
+app.use(auth_intercepter());
 //config of app
 settings.config(app);
 //all controllers

@@ -32,7 +32,10 @@ exports.config = function (app) {
 exports.autoproxy=function(app) {
 	app.get('/view/:name', function(req, res) {
 		var name = req.params.name;
-		res.render(name);
+		if(/\.c$/.test(name)) {
+			name = name.replace(/\.c$/, "");
+		}
+		res.render(name,req.session);
 	});
 };
 
