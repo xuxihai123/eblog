@@ -21,12 +21,68 @@ body {
     width: 100%;
     min-width: 600px;
     z-index: 99999;
+    background-color: #23282d;
+}
+#toolbar a{
+    display: block;
+    line-height: 32px;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-decoration: none;
+    color:#fff;
+}
+#toolbar a:hover{
+    background-color: #191e23;
+    color: #00b9eb;
+}
+#toolbar a.logo{
+    width:14px;
+    height:32px;
+    padding:0px 9px;
+}
+#toolbar .toolbar-left{
+    float: left;
+}
+#toolbar .toolbar-left:after{
+    clear: left;
+}
+#toolbar .toolbar-right{
+    float: right;
+}#toolbar .toolbar-right:after{
+     clear: right;
+}
+#toolbar i{
+    margin: 0 auto;
 }
 
+#toolbar ul{
+    text-align: left;
+    background: 0 0;
+    clear: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    text-indent: 0;
+    z-index: 99999;
+    display: block;
+}
+#toolbar  li{
+    float: left;
+}
+#toolbar ul li{
+    background: 0 0;
+    clear: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    text-indent: 0;
+    z-index: 99999;
+}
 #main {
     position: relative;
-    margin: 0 auto;
-    margin-top: -32px;
+    margin: -32px auto 0px auto;
 }
 
 #main:after {
@@ -35,14 +91,93 @@ body {
 
 #adminmenu {
     width: 160px;
-    float: left;
+    position: fixed;
     height: 800px;
-    border: 1px solid grey;
+    background-color: #23282d;
+    color: #fff;
+    border-top: 5px solid grey;
+}
+.folded #adminmenu, .folded #adminmenu li {
+    width: 36px;
+}
+.folded #adminmenu .menu-name {
+    position: absolute;
+    left: -999px;
+}
+#adminmenu .menu-nav {
+    clear: left;
+    margin: 12px 0;
+    padding: 0;
+}
+#adminmenu li{
+    list-style: none;
+}
+.menu-nav a,.menu-nav2 a{
+    text-decoration: none;
+    color: #eee;
 }
 
+#adminmenu .menu-nav2 {
+    display: none;
+    padding: 7px 0 8px;
+    margin: 0px;
+}
 
+#adminmenu .menu-nav > li {
+    border: 0;
+    min-height: 34px;
+    position: relative;
+}
+#adminmenu .menu-nav > li {
+    border: 0;
+    min-height: 34px;
+    position: relative;
+}
+#adminmenu .menu-nav > li > a {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    display: block;
+    padding: 0;
+    color: #eee;
+
+}
+#adminmenu .menu-nav > li >a:after {
+    clear: both;
+}
+#adminmenu .menu-nav > li >a.active {
+    background-color: #0073aa;
+}
+#adminmenu .menu-nav > li >a:hover{
+    background-color: #191e23;
+    color: #00b9eb;
+}
+#adminmenu .menu-name {
+    padding: 8px 0;
+}
+
+#adminmenu div.menu-image {
+    float: left;
+    width: 36px;
+    line-height: 34px;
+    margin: 0;
+    text-align: center;
+}
+#adminmenu .menu-nav2 > li > a {
+    font-size: 13px;
+    padding: 6px 14px;
+    display: block;
+    color: #b4b9be;
+}
+#adminmenu .menu-nav2 > li > a:hover {
+    background-color: #191e23;
+    color: #00b9eb;
+}
+#adminmenu .menu-nav2 > li >a.active {
+    color: #ffffff;
+}
 #admincontent {
-    padding-left:180px;
+    padding-left: 180px;
     height: 800px;
     background-color: #fff;
     border: 1px solid grey;

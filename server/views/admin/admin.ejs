@@ -12,48 +12,18 @@
     <link rel='stylesheet' href='/css/bootstrap.min.css'/>
     <link rel='stylesheet' href='/css/admin.css'/>
     <script src="/js/jquery.js"></script>
+    <script src="/js/admin.js"></script>
 </head>
 <body>
 <div id="header">
-    <% if(locals.user!==undefined){ %>
-    <span>用户:<%= user.user_login %></span>
-    <span>显示名:<%= user.display_name %></span>
-    <span>昵称:<%= user.user_nicename %></span>
-    <span>用户邮箱:<%= user.user_email %></span>
-    <span><a href="/user/signout">退出</a>:</span>
-    <% } %>
+    <%- include('adminheader') -%>
 </div>
 <div id="main">
     <div id="adminmenu">
-        <ul class="nav nav-list">
-            <li class="active"><a href="#">仪表盘</a></li>
-            <li>
-                <a href="#">文章</a>
-                <ul class="nav">
-                    <li>所有文章</li>
-                    </li>
-                    <li>写文章</li>
-                    </li>
-                    <li>分类目录</li>
-                    </li>
-                    <li>标签</li>
-                    </li>
-                </ul>
-            </li>
-            <li><a href="#">评论</a></li>
-            <li><a href="#">用户</a>
-                <ul class="nav">
-                    <li>所有用户</li>
-                    <li>添加用户</li>
-                    <li>我的个人资料</li>
-                </ul>
-            </li>
-            <li><a href="#">工具</a></li>
-            <li><a href="#">设置</a></li>
-        </ul>
+        <%- include('adminmenu') -%>
     </div>
     <div id="admincontent">
-
+        <%- include('admincontent') -%>
     </div>
 </div>
 <div id="footer"></div>

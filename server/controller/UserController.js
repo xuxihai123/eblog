@@ -108,7 +108,7 @@ exports.find = function () {
 	return {
 		url: "/user/find",
 		controller: function (req, res, next) {
-			User.getAll(function (list) {
+			User.getAll(function (err,list) {
 				res.json(list);
 			});
 		}

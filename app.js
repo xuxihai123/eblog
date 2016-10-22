@@ -32,7 +32,7 @@ app.use(session({
 	name:"blog.xxh",
 	resave: false,
 	saveUninitialized: true,
-	cookie: {secure: false, maxAge: 1000 * 60}
+	cookie: {secure: false, maxAge: 1000 * 60*30}
 }));
 //auth user
 var auth_intercepter = require('./server/interceptor/authIntercept');
