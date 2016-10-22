@@ -24,17 +24,8 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-var MongoClient = require('mongodb').MongoClient;
 
-// Initialize connection once
-MongoClient.connect(app.myset.dburl, function (err, database) {
-  if (err) throw err;
-  process.mongodb = database;
-
-  server.listen(port);
-  console.log("Listening on port " + port);
-});
-
+server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 

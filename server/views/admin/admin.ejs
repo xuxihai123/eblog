@@ -15,11 +15,12 @@
 </head>
 <body>
 <div id="header">
-    <% if(user){ %>
-    <span>用户:<%= user.username %></span>
-    <span>上次登录时间:<%= user.lasttime %></span>
-    <span>用户邮箱:<%= user.email %></span>
-    <span>退出:</span>
+    <% if(locals.user!==undefined){ %>
+    <span>用户:<%= user.user_login %></span>
+    <span>显示名:<%= user.display_name %></span>
+    <span>昵称:<%= user.user_nicename %></span>
+    <span>用户邮箱:<%= user.user_email %></span>
+    <span><a href="/user/signout">退出</a>:</span>
     <% } %>
 </div>
 <div id="main">

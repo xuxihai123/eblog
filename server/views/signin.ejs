@@ -4,33 +4,49 @@
     <meta charset="UTF-8">
     <title>register page</title>
     <link type="text/css" rel="stylesheet" href="../css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="../css/login.css"/>
     <script type="text/javascript" src="../js/jquery.js"></script>
 </head>
-<body>
-<div class="container-fluid" style="margin: 120px auto;padding: 20px 15px; border: 1px solid grey;border-radius: 5px">
+<body style="background: url(/images/bg-login.jpg) !important;">
+<div class="container-fluid">
     <div class="row-fluid">
-        <div class="span6 offset3">
+        <div class="login-box">
+            <div class="icons">
+                <a href=""><i class="icon-home"></i></a>
+                <a href=""><i class="icon-cog"></i></a>
+            </div>
+            <h2>用户登录</h2>
+
             <form class="form-horizontal" name="register" action="/user/signin" method="post">
-                <div class="control-group">
-                    <label class="control-label" for="username">username</label>
-
-                    <div class="controls">
-                        <input type="text" id="user_login" name="user_login" placeholder="Email">
+                <div class="box">
+                    <div class="box-label text-right" for="username">用户：</div>
+                    <div class="box-ctrl">
+                        <input  type="text" id="user_login" name="user_login" placeholder="username">
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for="user_pass">password</label>
+                <div class="box">
+                    <div class="box-label text-right" for="user_pass">密码：</div>
 
-                    <div class="controls">
-                        <input type="user_pass" id="user_pass" name="user_pass" placeholder="password">
+                    <div class="box-ctrl">
+                        <input type="password" id="user_pass" name="user_pass" placeholder="password">
                     </div>
                 </div>
-                <div class="text-center">
-                    <button class="btn btn-primary" type="submit">submit</button>
+                <div class="box">
+                    <div class="box-label text-right" for="forget">忘记密码：</div>
+
+                    <div class="box-ctrl">
+                        <div style="width: 220px">
+                            <span><a href="/user/reset">请点击这里</a></span>
+                            <span class="pull-right"><button class="btn btn-primary" style="background-color: #2D89EF" type="submit">登录</button></span>
+                        </div>
+                    </div>
                 </div>
-                <% if (locals.error){ %>
-                <div class="text-center"><%= error %></div>
-                <% } %>
+                <div class="clearfix"></div>
+                <div class="error">
+                    <% if (locals.error){ %>
+                    <span><%= error %></span>
+                    <% } %>
+                </div>
             </form>
         </div>
     </div>

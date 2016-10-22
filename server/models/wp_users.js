@@ -34,67 +34,54 @@ function User(user) {
 	this.user_status = user.user_status;
 };
 module.exports = User;
-User.save = function save(user, callback) {
-	var db = process.mongodb;
 
-	db.collection('wp_users', function (err, collection) {
+var sqlhelp = require("../utils/sqlHelper");
+User.save = function save(user, callback) {
+	var sql = "insert into wp_users set ?";
+	var saveUser = new User(user);
+	sqlhelp.query(sql, saveUser, function (err, user) {
 		if (err) {
-			return callback(err);
+			callback(err, null);
+		} else {
+			callback(null, user);
 		}
-		collection.ensureIndex('name', {unique: true}, function (err, user2) {
-		});
-		collection.insert(user, {safe: true}, function (err, user) {
-			callback(err, user);
-		});
 	});
 };
 User.get = function get(user_login, callback) {
-	var db = process.mongodb;
-	db.collection('wp_users', function (err, collection) {
+	var sql = 'select * from wp_users where user_login=' + sqlhelp.escape(user_login) ;
+	sqlhelp.query(sql, function (err, row, fields) {
 		if (err) {
-			return callback(err);
-		}
-		collection.findOne({user_login: user_login}, function (err, doc) {
-			if (doc) {
-				var user = new User(doc);
-				callback(err, user);
-			} else {
-				callback(err, null);
+			callback(err, null);
+		} else {
+			var user;
+			if (row&&row.length > 0) {
+				user = row[0];
 			}
-		});
+			callback(null, user);
+
+		}
 	});
 };
 User.getAll = function get(callback) {
-	var db = process.mongodb;
-	db.collection('wp_users', function (err, collection) {
+	var sql = "select * from wp_users";
+	sqlhelp.query(sql, function (err, row, fields) {
 		if (err) {
-			return callback(err);
+			callback(err, null);
+		} else {
+			callback(null, row);
+
 		}
-		collection.find(function (err, doc) {
-			if (doc) {
-				doc.toArray(function (err, list) {
-					callback(err, list);
-				});
-			} else {
-				callback(err, null);
-			}
-		});
 	});
 };
 User.delete = function (user_login, callback) {
-	var db = process.mongodb;
-	db.collection('wp_users', function (err, collection) {
+	var sql = "delete * from wp_users where user_login='" + sqlhelp.escape(user_login) + "'";
+	sqlhelp.query(sql, function (err, row, fields) {
 		if (err) {
-			return callback(err);
+			callback(err, null);
+		} else {
+			callback(null, row);
+
 		}
-		//ns, ops, options, callback
-		collection.remove({user_login: {"$gt": user_login}}, function (err, doc) {
-			if (doc) {
-				callback(err, doc);
-			} else {
-				callback(err, null);
-			}
-		});
 	});
 };
 

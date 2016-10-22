@@ -17,7 +17,7 @@ exports.register = function () {
 			var display_name = req_pargs.display_name;
 			var user_nicename = req_pargs.user_nicename;
 			var user_url = req_pargs.user_url;
-			var email = req_pargs.email;
+			var user_email = req_pargs.user_email;
 
 			if (user_pass != user_pass2) {
 				//req.flash('error', '两次输入的密码不一致!');
@@ -32,7 +32,7 @@ exports.register = function () {
 				user_pass: user_pass,
 				display_name: display_name,
 				user_nicename: user_nicename,
-				email: email,
+				user_email: user_email,
 				user_url: user_url,
 
 			});
@@ -44,15 +44,15 @@ exports.register = function () {
 				} else {
 					newUser.user_status = "0";
 					newUser.user_activation_key = dateutils.randomStr(16);
-					newUser.user_registered = dateutils.format(new Date(), "yyyy-MM-dd hh:mm:ss");
+					newUser.user_registered = dateutils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
 					//如果不存在则新增用户
 					User.save(newUser, function (err, user) {
 						if (err) {
-							req.flash('error', err);
+							req.session.error = err;
 							return res.redirect('/signup.c');//注册失败返回主册页
 						}
 						//req.session.user = user;//用户信息存入 session
-						res.redirect('/');//注册成功后返回主页
+						return res.redirect('/');//注册成功后返回主页
 					});
 				}
 			});
@@ -81,18 +81,48 @@ exports.login = function () {
 				if (user) {
 					if (user.user_pass == newUser.user_pass) {
 						req.session.user = user;
-						return res.redirect('/admin/index.c');//返回注册页
+						return res.redirect('/admin/admin.c');//进入主页
 					} else {
-						req.session.error = "登录失败";
-						return res.redirect('/signin.c');//返回注册页
+						req.session.error = "密码错误";
+						return res.redirect('/signin.c');//返回登录
 					}
 
 				} else {
 					//如果不存在
 					req.session.error = "用户不存在";
-					return res.redirect('/signin.c');//返回注册页
+					return res.redirect('/signin.c');//返回登录
 				}
 			});
+		}
+	};
+};
+exports.update = function () {
+	return {
+		url: "/user/update",
+		controller: function (req, res, next) {
+			res.send("update....");
+		}
+	};
+};
+exports.find = function () {
+	return {
+		url: "/user/find",
+		controller: function (req, res, next) {
+			User.getAll(function (list) {
+				res.json(list);
+			});
+		}
+	};
+};
+exports.signout = function () {
+	return {
+		url: "/user/signout",
+		controller: function (req, res, next) {
+			var user = req.session.user;
+			if (user) {
+				req.session.user = undefined;
+			}
+			return res.redirect('/signin.c');//返回登录
 		}
 	};
 };
