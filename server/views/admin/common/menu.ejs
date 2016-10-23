@@ -1,0 +1,94 @@
+<%
+var activeCheck = function (token, postType) {
+    if (!token) {
+        console.log('activeCheck params need token');
+    } else {
+        var type = request.query[token];
+        if (!type && !postType) {
+            return "active";
+        } else if (type == postType) {
+            return "active";
+        } else {
+            return "";
+        }
+    }
+};
+var activeFirstLi = function (token) {
+    if (!token) {
+        console.log('activeFirstLi params need token');
+    } else {
+        var page = locals.page;
+        if (page == token) {
+            return "active";
+        } else {
+            return "";
+        }
+    }
+};
+%>
+<ul class="menu-nav" id="menu-list">
+    <li class="active">
+        <a href="#" class="level1 <%= activeFirstLi('yibiaopan') %>">
+            <div class="menu-arrow"></div>
+            <div class="menu-image"><i class="icon-tags icon-white"></i></div>
+            <div class="menu-name">仪表盘</div>
+        </a>
+    </li>
+    <li>
+        <a href="/admin/post" class="level1 <%= activeFirstLi('post') %>">
+            <div class="menu-arrow"></div>
+            <div class="menu-image"><i class="icon-edit icon-white"></i></div>
+            <div class="menu-name">文章</div>
+        </a>
+        <ul class="menu-nav2 <%= activeFirstLi('post') %>">
+
+            <li><a href="/admin/post" class="<%= activeCheck('post_type') %>">所有文章</a></li>
+            <li><a href="/admin/post?post_type=new" class="<%= activeCheck('post_type', 'new') %>">写文章</a></li>
+            <li><a href="/admin/post?post_type=category" class="<%= activeCheck('post_type', 'category') %>">分类目录</a>
+            </li>
+            <li><a href="/admin/post?post_type=tag" class="<%= activeCheck('post_type', 'tag') %>">标签</a></li>
+        </ul>
+
+    </li>
+    <li>
+        <a href="/admin/comment.c" class="level1 <%= activeFirstLi('comment') %>">
+            <div class="menu-arrow"></div>
+            <div class="menu-image"><i class="icon-comment icon-white"></i></div>
+            <div class="menu-name">评论</div>
+        </a>
+    </li>
+    <li>
+
+        <a href="/admin/user" class="level1 <%= activeFirstLi('user') %>">
+            <div class="menu-arrow"></div>
+            <div class="menu-image"><i class="icon-user icon-white"></i></div>
+            <div class="menu-name">用户</div>
+        </a>
+        <ul class="menu-nav2 <%= activeFirstLi('user') %>">
+            <li><a href="/admin/user?user_type=list" class="active">所有用户</a></li>
+            <li><a href="/admin/user?user_type=addUI">添加用户</a></li>
+            <li><a href="/admin/user?user_type=userinfo">我的个人资料</a></li>
+        </ul>
+
+    </li>
+    <li>
+
+        <a href="/admin/setting.c" class="level1 <%= activeFirstLi('setting') %>">
+            <div class="menu-arrow"></div>
+            <div class="menu-image"><i class="icon-asterisk icon-white"></i></div>
+            <div class="menu-name">设置</div>
+        </a>
+        <ul class="menu-nav2 <%= activeFirstLi('setting') %>">
+            <li><a class="active">常规</a></li>
+            <li><a>撰写</a></li>
+            <li><a>阅读</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#" class="level1 menu-ctrl">
+            <div class="menu-arrow"></div>
+            <div class="menu-image"><i class="icon-circle-arrow-left icon-white"></i></div>
+            <div class="menu-name">收起菜单</div>
+        </a>
+    </li>
+</ul>

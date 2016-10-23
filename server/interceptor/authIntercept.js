@@ -10,12 +10,12 @@ module.exports = intercept;
 function intercept(path, options) {
 	var opts = options || {};
 
-	var REGEX_VIEW_ADMIN = /^\/admin\/\w.*\.c$/;
+	var REGEX_VIEW_ADMIN = /^\/admin\/\w.*$/;
 
 
 	return function intercept(req, res, next) {
-
-		if (REGEX_VIEW_ADMIN.test(req.url)) {
+		var url = req.url.replace(/\?.*/, "");
+		if (REGEX_VIEW_ADMIN.test(url)) {
 			checkPermission(req, res, next);
 		} else {
 			next();

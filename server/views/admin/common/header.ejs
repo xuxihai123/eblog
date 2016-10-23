@@ -1,5 +1,10 @@
 <div id="toolbar">
-
+    <%
+    if (!locals.session || !locals.session.user) {
+        console.log('redirect signup!!please login!');
+        response.redirect("/signin.c");
+    }
+    %>
     <div id="sub-wrapper">
         <ul class="toolbar-left">
             <li>
@@ -16,20 +21,20 @@
             <li>
                 <a class="nice">
                     <i class=" icon-info-sign icon-white"></i>
-                    <span>昵称:<%= user.user_nicename %></span>
+                    <span>昵称:<%= session.user.user_nicename %></span>
                 </a>
             </li>
             <li>
                 <a class="email">
                     <i class=" icon-info-sign icon-white"></i>
-                    <span>用户邮箱:<%= user.user_email %></span>
+                    <span>用户邮箱:<%= session.user.user_email %></span>
                 </a>
             </li>
         </ul>
         <ul class="toolbar-right">
             <li>
                 <a class="user">
-                    <span>用户:<%= user.user_login %></span>
+                    <span>用户:<%= session.user.user_login %></span>
                     <i class="  icon-user icon-white"></i>
                 </a>
             </li>

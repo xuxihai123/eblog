@@ -1,0 +1,24 @@
+<%
+var type = request.query.post_type;
+if (!type) {
+    type = "list";
+} else if (type != "list" && type != "addUI" & type != "category" & type != "tag") {
+    type = "list";
+}
+%>
+<!--list-->
+<% if(type == "list"){ %>
+<%- include list %>
+<% } %>
+<!--new-->
+<% if(type == "addUI"){ %>
+<%- include addUI %>
+<% } %>
+<!--category-->
+<% if(type == "category"){ %>
+<%- include category %>
+<% } %>
+<!--tag-->
+<% if(type == "tag"){ %>
+<%- include tag %>
+<% } %>

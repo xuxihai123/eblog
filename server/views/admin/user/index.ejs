@@ -1,0 +1,22 @@
+<%
+var type = locals.user_type;
+if (!type) {
+    type = "list";
+} else if (type != "list" && type != "addUI" & type != "userinfo") {
+    type = "list";
+}
+%>
+<!--list-->
+<% if(type == "list"){ %>
+<%- include list %>
+<% } %>
+<!--add-->
+<% if(type == "addUI"){ %>
+<%- include addUI %>
+<% } %>
+<!--userinfo-->
+<% if(type == "userinfo"){ %>
+<%- include userinfo %>
+<% } %>
+
+

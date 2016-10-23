@@ -1,0 +1,70 @@
+<div>
+    <h3>撰写新文章</h3>
+
+    <div class="post">
+        <div class="container-fluid"
+             style="margin: 120px auto;padding: 20px 15px; border: 1px solid grey;border-radius: 5px">
+            <div class="row-fluid">
+                <div class="span8 offset2">
+                    <form class="form-horizontal" name="post-new" action="/post/new" method="post">
+                        <div class="control-group">
+                            <label class="control-label" for="username">标题</label>
+
+                            <div class="controls">
+                                <input type="text" id="user_login" name="user_login" placeholder="username">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="user_pass">password</label>
+
+                            <div class="controls">
+                                <input type="password" id="user_pass" name="user_pass" placeholder="user_pass">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="user_pass2">password2</label>
+
+                            <div class="controls">
+                                <input type="password" id="user_pass2" name="user_pass2" placeholder="user_pass2">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="user_email">email</label>
+
+                            <div class="controls">
+                                <input type="text" id="user_email" name="user_email" placeholder="email">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="user_nicename">nicename</label>
+
+                            <div class="controls">
+                                <input type="text" id="user_nicename" name="user_nicename" placeholder="nicename">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="display_name">displayname</label>
+
+                            <div class="controls">
+                                <input type="text" id="display_name" name="display_name" placeholder="displayname">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="user_url">url</label>
+
+                            <div class="controls">
+                                <input type="text" id="user_url" name="user_url" placeholder="user_url">
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-primary" type="submit">submit</button>
+                        </div>
+                        <% if (locals.error){ %>
+                        <div class="text-center"><%= error %></div>
+                        <% } %>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

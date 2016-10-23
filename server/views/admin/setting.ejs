@@ -16,16 +16,19 @@
 </head>
 <body>
 <div id="header">
-    <%- include('adminheader') -%>
+    <% include common/header %>
 </div>
 <div id="main">
     <div id="adminmenu">
-        <%- include('adminmenu') -%>
+        <% locals.page = 'setting'; %>
+        <% include common/menu %>
     </div>
     <div id="admincontent">
-        <%- include('admincontent') -%>
+        <% include content %>
     </div>
 </div>
-<div id="footer"></div>
+<div id="footer">
+    <% include common/footer %>
+</div>
 </body>
 </html>
