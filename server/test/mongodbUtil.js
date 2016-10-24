@@ -64,5 +64,16 @@ function dbtest3() {
 	});
 }
 
+function mysqltest() {
+	var mysql = require('mysql');
+	var pool = mysql.createPool({
+		connectionLimit: 10,
+		host: 'localhost',
+		user: 'xxhblog',
+		password: 'xxhblog',
+		database: 'wp_blog2'
+	});
+	console.log(pool._closed);
 
-dbtest1();
+}
+mysqltest();
