@@ -3,34 +3,43 @@
 </div>
 <div class="container-fluid">
     <div class="row-fluid">
-        <div class="span3">
-            <form class="form-horizontal" name="termform" action="/admin/post_category" method="post" >
+        <div class="span4">
+            <div><h4>添加新分类目录</h4></div>
+            <form class="form-horizontal" name="termform" action="/admin/post_category" method="post">
                 <div class="control-group">
-                    <label >名称</label>
+                    <label>名称</label>
                     <input type="text" name="name" placeholder="这将是它在站点上显示的名字">
                 </div>
                 <div class="control-group">
-                    <label >别名</label>
+                    <label>别名</label>
 
                     <input type="text" name="slug" placeholder="“别名”是在URL中使用的别称，它可以令URL更美观">
                 </div>
                 <div class="control-group">
-                    <label >父节点</label>
+                    <label>父节点</label>
 
-                    <input type="text" name="parent" placeholder="这将是它在站点上显示的名字">
+                    <select name="parent">
+                        <option value="">无</option>
+                        <% request.termsList.forEach(function(term){ %>
+                        <option value="<%= term.term_id %>"><%= term.slug %></option>
+                        <% }); %>
+
+                    </select>
                 </div>
                 <div class="control-group">
-                    <label >图象描述</label>
+                    <label>图象描述</label>
 
-                    <input type="text" name="describe" placeholder="图象描述">
+                    <textarea type="text" name="describe" placeholder="图象描述">
+
+                        </textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">submit</button>
             </form>
             <div class="text-center text-error">
-                <%=session.error%>
+                <%= session.error %>
             </div>
         </div>
-        <div class="span9">
+        <div class="span8">
             <table class="table table-bordered">
                 <thead>
                 <th>名称</th>
@@ -39,12 +48,12 @@
                 <th>总数</th>
                 </thead>
                 <tbody>
-                <% request.termsList.forEach(function(user){ %>
+                <% request.termsList.forEach(function(term){ %>
                 <tr>
-                    <td><%= user.name %></td>
-                    <td><%= user.slug %></td>
-                    <td><%= user.term_group %></td>
-                    <td><%= user.term_id %></td>
+                    <td><%= term.name %></td>
+                    <td><%= term.description %></td>
+                    <td><%= term.slug %></td>
+                    <td><%= term.count %></td>
                 </tr>
                 <% }); %>
 

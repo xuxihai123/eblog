@@ -46,7 +46,7 @@ Term.get = function get(term_id, callback) {
 	});
 };
 Term.getAll = function get(callback) {
-	var sql = "select * from wp_terms";
+	var sql = "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id";
 	sqlhelp.query(sql, function (err, row, fields) {
 		if (err) {
 			console.log(err.stack);

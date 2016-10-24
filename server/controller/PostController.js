@@ -19,6 +19,7 @@ exports.managerGet = function () {
 		url: "/admin/post",
 		controller: function (req, res, next) {
 			var post_type = req.query.post_type || "list";
+			req.session.error = null;
 			if (post_type == "list") {
 				Post.getAll(function (err, list) {
 					req.postsList = list;
@@ -59,14 +60,22 @@ exports.doPost = function () {
 				parent:parent,
 				describe:describe,
 			});
-			Term.save(newTerm, function (err, term) {
-				if(err){
-					req.session.error = err;
-					res.redirect("/admin/post?post_type=category");
+			Term.get(newTerm, function (err, term) {
+				if(!term){
+					Term.save(newTerm, function (err, term) {
+						if(err){
+							req.session.error = err;
+							res.redirect("/admin/post?post_type=category");
+						}else{
+							res.redirect("/admin/post?post_type=category");
+						}
+					});
 				}else{
+					req.session.error = "分类已经存在";
 					res.redirect("/admin/post?post_type=category");
 				}
 			});
+
 		},
 		"/admin/post_tag": function (req, res, next) {
 			var req_pargs=req.body;
