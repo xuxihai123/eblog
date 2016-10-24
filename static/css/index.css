@@ -1,0 +1,52 @@
+* {
+    padding: 0px;
+    margin: 0px;
+}
+body.custom-background {
+    font-family: "Roboto","Helvetica Neue",Helvetica,Arial,sans-serif;
+    background:url('../images/bg-index.jpg') repeat top left scroll;
+    background-size: cover;
+    font-size: 16px;
+    line-height: 1.625;
+    color: #555;
+}
+
+#page {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    background: #fff;
+}
+#page:after{
+    clear:both;
+}
+#left {
+    width: 25%;
+    float: left;
+    background-color: #2d6987;
+}
+#right {
+    width: 75%;
+    float: left;
+    background-color: #f2f2f2;
+}
+
+#right .page-title {
+    padding: 20px 90px;
+    margin: 0;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+    font-family: "Roboto Condensed";
+    color: #777;
+    background: #eee;
+}
+#footer {
+    text-align: center;
+    padding: 30px;
+    font-size: 12px;
+    background: #eee;
+}
+
+#footer a {
+    color: #333;
+}
