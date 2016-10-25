@@ -6,7 +6,9 @@
     <link rel='stylesheet' href='/css/bootstrap.min.css'/>
     <!--<link rel='stylesheet' href='/css/bootstrap-responsive.min.css'/>-->
     <link rel='stylesheet' href='/css/index.css'/>
+    <link href="/css/prettify.css" type="text/css" rel="stylesheet" />
     <script src="/js/jquery.js"></script>
+    <script src="/js/prettify.js"></script>
 </head>
 <body class="custom-background">
 <div id="page">
@@ -54,4 +56,10 @@
     </div>
 </div>
 </body>
+<script type="text/javascript">
+    $(window).load(function(){
+        $("pre").addClass("prettyprint linenums");//如果其他地方也要用到pre，我们可以再加一个父标签的选择器来区分
+        prettyPrint();//代替body上的onload事件加载该方法
+    })
+</script>
 </html>
