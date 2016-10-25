@@ -1,0 +1,58 @@
+<%
+var home = request.home;
+articleList = home.homeList || [];
+console.log(home.type);
+%>
+<% if(home.type == "category"){ %>
+<h1 class="page-title">分类：<%= home.category %></h1>
+<% } else if(home.type == "archive"){ %>
+<h1 class="page-title">月份：<%= home.year %>年<%= home.month %>月</h1>
+<% } %>
+<div id="content" class="site-content">
+    <% if(articleList.length > 0){ %>
+    <% articleList.forEach(function(temp){ %>
+    <article
+            class="post type-post status-publish format-aside hentry category-uncategorized post_format-post-format-aside">
+        <header class="entry-header">
+            <h2 class="entry-title" itemprop="name">
+                <a itemprop="url" href="/2016/10/24/fffff/" title="链向fffff的固定链接"
+                   rel="bookmark"><%= temp.post_title %></a>
+            </h2>
+
+            <div class="entry-meta">
+                                <span class="entry-date">
+                                    <a href="http://localhost:8889/wordpress/2016/10/24/fffff/" rel="bookmark">
+                                        <time class="entry-date published" datetime="2016-10-24T12:00:08+00:00"
+                                              itemprop="datepublished"><%= utils.dateFormat(temp.post_date, 'yyyy-MM-dd HH:mm:ss') %>
+                                        </time>
+                                    </a>
+                                </span> by
+                                <span class="author vcard" itemscope="" itemprop="author"
+                                      itemtype="http://schema.org/Person">
+                                    <a class="url fn n" href="http://localhost:8889/wordpress/author/java_way/"
+                                       rel="author"
+                                       itemprop="url">
+                                        <span itemprop="name"><%= temp.author %></span>
+                                    </a>
+                                </span>
+                <span class="sep">·</span>
+                                <span class="comments-link">
+                                    <a href="http://localhost:8889/wordpress/2016/10/24/fffff/#respond"
+                                       itemprop="discussionUrl">0评论</a>
+                                </span>
+            </div>
+        </header>
+        <div class="entry-content" itemprop="articleBody">
+            <p><%= temp.post_content %></p>
+        </div>
+    </article>
+    <% }); %>
+    <% } else{ %>
+    <article
+            class="post type-post status-publish format-aside hentry category-uncategorized post_format-post-format-aside">
+        <div class="entry-content" itemprop="articleBody">
+            <p>您还没有发布文章</p>
+        </div>
+    </article>
+    <% } %>
+</div>

@@ -26,28 +26,28 @@
 //| post_mime_type        | varchar(100)        | NO   |     |                     |                |
 //| comment_count         | bigint(20)          | NO   |     | 0                   |                |
 function Post(post) {
-	this.post_autho = post.post_autho;
-	this.post_dat = post.post_dat;
-	this.post_date_gm = post.post_date_gm;
-	this.post_conten = post.post_conten;
-	this.post_titl = post.post_titl;
-	this.post_excerp = post.post_excerp;
-	this.post_statu = post.post_statu;
-	this.comment_statu = post.comment_statu;
-	this.ping_statu = post.ping_statu;
-	this.post_passwor = post.post_passwor;
-	this.post_nam = post.post_nam;
-	this.to_pin = post.to_pin;
-	this.pinge = post.pinge;
-	this.post_modifie = post.post_modifie;
-	this.post_modified_gm = post.post_modified_gm;
-	this.post_content_filtere = post.post_content_filtere;
-	this.post_paren = post.post_paren;
-	this.gui = post.gui;
-	this.menu_orde = post.menu_orde;
-	this.post_typ = post.post_typ;
-	this.post_mime_typ = post.post_mime_typ;
-	this.comment_coun = post.comment_coun;
+	this.post_author = post.post_author;
+	this.post_date = post.post_date;
+	this.post_date_gmt = post.post_date_gmt;
+	this.post_content = post.post_content;
+	this.post_title = post.post_title;
+	this.post_excerpt = post.post_excerpt;
+	this.post_status = post.post_status;
+	this.comment_status = post.comment_status;
+	this.ping_status = post.ping_status;
+	this.post_password = post.post_password;
+	this.post_name = post.post_name;
+	this.to_ping = post.to_ping;
+	this.pinged = post.pinged;
+	this.post_modified = post.post_modified;
+	this.post_modified_gmt = post.post_modified_gmt;
+	this.post_content_filtered = post.post_content_filtered;
+	this.post_parent = post.post_parent;
+	this.guid = post.guid;
+	this.menu_order = post.menu_order;
+	this.post_type = post.post_type;
+	this.post_mime_type = post.post_mime_type;
+	this.comment_count = post.comment_count;
 };
 module.exports = Post;
 
@@ -63,18 +63,60 @@ Post.save = function save(post, callback) {
 		}
 	});
 };
-Post.get = function get(post_login, callback) {
-	var sql = 'select * from wp_posts where post_login=' + sqlhelp.escape(post_login) ;
-	sqlhelp.query(sql, function (err, row, fields) {
+Post.get = function get(ID, callback) {
+	var sql = 'select * from wp_posts where ID=?';
+	sqlhelp.query(sql, [ID], function (err, row) {
 		if (err) {
 			callback(err, null);
 		} else {
 			var post;
-			if (row&&row.length > 0) {
+			if(row.length>0){
 				post = row[0];
 			}
 			callback(null, post);
 
+		}
+	});
+};
+Post.findByCategory = function (category, callback) {
+	console.log(category);
+	var sql = 'select * from wp_terms as T1,wp_term_relationships as T2,wp_posts as T3 where T1.slug=? and T1.term_id=T2.term_taxonomy_id and T2.object_id=T3.ID';
+	sqlhelp.query(sql, [category], function (err, row, fields) {
+		if (err) {
+			callback(err, null);
+		} else {
+			callback(null, row);
+		}
+	});
+
+};
+Post.findByYearMonth = function (obj, callback) {
+	var sql = 'select *  from wp_posts where year(post_date)=? and month(post_date)=? and post_status=\'publish\'';
+	sqlhelp.query(sql, [obj.year, obj.month], function (err, row, fields) {
+		if (err) {
+			callback(err, null);
+		} else {
+			callback(null, row);
+		}
+	});
+};
+Post.findNewestList = function (callback) {
+	var sql = 'select ID, post_title,post_status,post_date,year(post_date),month(post_date),day(post_date) from wp_posts  where post_status=\'publish\' order by post_date desc limit 6';
+	sqlhelp.query(sql, function (err, row, fields) {
+		if (err) {
+			callback(err, null);
+		} else {
+			callback(null, row);
+		}
+	});
+};
+Post.findArticleArchive = function (callback) {
+	var sql = 'select year(post_date),month(post_date),count(ID) from wp_posts group by year(post_date),month(post_date) order by year(post_date) desc,month(post_date)desc';
+	sqlhelp.query(sql, function (err, row, fields) {
+		if (err) {
+			callback(err, null);
+		} else {
+			callback(null, row);
 		}
 	});
 };

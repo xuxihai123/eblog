@@ -1,5 +1,6 @@
 var fs = require("fs");
 var path = require("path");
+var viewUtils = require("../server/utils/viewUtils");
 exports.config = function (app) {
 	var setting = app.myset;
 	var ctrls_path = setting.contrlllers_path, ctrl_path, controller;
@@ -68,6 +69,7 @@ function rewriteRender(app) {
 			options.session = session;
 			done = callback;
 		}
+		options.utils = viewUtils;
 		render.apply(res, [view, options, done]);
 	};
 }

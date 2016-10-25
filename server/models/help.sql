@@ -61,3 +61,47 @@ MySQL [wp_blog2]> select ID,post_title,term_taxonomy_id from wp_posts as T1,wp_t
 +----+---------------------------------------------------------------------------------------------------------------------------------------+------------------+
 32 rows in set (0.00 sec)
 
+//最近文章
+MySQL [wp_blog]> select  post_title,post_status,post_date from wp_posts  where post_status='publish' order by post_date desc limit 6;
++------------------------------------------------------+-------------+---------------------+
+| post_title                                           | post_status | post_date           |
++------------------------------------------------------+-------------+---------------------+
+| fffff                                                | publish     | 2016-10-24 12:00:08 |
+| wordpress fix2                                       | publish     | 2016-10-19 14:11:45 |
+| wordpress fix1                                       | publish     | 2016-10-19 14:06:31 |
+| 示例页面                                             | publish     | 2016-06-24 23:32:33 |
+| 各系统下设置输入法按键为ctrl+shift+space             | publish     | 2015-10-27 22:15:00 |
+| Centos安装gnome主菜单编辑器无                        | publish     | 2015-10-26 23:27:00 |
++------------------------------------------------------+-------------+---------------------+
+6 rows in set (0.00 sec)
+
+//文章归档
+MySQL [wp_blog]> select year(post_date),month(post_date),count(ID) from wp_posts group by year(post_date),month(post_date) order by year(post_date) desc,month(post_date)desc;
++-----------------+------------------+-----------+
+| year(post_date) | month(post_date) | count(ID) |
++-----------------+------------------+-----------+
+|            2016 |               10 |        28 |
+|            2016 |                6 |         2 |
+|            2015 |               10 |         3 |
+|            2015 |                7 |         2 |
+|            2015 |                6 |         1 |
+|            2015 |                4 |         1 |
+|            2014 |               12 |         4 |
+|            2014 |               11 |         3 |
++-----------------+------------------+-----------+
+8 rows in set (0.00 sec)
+//查询指定分类下的文章
+MySQL [wp_blog]> select * from wp_terms as T1,wp_term_relationships as T2 where T1.slug='java' and T1.term_id=T2.term_taxonomy_id;
+select * from wp_terms as T1,wp_term_relationships as T2,wp_posts as T3 where T1.slug='linux' and T1.term_id=T2.term_taxonomy_id and T2.object_id=T3.ID
++---------+------+------+------------+-----------+------------------+------------+
+| term_id | name | slug | term_group | object_id | term_taxonomy_id | term_order |
++---------+------+------+------------+-----------+------------------+------------+
+|       9 | java | java |          0 |        33 |                9 |          0 |
+|       9 | java | java |          0 |        35 |                9 |          0 |
+|       9 | java | java |          0 |        37 |                9 |          0 |
+|       9 | java | java |          0 |        39 |                9 |          0 |
+|       9 | java | java |          0 |        41 |                9 |          0 |
+|       9 | java | java |          0 |        43 |                9 |          0 |
++---------+------+------+------------+-----------+------------------+------------+
+6 rows in set (0.00 sec)
+

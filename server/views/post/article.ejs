@@ -1,0 +1,92 @@
+<%
+var post = request.previewPost;
+%>
+<div id="content" class="site-content" role="main">
+    <div class="post-item">
+        <div class="entry-header">
+            <h1 class="entry-title" itemprop="name"><%= post.post_title %></h1>
+
+            <div class="entry-meta">
+                <span class="entry-date">
+                    <a href="http://localhost:8889/wordpress/?p=21" rel="bookmark">
+                        <time class="entry-date published" datetime="2015-10-17T19:36:00+00:00"
+                              itemprop="datepublished">2015年10月17日
+                        </time>
+                    </a>
+                </span> by
+                <span class="author vcard" itemscope="" itemprop="author" itemtype="http://schema.org/Person">
+                    <a class="url fn n" href="http://localhost:8889/wordpress/?author=1" rel="author" itemprop="url">
+                        <span itemprop="name">java_way</span>
+                    </a>
+                </span>
+                <span class="sep">·</span>
+                <span class="comments-link">
+                    <a href="http://localhost:8889/wordpress/?p=21#respond" itemprop="discussionUrl">0评论</a>
+                </span>
+            </div>
+        </div>
+
+        <div class="entry-content" itemprop="articleBody">
+            <div id="article_content" class="article_content">
+                <%= post.post_content %>
+            </div>
+        </div>
+    </div>
+
+    <div id="nav-links">
+        <div class="nav-previous">
+            <a href="http://localhost:8889/wordpress/?p=23" rel="prev">
+                <span class="screen-reader-text">上篇文章：</span>
+                <span class="post-title">使用centos引导内核错误：kernel: pnp 00:0b: can’t evaluate _CRS: 8</span>
+            </a>
+        </div>
+        <div class="nav-next">
+            <a href="http://localhost:8889/wordpress/?p=19" rel="next">
+                <span class="screen-reader-text">下篇文章：</span>
+                <span class="post-title">Centos安装gnome主菜单编辑器无</span>
+            </a>
+        </div>
+    </div>
+
+    <div id="comments" class="comments-area">
+
+
+        <div id="respond" class="comment-respond">
+            <h3 id="reply-title" class="comment-reply-title">发表评论
+                <small>
+                    <a rel="nofollow" id="cancel-comment-reply-link" href="/wordpress/?p=21#respond"
+                       style="display:none;">取消回复
+                    </a>
+                </small>
+            </h3>
+            <form class="form-horizontal" name="post-new" action="/post/new" method="post">
+                <div class="control-group">
+                    <label for="comment">评论</label>
+                    <textarea id="comment" name="comment" required="required">
+                    </textarea>
+                </div>
+                <div class="control-group">
+                    <label for="author">姓名 <span class="required">*</span></label>
+                    <input id="author" name="author" type="text" value="" required="required">
+                </div>
+                <div class="control-group">
+                    <label for="email">电子邮件 <span class="required">*</span></label>
+                    <input id="email" name="email" type="email" required="required">
+                </div>
+                <div class="control-group">
+                    <label for="url">站点</label>
+                    <input id="url" name="url" type="url">
+                </div>
+                <div class="btn-div">
+                    <button type="submit" id="submit" class="btn" value="">发表评论</button>
+                </div>
+                <% if (locals.error){ %>
+                <div class="text-center"><%= error %></div>
+                <% } %>
+            </form>
+        </div><!-- #respond -->
+
+
+    </div>
+
+</div>
