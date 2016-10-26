@@ -41,7 +41,7 @@
                             id = post.ID;
                             url = "/" + year + "/" + month + "/" + day + "/" + id;
                         %>
-                        <a href="<%=url%>"><%= utils.cutMaxTitle(post.post_title, 16) %></a>
+                        <a href="<%= url %>"><%= utils.cutMaxTitle(post.post_title, 16) %></a>
                     </li>
                     <% }); %>
                 </ul>
@@ -54,9 +54,16 @@
                 <h3 class="widget-title">文章归档</h3>
                 <ul>
                     <% request.articleArchList.forEach(function(arch){ %>
+                    <%
+                        var month = arch['month(post_date)'];
+                        if ((month+"").length == 1) {
+                            month = "0" + month;
+                        }
+                    %>
                     <li>
-                        <a href="/<%= arch['year(post_date)'] %>/<%= arch['month(post_date)'] %>"><%= arch['year(post_date)'] %>
-                            年<%= arch['month(post_date)'] %>月</a></li>
+                        <a href="/<%= arch['year(post_date)'] %>/<%= month %>"><%= arch['year(post_date)'] %>
+                            年<%= month %>月</a>
+                    </li>
                     <% }); %>
                 </ul>
             </aside>

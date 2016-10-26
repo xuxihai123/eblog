@@ -6,7 +6,10 @@
     <link rel='stylesheet' href='/css/bootstrap.min.css'/>
     <!--<link rel='stylesheet' href='/css/bootstrap-responsive.min.css'/>-->
     <link rel='stylesheet' href='/css/index.css'/>
-    <link href="/css/prettify.css" type="text/css" rel="stylesheet" />
+    <link href="/css/prettify.css" type="text/css" rel="stylesheet"/>
+
+    <link media="all" rel="stylesheet" href="/js/jquery-stars/all.css">
+
     <script src="/js/jquery.js"></script>
     <script src="/js/prettify.js"></script>
 </head>
@@ -48,18 +51,24 @@
             <% } %>
         </div>
 
-        <div id="footer">
+        <div id="foot">
             <a href="#" title="优雅的个人发布平台">由WordPress自豪地提供</a>.
             主题：Flat 1.7.6 by <a rel="nofollow" href="https://themeisle.com/themes/flat/"
                                 title="Flat WordPress Theme">Themeisle</a>
         </div>
     </div>
 </div>
+<script type="text/javascript" src="/js/jquery-stars/jquery-stars.js"></script>
 </body>
 <script type="text/javascript">
-    $(window).load(function(){
-        $("pre").addClass("prettyprint linenums");//如果其他地方也要用到pre，我们可以再加一个父标签的选择器来区分
+    $(window).load(function () {
+        $("pre").addClass("prettyprint");//如果其他地方也要用到pre，我们可以再加一个父标签的选择器来区分
         prettyPrint();//代替body上的onload事件加载该方法
-    })
+    });
+    jQuery(document.body).jstars({
+        image_path: '/images', // folder with magic image
+        style: 'rand',       // optional, color, default: white
+        frequency: 16         // optional, from 1 to 19
+    });
 </script>
 </html>

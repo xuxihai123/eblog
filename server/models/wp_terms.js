@@ -8,7 +8,7 @@
 //| term_group | bigint(10)          | NO   |     | 0       |                |
 //+------------+---------------------+------+-----+---------+----------------+
 function Term(term) {
-	this.term_id = term.term_id;
+	//this.term_id = term.term_id; //auto_increment
 	this.name = term.name;
 	this.slug = term.slug;
 	this.term_group = term.term_group;
@@ -19,13 +19,11 @@ var sqlhelp = require("../utils/sqlHelper");
 
 Term.save = function save(term, callback) {
 	var sql = "insert into wp_terms set ?";
-	var saveterm = new Term(term);
-	sqlhelp.query(sql, saveterm, function (err, term) {
+	sqlhelp.query(sql, term, function (err, okPacket) {
 		if (err) {
-			console.log(err.stack);
 			callback(err, null);
 		} else {
-			callback(null, term);
+			callback(null, okPacket);
 		}
 	});
 };
@@ -41,6 +39,30 @@ Term.get = function get(term_id, callback) {
 				term = row[0];
 			}
 			callback(null, term);
+
+		}
+	});
+};
+Term.getAllCategory = function get(callback) {
+	var sql = "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id and T2.taxonomy='category'";
+	sqlhelp.query(sql, function (err, row, fields) {
+		if (err) {
+			console.log(err.stack);
+			callback(err, null);
+		} else {
+			callback(null, row);
+
+		}
+	});
+};
+Term.getAllTag = function get(callback) {
+	var sql = "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id and T2.taxonomy='post_tag'";
+	sqlhelp.query(sql, function (err, row, fields) {
+		if (err) {
+			console.log(err.stack);
+			callback(err, null);
+		} else {
+			callback(null, row);
 
 		}
 	});

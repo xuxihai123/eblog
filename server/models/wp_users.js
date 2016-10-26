@@ -38,12 +38,11 @@ module.exports = User;
 var sqlhelp = require("../utils/sqlHelper");
 User.save = function save(user, callback) {
 	var sql = "insert into wp_users set ?";
-	var saveUser = new User(user);
-	sqlhelp.query(sql, saveUser, function (err, user) {
+	sqlhelp.query(sql, user, function (err, okPacket) {
 		if (err) {
 			callback(err, null);
 		} else {
-			callback(null, user);
+			callback(null, okPacket);
 		}
 	});
 };

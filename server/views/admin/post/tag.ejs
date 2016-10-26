@@ -1,1 +1,53 @@
-tag
+<div>
+    <h3>标签目录</h3>
+</div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span4">
+            <div><h4>添加新标签目录</h4></div>
+            <form class="form-horizontal" name="termform" action="/admin/post_tag" method="post">
+                <div class="control-group">
+                    <label>名称</label>
+                    <input type="text" name="name" placeholder="这将是它在站点上显示的名字">
+                </div>
+                <div class="control-group">
+                    <label>别名</label>
+
+                    <input type="text" name="slug" placeholder="“别名”是在URL中使用的别称，它可以令URL更美观">
+                </div>
+                <div class="control-group">
+                    <label>图象描述</label>
+
+                    <textarea type="text" name="description" placeholder="图象描述">
+
+                        </textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">submit</button>
+            </form>
+            <div class="text-center text-error">
+                <%= session.error %>
+            </div>
+        </div>
+        <div class="span8">
+            <table class="table table-bordered">
+                <thead>
+                <th>名称</th>
+                <th>图象描述</th>
+                <th>别名</th>
+                <th>总数</th>
+                </thead>
+                <tbody>
+                <% request.termsList.forEach(function(term){ %>
+                <tr>
+                    <td><%= term.name %></td>
+                    <td><%= term.description %></td>
+                    <td><%= term.slug %></td>
+                    <td><%= term.count %></td>
+                </tr>
+                <% }); %>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

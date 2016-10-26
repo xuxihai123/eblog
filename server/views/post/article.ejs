@@ -1,5 +1,7 @@
 <%
 var post = request.previewPost;
+var url = utils.dateFormat(post.post_date, "yyyy/MM/");
+var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
 %>
 <div id="content" class="site-content" role="main">
     <div class="post-item">
@@ -8,15 +10,8 @@ var post = request.previewPost;
 
             <div class="entry-meta">
                 <span class="entry-date">
-                    <a href="http://localhost:8889/wordpress/?p=21" rel="bookmark">
-                        <time class="entry-date published" datetime="2015-10-17T19:36:00+00:00"
-                              itemprop="datepublished">2015年10月17日
-                        </time>
-                    </a>
-                </span> by
-                <span class="author vcard" itemscope="" itemprop="author" itemtype="http://schema.org/Person">
-                    <a class="url fn n" href="http://localhost:8889/wordpress/?author=1" rel="author" itemprop="url">
-                        <span itemprop="name">java_way</span>
+                    <a href="<%= "/" + url %>" rel="bookmark">
+                        <time class="entry-date published"><%=date%></time>
                     </a>
                 </span>
                 <span class="sep">·</span>

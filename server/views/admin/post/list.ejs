@@ -44,7 +44,7 @@
                     <td><%= post.post_type %></td>
                     <td><%= post.menu_order %></td>
                     <td><%= post.comment_count %></td>
-                    <td><%= post.post_date %></td>
+                    <td><%= utils.dateFormat(post.post_date,"yyyy-MM-dd") %></td>
                 </tr>
                 <% }); %>
 
