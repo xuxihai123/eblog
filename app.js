@@ -15,7 +15,7 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'server/views'));
-app.set('view engine', 'ejs'); //设置视图引擎。
+app.set('view engine', 'swig'); //设置视图引擎。
 
 
 // uncomment after placing your favicon in /public
