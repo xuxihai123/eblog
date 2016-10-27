@@ -1,3 +1,15 @@
+var marked = require("marked");
+
+marked.setOptions({
+	renderer: new marked.Renderer(),
+	gfm: true,
+	tables: true,
+	breaks: false,
+	pedantic: false,
+	sanitize: true,
+	smartLists: true,
+	smartypants: false
+});
 function formatDate(date, style) { //date format util
 	var y = date.getFullYear();
 	var M = "0" + (date.getMonth() + 1);
@@ -13,14 +25,14 @@ function formatDate(date, style) { //date format util
 	return style.replace('yyyy', y).replace('MM', M).replace('dd', d).replace('HH', h).replace('mm', m).replace('ss', s);
 }
 
-function cutMaxTitle(str,length) {
-	if(typeof str=="string") {
-		if(str.length>length) {
-			return str.substr(0, length)+"...";
-		}else{
+function cutMaxTitle(str, length) {
+	if (typeof str == "string") {
+		if (str.length > length) {
+			return str.substr(0, length) + "...";
+		} else {
 			return str;
 		}
-	}else{
+	} else {
 		return str;
 	}
 }
@@ -28,3 +40,5 @@ function cutMaxTitle(str,length) {
 exports.dateFormat = formatDate;
 
 exports.cutMaxTitle = cutMaxTitle;
+
+exports.marked = marked;

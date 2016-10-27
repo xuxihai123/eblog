@@ -6,7 +6,7 @@
     <link rel='stylesheet' href='/css/bootstrap.min.css'/>
     <!--<link rel='stylesheet' href='/css/bootstrap-responsive.min.css'/>-->
     <link rel='stylesheet' href='/css/index.css'/>
-    <link href="/css/prettify.css" type="text/css" rel="stylesheet"/>
+    <link href="/css/prettify-me.css" type="text/css" rel="stylesheet"/>
 
     <link media="all" rel="stylesheet" href="/js/jquery-stars/all.css">
 
@@ -62,7 +62,7 @@
 </body>
 <script type="text/javascript">
     $(window).load(function () {
-        $("pre").addClass("prettyprint");//如果其他地方也要用到pre，我们可以再加一个父标签的选择器来区分
+        $("pre").addClass("prettyprint linenums");//如果其他地方也要用到pre，我们可以再加一个父标签的选择器来区分
         prettyPrint();//代替body上的onload事件加载该方法
     });
     jQuery(document.body).jstars({
