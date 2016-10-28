@@ -38,50 +38,19 @@ module.exports = User;
 var sqlhelp = require("../utils/sqlHelper");
 User.save = function save(user, callback) {
 	var sql = "insert into wp_users set ?";
-	sqlhelp.query(sql, user, function (err, okPacket) {
-		if (err) {
-			callback(err, null);
-		} else {
-			callback(null, okPacket);
-		}
-	});
+	return sqlhelp.query(sql, user);
 };
 User.get = function get(user_login, callback) {
-	var sql = 'select * from wp_users where user_login=' + sqlhelp.escape(user_login) ;
-	sqlhelp.query(sql, function (err, row, fields) {
-		if (err) {
-			callback(err, null);
-		} else {
-			var user;
-			if (row&&row.length > 0) {
-				user = row[0];
-			}
-			callback(null, user);
-
-		}
-	});
+	var sql = 'select * from wp_users where user_login=?';
+	return sqlhelp.query(sql, [user_login]);
 };
 User.getAll = function get(callback) {
 	var sql = "select * from wp_users";
-	sqlhelp.query(sql, function (err, row, fields) {
-		if (err) {
-			callback(err, null);
-		} else {
-			callback(null, row);
-
-		}
-	});
+	return sqlhelp.query(sql);
 };
 User.delete = function (user_login, callback) {
-	var sql = "delete * from wp_users where user_login='" + sqlhelp.escape(user_login) + "'";
-	sqlhelp.query(sql, function (err, row, fields) {
-		if (err) {
-			callback(err, null);
-		} else {
-			callback(null, row);
-
-		}
-	});
+	var sql = "delete * from wp_users where user_login=?";
+	return sqlhelp.query(sql, [user_login]);
 };
 
 

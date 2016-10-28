@@ -1,3 +1,6 @@
+<%
+var pageModel = request.pageModel;
+%>
 <div>
     <h3>文章列表</h3>
 </div>
@@ -37,19 +40,47 @@
                 <th>日期</th>
                 </thead>
                 <tbody>
-                <% request.postsList.forEach(function(post){ %>
+                <% pageModel.recordList.forEach(function(post){ %>
                 <tr>
                     <td><%= post.post_title %></td>
                     <td><%= post.post_author %></td>
                     <td><%= post.post_type %></td>
                     <td><%= post.menu_order %></td>
                     <td><%= post.comment_count %></td>
-                    <td><%= utils.dateFormat(post.post_date,"yyyy-MM-dd") %></td>
+                    <td><%= utils.dateFormat(post.post_date, "yyyy-MM-dd") %></td>
                 </tr>
                 <% }); %>
 
                 </tbody>
             </table>
+            <div class="pull-right">
+                <div class="pagination">
+                    <ul>
+                        <!--prev-->
+                        <% if(pageModel.currentPage > 1){ %>
+
+                        <li><a href="/admin/post?pageNum=<%= pageModel.currentPage - 1 %>">Prev</a></li>
+                        <% }else{ %>
+                        <li class="disabled"><a href="#">Prev</a></li>
+                        <% } %>
+                        <!--middle-->
+                        <% for(var i = pageModel.beginPageIndex; i <= pageModel.endPageIndex; i++) { %>
+                            <% if((pageModel.currentPage == i)){ %>
+                            <li class="active"><a href="#"><%= i %></a></li>
+                            <% }else{ %>
+                            <li><a href="/admin/post?pageNum=<%= i %>&&pageSize=10"><%= i %></a></li>
+                            <% } %>
+                        <% } %>
+                        <!--next-->
+                        <% if(pageModel.currentPage < pageModel.pageCount){ %>
+                        <li><a href="/admin/post?pageNum=<%= pageModel.currentPage + 1 %>">Next</a></li>
+                        <% }else { %>
+                        <li class="disabled"><a href="#">Next</a></li>
+                        <% } %>
+                    </ul>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>

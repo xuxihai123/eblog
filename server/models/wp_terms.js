@@ -17,79 +17,56 @@ module.exports = Term;
 
 var sqlhelp = require("../utils/sqlHelper");
 
+/**
+ * @return promise
+ * @param term
+ * @param callback
+ */
 Term.save = function save(term, callback) {
 	var sql = "insert into wp_terms set ?";
-	sqlhelp.query(sql, term, function (err, okPacket) {
-		if (err) {
-			callback(err, null);
-		} else {
-			callback(null, okPacket);
-		}
-	});
+	return sqlhelp.query(sql, term);
 };
+/**
+ * @return promise
+ * @param term_id
+ * @param callback
+ */
 Term.get = function get(term_id, callback) {
-	var sql = 'select * from wp_terms where term_id=' + sqlhelp.escape(term_id) ;
-	sqlhelp.query(sql, function (err, row, fields) {
-		if (err) {
-			console.log(err.stack);
-			callback(err, null);
-		} else {
-			var term;
-			if (row&&row.length > 0) {
-				term = row[0];
-			}
-			callback(null, term);
-
-		}
-	});
+	var sql = 'select * from wp_terms where term_id=' + sqlhelp.escape(term_id);
+	return sqlhelp.query(sql);
 };
+/**
+ * @return promise
+ * @param callback
+ */
 Term.getAllCategory = function get(callback) {
 	var sql = "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id and T2.taxonomy='category'";
-	sqlhelp.query(sql, function (err, row, fields) {
-		if (err) {
-			console.log(err.stack);
-			callback(err, null);
-		} else {
-			callback(null, row);
-
-		}
-	});
+	return sqlhelp.query(sql);
 };
+/**
+ * return promise
+ * @param callback
+ */
 Term.getAllTag = function get(callback) {
 	var sql = "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id and T2.taxonomy='post_tag'";
-	sqlhelp.query(sql, function (err, row, fields) {
-		if (err) {
-			console.log(err.stack);
-			callback(err, null);
-		} else {
-			callback(null, row);
-
-		}
-	});
+	return sqlhelp.query(sql);
 };
+/**
+ * return promise
+ * @param callback
+ */
 Term.getAll = function get(callback) {
 	var sql = "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id";
-	sqlhelp.query(sql, function (err, row, fields) {
-		if (err) {
-			console.log(err.stack);
-			callback(err, null);
-		} else {
-			callback(null, row);
-
-		}
-	});
+	return sqlhelp.query(sql);
 };
+/**
+ *@return promise
+ * @param term_id
+ * @param callback
+ */
 Term.delete = function (term_id, callback) {
 	var sql = "delete * from wp_terms where term_id='" + sqlhelp.escape(term_id) + "'";
-	sqlhelp.query(sql, function (err, row, fields) {
-		if (err) {
-			console.log(err.stack);
-			callback(err, null);
-		} else {
-			callback(null, row);
-
-		}
-	});
+	return sqlhelp.query(sql);
 };
 
 

@@ -16,8 +16,7 @@ console.log(home.type);
         var id = temp.ID;
         var url = date + "/" + id;
     %>
-    <article
-            class="post type-post status-publish format-aside hentry category-uncategorized post_format-post-format-aside">
+    <article class="post type-post status-publish format-aside hentry ">
         <header class="entry-header">
             <h2 class="entry-title" itemprop="name">
                 <a itemprop="url" href="<%= "/" + url %>" title="链向<%= temp.post_title %>的固定链接"
@@ -25,24 +24,40 @@ console.log(home.type);
             </h2>
 
             <div class="entry-meta">
-                                <span class="entry-date">
+                                        <span class="entry-date">
 
-                                    <a href="<%= "/" + url %>" rel="bookmark">
-                                        <time class="entry-date published"><%= date %>
-                                        </time>
-                                    </a>
-                                </span>
-                                <span class="comments-link">
-                                    <a href="http://localhost:8889/wordpress/2016/10/24/fffff/#respond"
-                                       itemprop="discussionUrl">0评论</a>
-                                </span>
+                                            <a href="<%= "/" + url %>" rel="bookmark">
+                                                <time class="entry-date published"><%= date %>
+                                                </time>
+                                            </a>
+                                        </span>
+                                        <span class="comments-link">
+                                            <a href="http://localhost:8889/wordpress/2016/10/24/fffff/#respond"
+                                               itemprop="discussionUrl">0评论</a>
+                                        </span>
             </div>
         </header>
         <div class="entry-content" itemprop="articleBody">
             <p><%= utils.cutMaxTitle(temp.post_content, 200) %></p>
         </div>
     </article>
+
     <% }); %>
+    <div class="navigation pagination" role="navigation">
+        <h2 class="screen-reader-text">文章导航</h2>
+
+        <div class="nav-links">
+            <span class="page-numbers current">1</span>
+            <a class="prev page-numbers" href="http://localhost:8889/wordpress/">
+                <i class="icon-chevron-left"></i>
+            </a>
+            <a class="page-numbers" href="http://localhost:8889/wordpress/?paged=2">2</a>
+            <a class="page-numbers" href="http://localhost:8889/wordpress/?paged=3">3</a>
+            <a class="next page-numbers" href="http://localhost:8889/wordpress/?paged=2">
+                <i class="icon-chevron-right"></i>
+            </a>
+        </div>
+    </div>
     <% } else{ %>
     <article
             class="post type-post status-publish format-aside hentry category-uncategorized post_format-post-format-aside">
@@ -51,4 +66,5 @@ console.log(home.type);
         </div>
     </article>
     <% } %>
+
 </div>

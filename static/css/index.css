@@ -279,7 +279,6 @@ body.custom-background {
     height: auto;
 }
 
-
 ::-webkit-scrollbar-button {
     height: 0;
     width: 0
@@ -299,7 +298,6 @@ body.custom-background {
     border-radius: 2px;
     border-width: 0
 }
-
 
 ::-webkit-scrollbar-track:horizontal, ::-webkit-scrollbar-track:vertical {
     background-clip: padding-box;
@@ -334,3 +332,64 @@ body.custom-background {
     background-color: rgba(0, 0, 0, .05)
 }
 
+.pagination {
+    padding: 30px 90px;
+    position: relative;
+    text-align: center;
+    margin: 0;
+    display: block;
+    border-radius: 3px;
+}
+
+.screen-reader-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.pagination .current, .pagination .dots {
+    color: #fff;
+    background-color: #34495e;
+    border-color: #34495e;
+    opacity: .5;
+    filter: alpha(opacity=50);
+}
+
+.pagination .page-numbers {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 16px;
+    line-height: 1.625;
+    border-radius: 3px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline: none !important;
+    color: #fff;
+    background-color: #34495e;
+    border-color: #34495e;
+}
+
+.pagination .next {
+    float: right;
+}
+
+.pagination .prev {
+    float: left;
+}

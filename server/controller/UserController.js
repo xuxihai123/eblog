@@ -38,8 +38,8 @@ exports.register = function () {
 
 			});
 			//检查用户名是否已经存在
-			User.get(newUser.user_login, function (err, user) {
-				if (user) {
+			User.get(newUser.user_login).then(function (user) {
+				if (user && user.length > 0) {
 					req.session.error = "用户已存在";
 					return res.redirect('/signup.c');//返回注册页
 				} else {
@@ -47,17 +47,18 @@ exports.register = function () {
 					newUser.user_activation_key = dateutils.randomStr(16);
 					newUser.user_registered = dateutils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
 					//如果不存在则新增用户
-					User.save(newUser, function (err, user) {
-						if (err) {
-							req.session.error = err;
-							return res.redirect('/signup.c');//注册失败返回主册页
-						}
+					User.save(newUser).then(function (result) {
 						//req.session.user = user;//用户信息存入 session
 						return res.redirect('/');//注册成功后返回主页
+					}).fail(function (err) {
+						req.session.error = err;
+						return res.redirect('/signup.c');//注册失败返回主册页
 					});
 				}
+			}, function (err) {
+				req.session.error = err;
+				return res.redirect('/signup.c');//注册失败返回主册页
 			});
-
 		}
 	};
 };
@@ -78,8 +79,9 @@ exports.login = function () {
 				user_pass: user_pass,
 			});
 			//检查用户名是否已经存在
-			User.get(newUser.user_login, function (err, user) {
-				if (user) {
+			User.get(newUser.user_login).then(function (result) {
+				if (result && result.length > 0) {
+					var user = result[0];
 					if (user.user_pass == newUser.user_pass) {
 						req.session.user = user;
 						return res.redirect('/admin/index.c');//进入主页
@@ -93,6 +95,10 @@ exports.login = function () {
 					req.session.error = "用户不存在";
 					return res.redirect('/signin.c');//返回登录
 				}
+			}).fail(function (err) {
+				req.session.error = err;
+				console.log(err.message);
+				return res.redirect('/signin.c');//注册失败返回主册页
 			});
 		}
 	};
@@ -116,14 +122,13 @@ exports.managerGet = function () {
 		controller: function (req, res, next) {
 			var operate = req.query.user_type || "list";
 			if (operate == "list") {
-				User.getAll(function (err, list) {
+				User.getAll().then(function (list) {
 					req.usersList = list;
 					res.render("admin/user", {
 						user_type: "list",
-						//request: req,
-						//response: res,
-						//session: req.session,
 					});
+				}).fail(function (err) {
+					res.json(err);
 				});
 
 			} else if (operate == "addUI") {
@@ -132,11 +137,13 @@ exports.managerGet = function () {
 				});
 			} else if (operate == "userinfo") {
 				var user_login = req.session.user.user_login;
-				User.get(user_login, function (err, user) {
-					req.user = user;
+				User.get(user_login).then(function (result) {
+					req.user = result[0];
 					res.render("admin/user", {
 						user_type: "userinfo",
 					});
+				}).fail(function (err) {
+					res.json(err);
 				});
 			}
 
@@ -164,8 +171,8 @@ exports.managerPost = function () {
 				user_email: user_email,
 				user_url: user_url,
 			});
-			User.get(newUser.user_login, function (err, user) {
-				if (user) {
+			User.get(newUser.user_login).then(function (err, user) {
+				if (user && user.length > 0) {
 					req.session.error = "用户已存在";
 					return res.redirect('/admin/user?user_type=addUI');//返回注册页
 				} else {
@@ -173,15 +180,16 @@ exports.managerPost = function () {
 					newUser.user_activation_key = dateutils.randomStr(16);
 					newUser.user_registered = dateutils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
 					//如果不存在则新增用户
-					User.save(newUser, function (err, user) {
-						if (err) {
-							req.session.error = "添加出错！";
-							return res.redirect('/admin/user?user_type=addUI');//注册失败返回主册页
-						}
+					User.save(newUser).then(function (result) {
 						//req.session.user = user;//用户信息存入 session
 						return res.redirect('/admin/user?user_type=list');//注册成功后返回主页
+					}).fail(function (err) {
+						req.session.error = "添加出错！";
+						return res.redirect('/admin/user?user_type=addUI');//注册失败返回主册页
 					});
 				}
+			}, function (err) {
+				res.json(err);
 			});
 		}
 	};

@@ -1,5 +1,7 @@
 <%
 var post = request.previewPost;
+var prev = request.prevPost;
+var next = request.nextPost;
 var url = utils.dateFormat(post.post_date, "yyyy/MM/");
 var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
 %>
@@ -11,7 +13,7 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
             <div class="entry-meta">
                 <span class="entry-date">
                     <a href="<%= "/" + url %>" rel="bookmark">
-                        <time class="entry-date published"><%=date%></time>
+                        <time class="entry-date published"><%= date %></time>
                     </a>
                 </span>
                 <span class="sep">·</span>
@@ -29,18 +31,22 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
     </div>
 
     <div id="nav-links">
+        <% if(prev){ %>
         <div class="nav-previous">
-            <a href="http://localhost:8889/wordpress/?p=23" rel="prev">
-                <span class="screen-reader-text">上篇文章：</span>
-                <span class="post-title">使用centos引导内核错误：kernel: pnp 00:0b: can’t evaluate _CRS: 8</span>
+            <a href="<%= utils.dateFormat(prev.post_date, "/yyyy/MM/dd/") + prev.ID %>" rel="prev">
+                <span class="meta-nav">上篇文章</span>
+                <span class="post-title"><%= prev.post_title %></span>
             </a>
         </div>
+        <% } %>
+        <% if(next){ %>
         <div class="nav-next">
-            <a href="http://localhost:8889/wordpress/?p=19" rel="next">
-                <span class="screen-reader-text">下篇文章：</span>
-                <span class="post-title">Centos安装gnome主菜单编辑器无</span>
+            <a href="<%= utils.dateFormat(next.post_date, "/yyyy/MM/dd/")+ next.ID %>" rel="next">
+                <span class="meta-nav">下篇文章</span>
+                <span class="post-title"><%= next.post_title %></span>
             </a>
         </div>
+        <% } %>
     </div>
 
     <div id="comments" class="comments-area">

@@ -2,58 +2,63 @@ var Post = require("../models/wp_posts");
 var Term = require("../models/wp_terms");
 var TermTaxonomy = require("../models/wp_term_taxonomy");
 var TermRelationship = require("../models/wp_term_relationships");
+var Q = require("q");
 /**
  * add user
  * @returns {Function}
  */
-exports.index = function () {
-	return {
-		//url:/^\/(index|)\/?$/,
-		url: "/",
-		controller: function (req, res, next) {
-			res.render("index", {"title": "Express"});
-		}
-	}
-};
 //管理接口
 exports.managerGet = function () {
 	return {
 		url: "/admin/post",
 		controller: function (req, res, next) {
 			var post_type = req.query.post_type || "list";
+			var pageNum = parseInt(req.query.pageNum) || 1;
+			var pageSize = parseInt(req.query.pageSize) || 10;
 			req.session.error = null;
 			if (post_type == "list") {
-				Post.getAll(function (err, list) {
-					req.postsList = list;
+				Post.getPage(pageNum, pageSize).then(function (pageModel) {
+					req.pageModel = pageModel;
 					res.render("admin/post", {
 						user_type: "list",
 					});
+				}, function (err) {
+					error(err);
 				});
 			} else if (post_type == "addUI") {
-				Term.getAllCategory(function (err, list) {
-					req.categoryList = list;
-					Term.getAllTag(function (err, list) {
-						req.tagList = list;
+				Q.all([Term.getAllCategory(), Term.getAllTag()])
+					.spread(function (list1, list2) {
+						req.categoryList = list1;
+						req.tagList = list2;
 						res.render("admin/post", {
 							post_type: "addUI",
 						});
+					})
+					.fail(function (err) {
+						error(err);
 					});
-				});
 
 			} else if (post_type == "category") {
-				Term.getAllCategory(function (err, list) {
+				Term.getAllCategory().then(function (list) {
 					req.termsList = list;
 					res.render("admin/post", {
 						user_type: "category",
 					});
+				}, function (err) {
+					error(err);
 				});
 			} else if (post_type == "tag") {
-				Term.getAllTag(function (err, list) {
+				Term.getAllTag().then(function (list) {
 					req.termsList = list;
 					res.render("admin/post", {
 						user_type: "tag",
 					});
+				}, function (err) {
+					error(err);
 				});
+			}
+			function error(msg) {
+				res.render("admin/post", {"title": "Express", error: msg});
 			}
 		}
 	}
@@ -73,30 +78,21 @@ exports.doPost = function () {
 				post_date: new Date(),
 				post_date_gmt: new Date(),
 			});
-
-			Post.save(newPost, function (err, okPacket) {
-				if (err) {
-					req.session.error = err.errorCode;
-					res.json(err);
-					//res.redirect("/admin/post_new?post_type=category");
-				} else {
-					var relationships1 = [okPacket.insertId, term_id1, 0];
-					var relationships2 = [okPacket.insertId, term_id2, 0];
-					var relations = [];
-					if (term_id1) {
-						relations.push(relationships1);
-					}
-					if (term_id2) {
-						relations.push(relationships2);
-					}
-					TermRelationship.saveMulti(relations, function (err, okPacket) {
-						if (err) {
-							res.json(err);
-						} else {
-							res.redirect("/admin/post?post_type=list");
-						}
-					});
+			Post.save(newPost).then(function (okPacket) {
+				var relationships1 = [okPacket.insertId, term_id1, 0];
+				var relationships2 = [okPacket.insertId, term_id2, 0];
+				var relations = [];
+				if (term_id1) {
+					relations.push(relationships1);
 				}
+				if (term_id2) {
+					relations.push(relationships2);
+				}
+				return TermRelationship.saveMulti(relations);
+			}).then(function (okPacket) {
+				res.redirect("/admin/post?post_type=list");
+			}).fail(function (err) {
+				res.render("admin/post_new", {"title": "Express", error: msg});
 			});
 		},
 		"/admin/post_category": function (req, res, next) {
@@ -110,28 +106,20 @@ exports.doPost = function () {
 				slug: slug,
 				term_group: 0
 			});
-
-			Term.save(newTerm, function (err, okPacket) {
-				if (err) {
-					req.session.error = err.errorCode;
-					res.redirect("/admin/post?post_type=category");
-				} else {
-					var newTaxonomy = new TermTaxonomy({
-						term_id: okPacket.insertId,
-						parent: parent,
-						description: description,
-						taxonomy: 'category',
-						count: 0
-					});
-					TermTaxonomy.save(newTaxonomy, function (err, okPacket) {
-						if (err) {
-							req.session.error = err.errorCode;
-							res.redirect("/admin/post?post_type=category");
-						} else {
-							res.redirect("/admin/post?post_type=category");
-						}
-					});
-				}
+			Term.save(newTerm).then(function (okPacket) {
+				var newTaxonomy = new TermTaxonomy({
+					term_id: okPacket.insertId,
+					parent: parent,
+					description: description,
+					taxonomy: 'category',
+					count: 0
+				});
+				return TermTaxonomy.save(newTaxonomy);
+			}).then(function () {
+				res.redirect("/admin/post?post_type=category");
+			}).fail(function (err) {
+				req.session.error = err.errorCode;
+				res.redirect("/admin/post?post_type=category");
 			});
 
 		},
@@ -145,29 +133,20 @@ exports.doPost = function () {
 				slug: slug,
 				term_group: 0
 			});
-
-			Term.save(newTerm, function (err, okPacket) {
-				if (err) {
-					console.log(err.message);
-					req.session.error = err.message;
-					res.redirect("/admin/post?post_type=tag");
-				} else {
-					var newTaxonomy = new TermTaxonomy({
-						term_id: okPacket.insertId,
-						description: description,
-						taxonomy: 'post_tag',
-						count: 0
-					});
-					TermTaxonomy.save(newTaxonomy, function (err, okPacket) {
-						if (err) {
-							req.session.error = err.message;
-							console.log(err.message);
-							res.redirect("/admin/post?post_type=tag");
-						} else {
-							res.redirect("/admin/post?post_type=tag");
-						}
-					});
-				}
+			Term.save(newTerm).then(function (okPacket) {
+				var newTaxonomy = new TermTaxonomy({
+					term_id: okPacket.insertId,
+					description: description,
+					taxonomy: 'post_tag',
+					count: 0
+				});
+				return TermTaxonomy.save(newTaxonomy);
+			}).then(function (okPacket) {
+				res.redirect("/admin/post?post_type=tag");
+			}).fail(function (err) {
+				console.log(err.message);
+				req.session.error = err.message;
+				res.redirect("/admin/post?post_type=tag");
 			});
 		}
 	};
