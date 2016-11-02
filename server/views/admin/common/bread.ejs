@@ -1,0 +1,15 @@
+<%
+ var page=locals.page;
+    if(page=="index") {
+        breadTip2 = "仪表盘";
+    }else if(page=="post") {
+        breadTip2="文章"
+    }else{
+        breadTip2 = "用户";
+    }
+  %>
+<ol class="breadcrumb">
+    <li><a href="/admin/index.c">Home</a></li>
+    <li><a href="#"><%= breadTip2 %></a></li>
+    <li class="active"><%= breadTip3 %></li>
+</ol>
