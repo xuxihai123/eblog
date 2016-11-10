@@ -30,11 +30,29 @@ TermTaxonomy.save = function save(termTaxonomy, callback) {
 };
 /**
  * @return promise
+ * @param term_id
+ * @param callback
+ */
+TermTaxonomy.delByTermId = function (term_id, callback) {
+	var sql = "delete * from wp_term_taxonomy where term_id=?";
+	return sqlhelp.query(sql,term_id);
+};
+/**
+ * @return promise
  * @param term_taxonomy_id
  * @param callback
  */
 TermTaxonomy.get = function get(term_taxonomy_id, callback) {
 	var sql = 'select * from wp_term_taxonomy where term_taxonomy_id=' + sqlhelp.escape(term_taxonomy_id);
+	return sqlhelp.query(sql);
+};
+/**
+ * @return promise
+ * @param term_taxonomy_id
+ * @param callback
+ */
+TermTaxonomy.getByTermId = function get(term_id, callback) {
+	var sql = 'select * from wp_term_taxonomy where term_id=' + sqlhelp.escape(term_id);
 	return sqlhelp.query(sql);
 };
 /**

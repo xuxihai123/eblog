@@ -20,7 +20,7 @@ exports.managerGet = function () {
 				Post.getPage(pageNum, pageSize).then(function (pageModel) {
 					req.pageModel = pageModel;
 					res.render("admin/post", {
-						user_type: "list",
+						post_type: "list",
 					});
 				}, function (err) {
 					error(err);
@@ -39,12 +39,13 @@ exports.managerGet = function () {
 					});
 
 			} else if (post_type == "category") {
-				Term.getAllCategory().then(function (list) {
-					req.termsList = list;
+				Q.all([Term.getAll(), Term.getPage(pageNum, pageSize)]).spread(function (allCategory, pageModel) {
+					req.allCategory = allCategory;
+					req.pageModel = pageModel;
 					res.render("admin/post", {
-						user_type: "category",
+						post_type: "category",
 					});
-				}, function (err) {
+				}).fail(function (err) {
 					error(err);
 				});
 			} else if (post_type == "tag") {
@@ -62,6 +63,29 @@ exports.managerGet = function () {
 			}
 		}
 	}
+};
+exports.doGet = function () {
+	return {
+		"/admin/delete_post": function (req, res, next) {
+			var post_id = req.query.postId;
+
+		},
+		"/admin/delete_category": function (req, res, next) {
+			var term_id = req.query.termId;
+			TermTaxonomy.getByTermId(term_id).then(function (termtaxonomy) {
+				if(termtaxonomy.count>0){
+
+				}else{
+
+				}
+			}).fail(function (err) {
+				error(err)
+			});
+			function error(msg) {
+				res.render("admin/post", {"title": "Express", error: msg});
+			}
+		}
+	};
 };
 exports.doPost = function () {
 	return {

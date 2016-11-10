@@ -1,3 +1,7 @@
+<%
+var pageModel = request.pageModel;
+var allCategory = request.allCategory;
+%>
 <div>
     <h3>分类目录</h3>
 </div>
@@ -20,7 +24,7 @@
 
                     <select name="parent">
                         <option value="">无</option>
-                        <% request.termsList.forEach(function(term){ %>
+                        <% allCategory.forEach(function(term){ %>
                         <option value="<%= term.term_id %>"><%= term.slug %></option>
                         <% }); %>
 
@@ -48,17 +52,46 @@
                 <th>总数</th>
                 </thead>
                 <tbody>
-                <% request.termsList.forEach(function(term){ %>
+                <% pageModel.recordList.forEach(function(term){ %>
                 <tr>
                     <td><%= term.name %></td>
                     <td><%= term.description %></td>
                     <td><%= term.slug %></td>
                     <td><%= term.count %></td>
+                    <td><a href="/admin/delete_category?termId=<%=term.term_id%>">删除</a></td>
                 </tr>
                 <% }); %>
 
                 </tbody>
             </table>
+            <div class="pull-right">
+                <div class="pagination">
+                    <ul>
+                        <!--prev-->
+                        <% if(pageModel.currentPage > 1){ %>
+
+                        <li><a href="/admin/post?post_type=category&pageNum=<%= pageModel.currentPage - 1 %>">Prev</a></li>
+                        <% }else{ %>
+                        <li class="disabled"><a href="#">Prev</a></li>
+                        <% } %>
+                        <!--middle-->
+                        <% for(var i = pageModel.beginPageIndex; i <= pageModel.endPageIndex; i++) { %>
+                        <% if((pageModel.currentPage == i)){ %>
+                        <li class="active"><a href="#"><%= i %></a></li>
+                        <% }else{ %>
+                        <li><a href="/admin/post?post_type=category&pageNum=<%= i %>&&pageSize=10"><%= i %></a></li>
+                        <% } %>
+                        <% } %>
+                        <!--next-->
+                        <% if(pageModel.currentPage < pageModel.pageCount){ %>
+                        <li><a href="/admin/post?post_type=category&pageNum=<%= pageModel.currentPage + 1 %>">Next</a></li>
+                        <% }else { %>
+                        <li class="disabled"><a href="#">Next</a></li>
+                        <% } %>
+                    </ul>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>

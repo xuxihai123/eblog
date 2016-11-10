@@ -16,7 +16,7 @@ function Term(term) {
 module.exports = Term;
 
 var sqlhelp = require("../utils/sqlHelper");
-
+var pagehelp = require("./pageHelper");
 /**
  * @return promise
  * @param term
@@ -25,6 +25,10 @@ var sqlhelp = require("../utils/sqlHelper");
 Term.save = function save(term, callback) {
 	var sql = "insert into wp_terms set ?";
 	return sqlhelp.query(sql, term);
+};
+Term.delCategory = function del(term_id, callback) {
+	var sql = "delete from wp_terms where term_id=?";
+	return sqlhelp.query(sql, term_id);
 };
 /**
  * @return promise
@@ -58,6 +62,10 @@ Term.getAllTag = function get(callback) {
 Term.getAll = function get(callback) {
 	var sql = "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id";
 	return sqlhelp.query(sql);
+};
+Term.getPage = function (pageNum, pageSize) {
+	var sql = "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id";
+	return pagehelp.getPageModel(pageNum, pageSize, sql);
 };
 /**
  *@return promise
