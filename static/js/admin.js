@@ -40,3 +40,47 @@ $(function () {
 
 	});
 });
+
+function deleteTerm(termid,count) {
+	if(count==0){
+		$("#modalDialog").modal();
+	}
+	var action = WPactions.deleteCategory(termid);
+	window.location.href = action;
+}
+
+(function (window) {
+
+	function stringReplace(template, params) {
+		var result = template, args;
+		for (var i = 0; i < params.length; i++) {
+			args = encodeURI(params[i]);
+			result = result.replace(/(\w+=)\?/, "$1" + args);
+		}
+		return result;
+	}
+
+	function formatAction(action, params) {
+		if (action && params) {
+			if (typeof params == "string") {
+				return stringReplace(action, [params]);
+			} else if (Array.isArray(params)) {
+				return stringReplace(action, params);
+			} else {
+				return action;
+			}
+		} else {
+			return action;
+		}
+	}
+
+
+	window.WPactions = {
+		deleteCategory: function (termId) {
+			return formatAction("/admin/delete_category?termId=?", termId);
+		},
+		deleteTag: function (termId) {
+			return formatAction("/admin/delete_category?termId=?", termId);
+		}
+	}
+})(window);

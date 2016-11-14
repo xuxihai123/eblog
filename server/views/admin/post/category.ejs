@@ -59,7 +59,7 @@ var allCategory = request.allCategory;
                         <td><%= term.description %></td>
                         <td><%= term.slug %></td>
                         <td><%= term.count %></td>
-                        <td><a href="/admin/delete_category?termId=<%=term.term_id%>">删除</a></td>
+                        <td><a href="#" onclick="deleteTerm('<%=term.term_id%>','<%=term.count%>')">删除</a></td>
                     </tr>
                     <% }); %>
 
