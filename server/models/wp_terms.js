@@ -63,9 +63,23 @@ Term.getAll = function get(callback) {
 	var sql = "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id";
 	return sqlhelp.query(sql);
 };
-Term.getPage = function (pageNum, pageSize) {
-	var sql = "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id";
-	return pagehelp.getPageModel(pageNum, pageSize, sql);
+/**
+ * @param offset
+ * @param limit
+ * @returns {*}
+ */
+Term.getTagPage = function (offset, limit) {
+	var sql = "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id and T2.taxonomy='post_tag'";
+	return pagehelp.getPageModel(offset, limit, sql);
+};
+/**
+ * @param offset
+ * @param limit
+ * @returns {*}
+ */
+Term.getCategoryPage = function (offset, limit) {
+	var sql = "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id and T2.taxonomy='category'";
+	return pagehelp.getPageModel(offset, limit, sql);
 };
 /**
  *@return promise
@@ -73,8 +87,8 @@ Term.getPage = function (pageNum, pageSize) {
  * @param callback
  */
 Term.delete = function (term_id, callback) {
-	var sql = "delete * from wp_terms where term_id='" + sqlhelp.escape(term_id) + "'";
-	return sqlhelp.query(sql);
+	var sql = "delete  from wp_terms where term_id=?";
+	return sqlhelp.query(sql,term_id);
 };
 
 

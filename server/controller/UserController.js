@@ -84,7 +84,14 @@ exports.login = function () {
 					var user = result[0];
 					if (user.user_pass == newUser.user_pass) {
 						req.session.user = user;
-						return res.redirect('/admin/index.c');//进入主页
+						res.json({
+							user_login: user.user_login,
+							display_name: user.display_name,
+							user_nicename: user.user_nicename,
+							user_email: user.user_email,
+							user_url: user.user_url,
+							user_status: user.user_status
+						});
 					} else {
 						req.session.error = "密码错误";
 						return res.redirect('/signin.c');//返回登录
@@ -106,12 +113,33 @@ exports.login = function () {
 exports.signout = function () {
 	return {
 		url: "/user/signout",
+		method: "post",
 		controller: function (req, res, next) {
 			var user = req.session.user;
 			if (user) {
 				req.session.user = undefined;
 			}
-			return res.redirect('/signin.c');//返回登录
+			res.json({
+				success: "ok",
+				loginStatus: "0"
+			});
+		}
+	};
+};
+exports.getInfo = function () {
+	return {
+		url: "/admin/getInfo",
+		method: "post",
+		controller: function (req, res, next) {
+			var user = req.session.user;
+			res.json({
+				user_login: user.user_login,
+				display_name: user.display_name,
+				user_nicename: user.user_nicename,
+				user_email: user.user_email,
+				user_url: user.user_url,
+				user_status: user.user_status
+			});
 		}
 	};
 };
@@ -191,6 +219,104 @@ exports.managerPost = function () {
 			}, function (err) {
 				res.json(err);
 			});
+		}
+	};
+};
+
+exports.doPost = function () {
+	return {
+		"/admin/userList.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var offset = req_pargs.offset || 0;
+			var limit = req_pargs.limit || 10;
+			User.getPage(offset, limit).then(function (pageModel) {
+				res.json(pageModel);
+			}, function (err) {
+				error(err);
+			});
+		},
+		"/admin/userinfo.do": function (req, res, next) {
+			var user_login = req.session.user.user_login;
+			User.get(user_login).then(function (result) {
+				req.user = result[0];
+				res.json(req.user);
+			}).fail(function (err) {
+				res.json(err);
+			});
+		},
+		"/admin/useradd.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var user_login = req_pargs.user_login;
+			var user_pass = req_pargs.user_pass;
+			var display_name = req_pargs.display_name;
+			var user_nicename = req_pargs.user_nicename;
+			var user_url = req_pargs.user_url;
+			var user_email = req_pargs.user_email;
+			var newUser = new User({
+				user_login: user_login,
+				user_pass: user_pass,
+				display_name: display_name,
+				user_nicename: user_nicename,
+				user_email: user_email,
+				user_url: user_url,
+			});
+			User.get(newUser.user_login).then(function (err, user) {
+				if (user && user.length > 0) {
+					res.json({
+						errorMessage: "用户已存在"
+					});
+				} else {
+					newUser.user_status = "0";
+					newUser.user_activation_key = dateutils.randomStr(16);
+					newUser.user_registered = dateutils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
+					//如果不存在则新增用户
+					User.save(newUser).then(function (result) {
+						//req.session.user = user;//用户信息存入 session
+						res.json({
+							"success": "ok",
+							"loginStatus": "1",
+						})
+					}).fail(function (err) {
+						res.json({
+							errorMessage: "添加出错"
+						});
+					});
+				}
+			}, function (err) {
+				res.json(err);
+			});
+		},
+		"/admin/delete_user.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var user_login = req_pargs.user_login;
+			User.get(user_login).then(function (users) {
+				if (users.length > 0) {
+					var user = users[0];
+					if (user.user_login == "admin" || user.user_login == "java_way") {
+						res.json({
+							errorMessage: "管理员用户不能删除"
+						});
+					} else {
+						User.delete(user_login).then(function (okPacket) {
+							res.json({
+								success: "ok",
+								loginStatus: "1"
+							});
+						}).fail(function (err) {
+							res.json(err);
+						});
+					}
+				} else {
+					res.json({
+						errorMessage: "用户不存在"
+					});
+				}
+			}).fail(function (err) {
+				error(err)
+			});
+			function error(msg) {
+				res.json(msg);
+			}
 		}
 	};
 };

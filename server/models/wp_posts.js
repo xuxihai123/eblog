@@ -137,15 +137,15 @@ Post.getAll = function get() {
  * @param pageSize
  * @returns promise(pageModel)
  */
-Post.getPage = function (pageNum, pageSize) {
+Post.getPage = function (offset, limit) {
 	var sql = "select * from wp_posts";
-	return pagehelp.getPageModel(pageNum, pageSize, sql);
+	return pagehelp.getPageModel(offset, limit, sql);
 };
 /**
  *@return promise
- * @param post_login
+ * @param post_id
  */
-Post.delete = function (post_login) {
-	var sql = "delete * from wp_posts where post_login='" + sqlhelp.escape(post_login) + "'";
-	return sqlhelp.query(sql);
+Post.delete = function (post_id) {
+	var sql = "delete  from wp_posts where ID=?";
+	return sqlhelp.query(sql,post_id);
 };

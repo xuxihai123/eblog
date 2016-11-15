@@ -3,35 +3,31 @@
 	var ng = angular.module("ng");
 
 	angular.extend(angular, {
-		isUndefined:function (value) {
+		isUndefined: function (value) {
 			return "undefined" == typeof value;
 		},
-		isEmpty:function(value) {
+		isEmpty: function (value) {
 			return angular.isUndefined(value) || "" === value || null === value || value !== value;
 		},
 
 	});
-	ng.config(["$provide", "$compileProvider",function ($provide, $compileProvider, $filterProvider) {
+	ng.config(["$provide", "$compileProvider", function ($provide, $compileProvider, $filterProvider) {
 
 		$provide.provider({
 			$remote: $remoteProvider
 		});
-		$compileProvider.directive({
-
-		});
+		$compileProvider.directive({});
 	}]);
 	function $remoteProvider() {
 		var service = {
 			errorTag: "$error",
 			config: {},
-			queue: 0,
-			clientMode: !1,
-			trsContext: null,
+			ServerContext: "",
 			getFailDataFn: null,
 			sendBeforeFn: null,
 			sendAfterFn: null,
 			setErrorCallback: function (fn) {
-				this.getFailDataFn = fn;
+				this.filterErrorFn = fn;
 			},
 			setSendBeforeFn: function (fn) {
 				this.sendBeforeFn = fn;
@@ -42,11 +38,8 @@
 			setErrorTag: function (tag) {
 				this.errorTag = tag;
 			},
-			setTrsContext: function (prefix) {
-				window.TRSCONTEXT = this.trsContext = prefix;
-			},
-			setClientMode: function (mode) {
-				window.CLIENTMODE = this.clientMode = mode;
+			setServerContext: function (prefix) {
+				window.ServerContent = this.ServerContext = prefix;
 			}
 		}, $minErr = angular.$$minErr("$remoteErr");
 		angular.extend(this, service);
@@ -54,13 +47,14 @@
 		this.$get = ['$http', '$log', function ($http, $log) {
 
 			var now = Date.now,
-					errorTag = this.errorTag,
-					getFailData = this.getFailDataFn;
+				that = this,
+				errorTag = this.errorTag,
+				filterErrorFn = this.filterErrorFn;
 
 			function preHandle(config) {
 				var url = config.url;
 				if (url.indexOf("/") != 0) {
-					config.url = this.TRSCONTEXT + '/' + url;
+					config.url = this.ServerContext + '/' + url;
 				}
 			}
 
@@ -73,7 +67,7 @@
 					//$referer: refer
 				});
 
-				preHandle.apply(this, [config]);
+				preHandle.apply(that, [config]);
 
 				var start = now();
 
@@ -101,7 +95,7 @@
 						if (errorFn) {
 							error = errorFn(data, status, headers, config);
 						} else {
-							error = getFailData && getFailData(data, status, headers, config);
+							error = filterErrorFn && filterErrorFn(data, status, headers, config);
 						}
 					}
 					if (error) {
@@ -117,7 +111,7 @@
 					if (errorFn) {
 						errorFn(data, status, headers, config);
 					} else {
-						getFailData && getFailData(data, status, headers, config);
+						filterErrorFn && filterErrorFn(data, status, headers, config);
 					}
 
 				}
@@ -237,15 +231,15 @@
 			}
 		};
 	}];
-	angular.module("ngRoute").directive(directive).run(["$route","$location", function ($route,$location) {
+	angular.module("ngRoute").directive(directive).run(["$route", "$location", function ($route, $location) {
 		function filterNgPage($locationEvent, newUrl, oldUrl) {
-			if(newUrl===oldUrl) { //刷新
+			if (newUrl === oldUrl) { //刷新
 				if (/\/vpage=(\d+)/.test(newUrl)) {
 					var reto = location.hash.substr(1).replace(/\/vpage=\d+/, "");
 					$location.path(reto);
 					return true;
 				}
-			}else{ //非刷新
+			} else { //非刷新
 				if (/\/vpage=(\d+)/.test(newUrl)) {
 					console.log("filter url for route");
 					return true;

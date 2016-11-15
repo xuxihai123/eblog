@@ -1,0 +1,8 @@
+.pagination > ul > li > a.disable {
+    color: #999;
+    cursor: default;
+}
+
+.form-horizontal .control-group input[type=text].ng-invalid, .form-horizontal .control-group input[type=password].ng-invalid, .form-horizontal .control-group select.ng-invalid {
+    border: 1px solid red;
+}

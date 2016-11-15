@@ -1,0 +1,49 @@
+<div oc-lazy-load="htmls/Post/PostAdd/PostAdd.js">
+	<div class="mainContent" ng-controller="PostAddCtrl" ng-init="startup()">
+		<div class="content_title">
+			<h3>撰写新文章</h3>
+		</div>
+		<div class="post">
+			<div class="container-fluid">
+				<div class="row-fluid">
+					<div class="span10">
+						<form class="form-horizontal" name="postnewForm" novalidate>
+							<div class="control-group">
+								<label for="post_title">标题*</label>
+								<input type="text" id="post_title" name="post_title" ng-model="post_title" required placeholder="标题">
+							</div>
+							<div class="control-group">
+								<label for="term_id1">分类目录</label>
+								<select id="term_id1" name="term_id1" ng-model="term_id1"
+								        ng-options="row.term_id as row.slug for row in allCategory" required>
+								</select>
+							</div>
+							<div class="control-group">
+								<label for="term_id2">添加标签</label>
+
+								<select id="term_id2" name="term_id2" ng-model="term_id2"
+								        ng-options="row.term_id as row.slug for row in allTag" required>
+								</select>
+
+							</div>
+							<div class="control-group">
+								<label for="post_content">内容*</label>
+
+								<div id="editormd">
+									<textarea id="post_content" name="post_content"></textarea>
+								</div>
+
+							</div>
+							<div class="text-center">
+								<button class="btn btn-primary" type="button" ng-click="postAdd()"
+								        ng-disabled="postnewForm.$invalid">submit
+								</button>
+							</div>
+							<div class="text-center"></div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

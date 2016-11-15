@@ -4,46 +4,46 @@
 		<li class="active">
 			<a class="level1 ">
 				<div class="menu-arrow"></div>
-				<div class="menu-image"><i class="icon-tags icon-white"></i></div>
+				<div class="menu-image"><i class="icon-tags icon-large "></i></div>
 				<div class="menu-name">仪表盘</div>
 			</a>
 		</li>
 		<li>
 			<a class="level1 ">
 				<div class="menu-arrow"></div>
-				<div class="menu-image"><i class="icon-edit icon-white"></i></div>
+				<div class="menu-image"><i class="icon-edit icon-large"></i></div>
 				<div class="menu-name">文章</div>
 			</a>
 			<ul class="menu-nav2 ">
-				<li><a class="level2">所有文章</a></li>
-				<li><a class="level2">写文章</a></li>
-				<li><a class="level2">分类目录</a></li>
-				<li><a class="level2">标签</a></li>
+				<li><a class="level2" ng-click="goto('/PostList')">所有文章</a></li>
+				<li><a class="level2" ng-click="goto('/PostAdd')">写文章</a></li>
+				<li><a class="level2" ng-click="goto('/PostCategory')">分类目录</a></li>
+				<li><a class="level2" ng-click="goto('/PostTag')">标签</a></li>
 			</ul>
 		</li>
 		<li>
 			<a class="level1 ">
 				<div class="menu-arrow"></div>
-				<div class="menu-image"><i class="icon-comment icon-white"></i></div>
+				<div class="menu-image"><i class="icon-comment icon-large"></i></div>
 				<div class="menu-name">评论</div>
 			</a>
 		</li>
 		<li>
 			<a class="level1 ">
 				<div class="menu-arrow"></div>
-				<div class="menu-image"><i class="icon-user icon-white"></i></div>
+				<div class="menu-image"><i class="icon-user icon-large"></i></div>
 				<div class="menu-name">用户</div>
 			</a>
 			<ul class="menu-nav2 ">
-				<li><a class="level2">所有用户</a></li>
-				<li><a class="level2">添加用户</a></li>
-				<li><a class="level2">我的个人资料</a></li>
+				<li><a class="level2" ng-click="goto('/UserList')">所有用户</a></li>
+				<li><a class="level2" ng-click="goto('/UserAdd')">添加用户</a></li>
+				<li><a class="level2" ng-click="goto('/UserInfo')">我的个人资料</a></li>
 			</ul>
 		</li>
 		<li>
 			<a class="level1 ">
 				<div class="menu-arrow"></div>
-				<div class="menu-image"><i class="icon-asterisk icon-white"></i></div>
+				<div class="menu-image"><i class="icon-asterisk icon-large"></i></div>
 				<div class="menu-name">设置</div>
 			</a>
 			<ul class="menu-nav2 ">
@@ -55,7 +55,7 @@
 		<li>
 			<a class="level1 menu-ctrl">
 				<div class="menu-arrow"></div>
-				<div class="menu-image"><i class="icon-circle-arrow-left icon-white"></i></div>
+				<div class="menu-image"><i class="icon-circle-arrow-left icon-large"></i></div>
 				<div class="menu-name">收起</div>
 			</a>
 		</li>

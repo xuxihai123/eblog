@@ -3,37 +3,37 @@
 		<ul class="toolbar-left">
 			<li>
 				<a class="logo" href="/user/about">
-					<i class=" icon-info-sign icon-white"></i>
+					<i class=" icon-info-sign icon-large"></i>
 				</a>
 			</li>
 
 			<li>
 				<a class="user">
-					<i class="  icon-home icon-white"></i>
+					<i class="icon-home icon-large"></i>
 				</a>
 			</li>
 			<li>
 				<a class="nice">
-					<i class=" icon-info-sign icon-white"></i>
+					<i class=" icon-info-sign icon-large"></i>
 					<span>昵称:xxxx</span>
 				</a>
 			</li>
 			<li>
 				<a class="email">
-					<i class=" icon-info-sign icon-white"></i>
-					<span>用户邮箱:xxxxx</span>
+					<i class=" icon-info-sign icon-large "></i>
+					<span>用户邮箱:{{$userinfo.user_email}}</span>
 				</a>
 			</li>
 		</ul>
 		<ul class="toolbar-right">
 			<li>
 				<a class="user">
-					<span>用户:bbbbb</span>
-					<i class="  icon-user icon-white"></i>
+					<span>用户:{{$userinfo.user_login}}</span>
+					<i class="  icon-user icon-large"></i>
 				</a>
 			</li>
 			<li>
-				<a class="logout" href="/user/signout">
+				<a class="logout" ng-click="logout()" href="">
 					<span>退出</span>
 				</a>
 			</li>

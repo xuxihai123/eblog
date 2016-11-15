@@ -1,0 +1,46 @@
+<div oc-lazy-load="htmls/Post/PostList/PostList.js">
+	<div class="mainContent" ng-controller="PostListCtrl" ng-init="startup()">
+		<div class="content_title">
+			<h3>文章列表</h3>
+		</div>
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span12">
+					<table class="table table-bordered  table-hover table-responsive">
+						<thead>
+						<tr>
+							<th>标题</th>
+							<th>作者</th>
+							<th>分类目录</th>
+							<th>标签</th>
+							<th>评论数</th>
+							<th>日期</th>
+							<th>操作</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr ng-repeat="post in pageModel.List">
+							<td><span ng-bind="post.post_title"></span></td>
+							<td><span ng-bind="post.post_author"></span></td>
+							<td><span ng-bind="post.post_type"></span></td>
+							<td><span ng-bind="post.menu_order"></span></td>
+							<td><span ng-bind="post.comment_count"></span></td>
+							<td><span ng-bind="post.post_date|date:'yyyy-MM-dd'"></span></td>
+							<td>
+								<a href="" ng-click="editPost(post)"><i class="icon-edit icon-large"></i></a>&nbsp;&nbsp;
+								<a href=""  ng-click="deletePost(post)"><i class="icon-remove icon-large"></i></a>
+							</td>
+
+						</tr>
+						</tbody>
+					</table>
+					<div class="pull-right">
+						<div ui-pager="pageModel" callback="doQuery"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+

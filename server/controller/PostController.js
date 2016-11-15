@@ -8,88 +8,53 @@ var Q = require("q");
  * @returns {Function}
  */
 //管理接口
-exports.managerGet = function () {
-	return {
-		url: "/admin/post",
-		controller: function (req, res, next) {
-			var post_type = req.query.post_type || "list";
-			var pageNum = parseInt(req.query.pageNum) || 1;
-			var pageSize = parseInt(req.query.pageSize) || 10;
-			req.session.error = null;
-			if (post_type == "list") {
-				Post.getPage(pageNum, pageSize).then(function (pageModel) {
-					req.pageModel = pageModel;
-					res.render("admin/post", {
-						post_type: "list",
-					});
-				}, function (err) {
-					error(err);
-				});
-			} else if (post_type == "addUI") {
-				Q.all([Term.getAllCategory(), Term.getAllTag()])
-					.spread(function (list1, list2) {
-						req.categoryList = list1;
-						req.tagList = list2;
-						res.render("admin/post", {
-							post_type: "addUI",
-						});
-					})
-					.fail(function (err) {
-						error(err);
-					});
-
-			} else if (post_type == "category") {
-				Q.all([Term.getAll(), Term.getPage(pageNum, pageSize)]).spread(function (allCategory, pageModel) {
-					req.allCategory = allCategory;
-					req.pageModel = pageModel;
-					res.render("admin/post", {
-						post_type: "category",
-					});
-				}).fail(function (err) {
-					error(err);
-				});
-			} else if (post_type == "tag") {
-				Term.getAllTag().then(function (list) {
-					req.termsList = list;
-					res.render("admin/post", {
-						user_type: "tag",
-					});
-				}, function (err) {
-					error(err);
-				});
-			}
-			function error(msg) {
-				res.render("admin/post", {"title": "Express", error: msg});
-			}
-		}
-	}
-};
-exports.doGet = function () {
-	return {
-		"/admin/delete_post": function (req, res, next) {
-			var post_id = req.query.postId;
-
-		},
-		"/admin/delete_category": function (req, res, next) {
-			var term_id = req.query.termId;
-			TermTaxonomy.getByTermId(term_id).then(function (termtaxonomy) {
-				if(termtaxonomy.count>0){
-
-				}else{
-
-				}
-			}).fail(function (err) {
-				error(err)
-			});
-			function error(msg) {
-				res.render("admin/post", {"title": "Express", error: msg});
-			}
-		}
-	};
-};
 exports.doPost = function () {
 	return {
-		"/admin/post_new": function (req, res, next) {
+		"/admin/postList.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var offset = req_pargs.offset || 0;
+			var limit = req_pargs.limit || 10;
+			Post.getPage(offset, limit).then(function (pageModel) {
+				res.json(pageModel);
+			}, function (err) {
+				error(err);
+			});
+		},
+		"/admin/postAllTag.do": function (req, res, next) {
+			Term.getAllTag().then(function (allTag) {
+				res.json(allTag);
+			}, function (err) {
+				error(err);
+			});
+		},
+		"/admin/postTagList.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var offset = req_pargs.offset || 0;
+			var limit = req_pargs.limit || 10;
+			Term.getTagPage(offset, limit).then(function (pageModel) {
+				res.json(pageModel);
+			}, function (err) {
+				error(err);
+			});
+		},
+		"/admin/postAllCategory.do": function (req, res, next) {
+			Term.getAllCategory().then(function (allCategory) {
+				res.json(allCategory);
+			}, function (err) {
+				error(err);
+			});
+		},
+		"/admin/postCategoryList.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var offset = req_pargs.offset || 0;
+			var limit = req_pargs.limit || 10;
+			Term.getCategoryPage(offset, limit).then(function (pageModel) {
+				res.json(pageModel);
+			}, function (err) {
+				error(err);
+			});
+		},
+		"/admin/post_new.do": function (req, res, next) {
 			var req_pargs = req.body;
 			var post_title = req_pargs.post_title;
 			var term_id1 = req_pargs.term_id1;
@@ -114,12 +79,15 @@ exports.doPost = function () {
 				}
 				return TermRelationship.saveMulti(relations);
 			}).then(function (okPacket) {
-				res.redirect("/admin/post?post_type=list");
+				res.json({
+					success: "ok",
+					loginStatus: "1"
+				});
 			}).fail(function (err) {
 				res.render("admin/post_new", {"title": "Express", error: msg});
 			});
 		},
-		"/admin/post_category": function (req, res, next) {
+		"/admin/post_category.do": function (req, res, next) {
 			var req_pargs = req.body;
 			var name = req_pargs.name;
 			var slug = req_pargs.slug;
@@ -140,14 +108,17 @@ exports.doPost = function () {
 				});
 				return TermTaxonomy.save(newTaxonomy);
 			}).then(function () {
-				res.redirect("/admin/post?post_type=category");
+				res.json({
+					success: "ok",
+					loginStatus: "1",
+				})
 			}).fail(function (err) {
 				req.session.error = err.errorCode;
 				res.redirect("/admin/post?post_type=category");
 			});
 
 		},
-		"/admin/post_tag": function (req, res, next) {
+		"/admin/post_tag.do": function (req, res, next) {
 			var req_pargs = req.body;
 			var name = req_pargs.name;
 			var slug = req_pargs.slug;
@@ -166,12 +137,81 @@ exports.doPost = function () {
 				});
 				return TermTaxonomy.save(newTaxonomy);
 			}).then(function (okPacket) {
-				res.redirect("/admin/post?post_type=tag");
+				res.json({
+					success: "ok",
+					loginStatus: "1"
+				});
 			}).fail(function (err) {
 				console.log(err.message);
 				req.session.error = err.message;
 				res.redirect("/admin/post?post_type=tag");
 			});
+		},
+		"/admin/delete_post.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var post_id = req_pargs.post_id;
+			Post.delete(post_id).then(function (okPacket) {
+				if (okPacket) {
+					res.json({
+						success: "ok",
+						loginStatus: "1"
+					});
+				}
+			}).fail(function (err) {
+				res.json(err);
+			});
+		},
+		"/admin/delete_category.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var term_id = req_pargs.term_id;
+			TermTaxonomy.getByTermId(term_id).then(function (termtaxonomy) {
+				var tempTermtax = termtaxonomy[0];
+				if (tempTermtax.count > 0) {
+					res.json({
+						errorMessage: "不能删除，该分类下的文章数不为0！"
+					});
+				} else {
+					Q.all([Term.delete(term_id), TermTaxonomy.delByTermId(term_id)]).then(function () {
+						res.json({
+							success: "ok",
+							loginStatus: "1"
+						});
+					}).fail(function (err) {
+						res.json(err);
+					})
+				}
+			}).fail(function (err) {
+				error(err)
+			});
+			function error(msg) {
+				res.json(msg);
+			}
+		},
+		"/admin/delete_tag.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var term_id = req_pargs.term_id;
+			TermTaxonomy.getByTermId(term_id).then(function (termtaxonomy) {
+				var tempTermtax = termtaxonomy[0];
+				if (tempTermtax.count > 0) {
+					res.json({
+						errorMessage: "不能删除，该分类下的文章数不为0！"
+					});
+				} else {
+					Q.all([Term.delete(term_id), TermTaxonomy.delByTermId(term_id)]).then(function () {
+						res.json({
+							success: "ok",
+							loginStatus: "1"
+						});
+					}).fail(function (err) {
+						res.json(err);
+					})
+				}
+			}).fail(function (err) {
+				error(err)
+			});
+			function error(msg) {
+				res.json(msg);
+			}
 		}
 	};
 };

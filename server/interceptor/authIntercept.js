@@ -26,11 +26,16 @@ function intercept(path, options) {
 		var session = req.session, now = new Date();
 		if (!session.user) { //user not login
 			req.session.error = "请您先登录!";
-			res.redirect("/signin.c");
+			res.json({
+				errorMessage: "请您先登录",
+				errorCode: "999999"
+			});
 		} else if (session.cookie && session.cookie.expires < now) { //session timeout
 			req.session.user = undefined;
-			req.session.error = "回话超时,请重新登录!";
-			res.redirect("/signin.c");
+			res.json({
+				errorMessage: "回话超时,请重新登录!",
+				errorCode: "999999"
+			});
 		} else {  //user login
 			next();
 		}

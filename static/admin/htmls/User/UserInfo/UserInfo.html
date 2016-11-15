@@ -1,0 +1,53 @@
+<div oc-lazy-load="htmls/User/UserInfo/UserInfo.js">
+	<div class="mainContent" ng-controller="UserInfoCtrl" ng-init="startup()">
+		<div class="content_title">
+			<h3>用户列表</h3>
+		</div>
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="span6 offset3">
+					<form class="form-horizontal" name="register" action="/user/signup" method="post">
+						<div class="control-group">
+							<label class="control-label" for="username">username</label>
+
+							<div class="controls">
+								<input type="text" id="user_login" name="user_login" ng-model="userinfo.user_login" placeholder="username">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="user_email">email</label>
+
+							<div class="controls">
+								<input type="text" id="user_email" name="user_email" ng-model="userinfo.user_email" >
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="user_nicename">nicename</label>
+
+							<div class="controls">
+								<input type="text" id="user_nicename" name="user_nicename" ng-model="userinfo.user_nicename">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="display_name">displayname</label>
+
+							<div class="controls">
+								<input type="text" id="display_name" name="display_name" ng-model="userinfo.display_name">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="user_url">url</label>
+
+							<div class="controls">
+								<input type="text" id="user_url" name="user_url" ng-model="userinfo.user_url">
+							</div>
+						</div>
+						<div class="text-center">
+							<button class="btn btn-primary" type="submit">submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

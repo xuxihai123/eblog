@@ -17,7 +17,7 @@
 			</div>
 			<h2>用户登录</h2>
 
-			<form class="form-horizontal" name="register" action="/user/signin" method="post">
+			<form class="form-horizontal" name="register">
 				<div class="box">
 					<div class="box-label text-right" for="username">用户：</div>
 					<div class="box-ctrl">
@@ -37,9 +37,11 @@
 					<div class="box-ctrl">
 						<div style="width: 220px">
 							<span><a href="/user/reset">请点击这里</a></span>
-							<span class="pull-right"><button class="btn btn-primary" style="background-color: #2D89EF"
-							                                 type="submit">登录
-							</button></span>
+							<span class="pull-right">
+								<button class="btn btn-primary" style="background-color: #2D89EF" type="button"
+								        onclick="doSubmit()">登录
+								</button>
+							</span>
 						</div>
 					</div>
 				</div>
@@ -51,5 +53,21 @@
 		</div>
 	</div>
 </div>
+<script src="lib/min/jquery-1.10.1.min.js"></script>
+<script type="text/javascript">
+	function doSubmit() {
+		var username = $("#user_login").val();
+		var password = $("#user_pass").val();
+		$.post("/user/signin", {
+			user_login: username,
+			user_pass: password,
+		}, function (data) {
+			if (data.user_login) {
+				window.location.href = "index.html";
+			}
+		});
+	}
+
+</script>
 </body>
 </html>

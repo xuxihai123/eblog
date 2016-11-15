@@ -36,6 +36,7 @@ function User(user) {
 module.exports = User;
 
 var sqlhelp = require("../utils/sqlHelper");
+var pagehelp = require("./pageHelper");
 User.save = function save(user, callback) {
 	var sql = "insert into wp_users set ?";
 	return sqlhelp.query(sql, user);
@@ -48,8 +49,22 @@ User.getAll = function get(callback) {
 	var sql = "select * from wp_users";
 	return sqlhelp.query(sql);
 };
+/**
+ * @return promise
+ * @param offset
+ * @param limit
+ */
+User.getPage = function (offset, limit) {
+	var sql = "select * from wp_users";
+	return pagehelp.getPageModel(offset, limit, sql);
+};
+/**
+ * @return promise
+ * @param user_login
+ * @param callback
+ */
 User.delete = function (user_login, callback) {
-	var sql = "delete * from wp_users where user_login=?";
+	var sql = "delete  from wp_users where user_login=?";
 	return sqlhelp.query(sql, [user_login]);
 };
 
