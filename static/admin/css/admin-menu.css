@@ -10,6 +10,12 @@
     border-top: 5px solid grey;
 }
 
+#adminmenu li > a:hover {
+    cursor: pointer;
+}
+#adminmenu .menu-nav2 li.active>a {
+    color: #ffffff;
+}
 .folded #adminmenu, .folded #adminmenu, .folded #adminmenuback, .folded #adminmenuwrap {
     width: 36px;
 }
