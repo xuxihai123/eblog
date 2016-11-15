@@ -126,6 +126,14 @@ Post.findArticleArchive = function () {
 };
 /**
  * @return promise
+ * @param word
+ */
+Post.findPostByWord = function (word) {
+	var sql = "select ID, post_title,post_status,post_date, from wp_posts  where post_title like %" + sqlhelp.escape(word) + "%";
+	return sqlhelp.query(sql);
+};
+/**
+ * @return promise
  *
  */
 Post.getAll = function get() {
@@ -147,5 +155,5 @@ Post.getPage = function (offset, limit) {
  */
 Post.delete = function (post_id) {
 	var sql = "delete  from wp_posts where ID=?";
-	return sqlhelp.query(sql,post_id);
+	return sqlhelp.query(sql, post_id);
 };

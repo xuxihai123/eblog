@@ -21,7 +21,7 @@ app.config(configRemote);
 
 app.run(["$rootScope", "$location", "$remote", "$cookieService", function ($rootScope, $location, $remote, $cookieService) {
 
-	$remote.post("admin/getInfo", {}, function (data) {
+	$remote.post("admin/getInfo.do", {}, function (data) {
 		if (data.errorCode == "999999") {
 			window.location.href = "login.html";
 		} else {
@@ -30,7 +30,7 @@ app.run(["$rootScope", "$location", "$remote", "$cookieService", function ($root
 	});
 }]);
 
-app.run(["$rootScope", "$location", "$remote", "$modal","$route", function ($rootScope, $location, $remote, $modal,$route) {
+app.run(["$rootScope", "$location", "$remote", "$modal", "$route", function ($rootScope, $location, $remote, $modal, $route) {
 
 	$rootScope.$on('$routeChangeStart', function (event, preparedRoute, lastRoute) {
 		$rootScope.$nextRouteWrapper = preparedRoute;
@@ -103,7 +103,7 @@ app.run(["$rootScope", "$location", "$remote", "$modal","$route", function ($roo
 			window.location = url;
 		}
 	};
-	$rootScope.routeRefresh=function() {
+	$rootScope.routeRefresh = function () {
 		$route.reload();
 	};
 	$rootScope.logout = function () {

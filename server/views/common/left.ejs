@@ -22,9 +22,9 @@
     <div class="sidebar-offcanvas">
         <div id="main-sidebar" class="widget-area" role="complementary">
             <aside id="search-2" class="widget widget_search">
-                <form method="get" id="searchform" action="#">
-                    <input type="text" class="field" name="s" id="s" placeholder="搜索">
-                    <button type="button" tabindex="-1"><i class="icon-search"></i></button>
+                <form method="get" id="searchform" action="/search">
+                    <input type="text" class="field" name="word" id="word" placeholder="搜索">
+                    <button type="submit" tabindex="-1"><i class="icon-search"></i></button>
                 </form>
             </aside>
             <aside id="recent-posts-2" class="widget widget_recent_entries">
@@ -56,7 +56,7 @@
                     <% request.articleArchList.forEach(function(arch){ %>
                     <%
                         var month = arch['month(post_date)'];
-                        if ((month+"").length == 1) {
+                        if ((month + "").length == 1) {
                             month = "0" + month;
                         }
                     %>

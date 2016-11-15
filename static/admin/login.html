@@ -64,6 +64,8 @@
 		}, function (data) {
 			if (data.user_login) {
 				window.location.href = "index.html";
+			}else{
+				$("#error").text(data.errorMessage);
 			}
 		});
 	}

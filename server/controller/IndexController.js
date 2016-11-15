@@ -30,6 +30,31 @@ exports.index = function () {
 		}
 	}
 };
+exports.search = function () {
+	return {
+		//url:/^\/(index|)\/?$/,
+		url: "/search",
+		controller: function (req, res, next) {
+			var word = req.query.word;
+			Q.all([Term.getAll(), Post.findArticleArchive(), Post.findPostByWord(word)])
+				.spread(function (termsList, articleArchList, searchPostList) {
+					req.termsList = termsList;
+					req.articleArchList = articleArchList;
+					req.searchPostList = searchPostList;
+					req.home = {
+						type: "index",
+						homeList: searchPostList
+					};
+					return res.render("index", {"title": "Express"});
+				}).fail(function (err) {
+				error('getAll error');
+			});
+			function error(msg) {
+				res.render("index", {"title": "Express", error: msg});
+			}
+		}
+	}
+};
 exports.indexArticle = function () {
 	return {
 		//url:/^\/(index|)\/?$/,

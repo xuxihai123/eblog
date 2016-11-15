@@ -93,14 +93,15 @@ exports.login = function () {
 							user_status: user.user_status
 						});
 					} else {
-						req.session.error = "密码错误";
-						return res.redirect('/signin.c');//返回登录
+						res.json({
+							errorMessage: "密码错误！"
+						});
 					}
 
 				} else {
-					//如果不存在
-					req.session.error = "用户不存在";
-					return res.redirect('/signin.c');//返回登录
+					res.json({
+						errorMessage: "用户不存在！"
+					});
 				}
 			}).fail(function (err) {
 				req.session.error = err;
@@ -126,11 +127,11 @@ exports.signout = function () {
 		}
 	};
 };
-exports.getInfo = function () {
+
+//管理接口
+exports.doPost = function () {
 	return {
-		url: "/admin/getInfo",
-		method: "post",
-		controller: function (req, res, next) {
+		"/admin/getInfo.do": function (req, res, next) {
 			var user = req.session.user;
 			res.json({
 				user_login: user.user_login,
@@ -140,91 +141,7 @@ exports.getInfo = function () {
 				user_url: user.user_url,
 				user_status: user.user_status
 			});
-		}
-	};
-};
-//管理接口
-exports.managerGet = function () {
-	return {
-		url: "/admin/user",
-		controller: function (req, res, next) {
-			var operate = req.query.user_type || "list";
-			if (operate == "list") {
-				User.getAll().then(function (list) {
-					req.usersList = list;
-					res.render("admin/user", {
-						user_type: "list",
-					});
-				}).fail(function (err) {
-					res.json(err);
-				});
-
-			} else if (operate == "addUI") {
-				res.render("admin/user", {
-					user_type: "addUI",
-				});
-			} else if (operate == "userinfo") {
-				var user_login = req.session.user.user_login;
-				User.get(user_login).then(function (result) {
-					req.user = result[0];
-					res.render("admin/user", {
-						user_type: "userinfo",
-					});
-				}).fail(function (err) {
-					res.json(err);
-				});
-			}
-
-		}
-	};
-};
-
-exports.managerPost = function () {
-	return {
-		url: "/admin/user_add",
-		method: "post",
-		controller: function (req, res, next) {
-			var req_pargs = req.body;
-			var user_login = req_pargs.user_login;
-			var user_pass = req_pargs.user_pass;
-			var display_name = req_pargs.display_name;
-			var user_nicename = req_pargs.user_nicename;
-			var user_url = req_pargs.user_url;
-			var user_email = req_pargs.user_email;
-			var newUser = new User({
-				user_login: user_login,
-				user_pass: user_pass,
-				display_name: display_name,
-				user_nicename: user_nicename,
-				user_email: user_email,
-				user_url: user_url,
-			});
-			User.get(newUser.user_login).then(function (err, user) {
-				if (user && user.length > 0) {
-					req.session.error = "用户已存在";
-					return res.redirect('/admin/user?user_type=addUI');//返回注册页
-				} else {
-					newUser.user_status = "0";
-					newUser.user_activation_key = dateutils.randomStr(16);
-					newUser.user_registered = dateutils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
-					//如果不存在则新增用户
-					User.save(newUser).then(function (result) {
-						//req.session.user = user;//用户信息存入 session
-						return res.redirect('/admin/user?user_type=list');//注册成功后返回主页
-					}).fail(function (err) {
-						req.session.error = "添加出错！";
-						return res.redirect('/admin/user?user_type=addUI');//注册失败返回主册页
-					});
-				}
-			}, function (err) {
-				res.json(err);
-			});
-		}
-	};
-};
-
-exports.doPost = function () {
-	return {
+		},
 		"/admin/userList.do": function (req, res, next) {
 			var req_pargs = req.body;
 			var offset = req_pargs.offset || 0;
@@ -252,6 +169,8 @@ exports.doPost = function () {
 			var user_nicename = req_pargs.user_nicename;
 			var user_url = req_pargs.user_url;
 			var user_email = req_pargs.user_email;
+			var md5 = crypto.createHash('md5');
+			user_pass = md5.update(user_pass).digest('hex');
 			var newUser = new User({
 				user_login: user_login,
 				user_pass: user_pass,
