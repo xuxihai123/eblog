@@ -70,7 +70,7 @@
             <aside id="categories-2" class="widget widget_categories">
                 <h3 class="widget-title">分类目录</h3>
                 <ul>
-                    <% request.termsList.forEach(function(temp){ %>
+                    <% request.categoryList.forEach(function(temp){ %>
                     <% if(temp.slug != "uncategorized"){ %>
                     <li class="cat-item cat-item-13"><a href="/category/<%= temp.slug %>"><%= temp.name %></a></li>
                     <% } %>

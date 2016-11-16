@@ -99,6 +99,11 @@ Post.findByCategory = function (category) {
 	return sqlhelp.query(sql, [category]);
 
 };
+Post.findByCategoryPage = function (category, offset, limit) {
+	var sql = 'select * from wp_terms as T1,wp_term_relationships as T2,wp_posts as T3 where T1.slug=? and T1.term_id=T2.term_taxonomy_id and T2.object_id=T3.ID';
+	sql = sqlhelp.format(sql, [category]);
+	return pagehelp.getPageModel(offset, limit, sql);
+};
 /**
  * @return promise
  * @param obj
@@ -110,11 +115,32 @@ Post.findByYearMonth = function (obj) {
 };
 /**
  * @return promise
+ * @param obj
+ * @param offset
+ * @param limit
+ * @returns {*}
+ */
+Post.findByYearMonthPage = function (obj, offset, limit) {
+	var sql = 'select *  from wp_posts where year(post_date)=? and month(post_date)=? and post_status=\'publish\'';
+	sql = sqlhelp.format(sql, [obj.year, obj.month]);
+	return pagehelp.getPageModel(offset, limit, sql);
+};
+/**
+ * @return promise
  *
  */
 Post.findNewestList = function () {
 	var sql = 'select ID, post_title,post_status,post_date,year(post_date),month(post_date),day(post_date) from wp_posts  where post_status=\'publish\' order by post_date desc limit 6';
 	return sqlhelp.query(sql);
+};
+/**
+ * @return promise
+ * @param offset
+ * @param limit
+ */
+Post.findNewestListPage = function (offset, limit) {
+	var sql = 'select ID, post_title,post_status,post_date,year(post_date),month(post_date),day(post_date) from wp_posts  where post_status=\'publish\' order by post_date desc';
+	return pagehelp.getPageModel(offset, limit, sql);
 };
 /**
  * @return promise
@@ -132,6 +158,18 @@ Post.findPostByWord = function (word) {
 	word = "%" + word + "%";
 	var sql = 'select ID, post_title,post_status,post_date from wp_posts  where post_title like ?';
 	return sqlhelp.query(sql, word);
+};
+/**
+ * @return promise
+ * @param word
+ * @param start
+ * @param limit
+ */
+Post.findPostByWordPage = function (word, offset, limit) {
+	word = "%" + word + "%";
+	var sql = 'select ID, post_title,post_status,post_date from wp_posts  where post_title like ?';
+	sql = sqlhelp.format(sql, [word]);
+	return pagehelp.getPageModel(offset, limit, sql);
 };
 /**
  * @return promise
@@ -164,5 +202,5 @@ Post.delete = function (post_id) {
  */
 Post.update = function (post) {
 	var sql = "update wp_posts set post_title = ?, post_content = ? where ID=?";
-	return sqlhelp.query(sql, [post.post_title,post.post_content,post.ID]);
+	return sqlhelp.query(sql, [post.post_title, post.post_content, post.ID]);
 };
