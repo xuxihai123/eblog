@@ -3,7 +3,7 @@ var Post = require("../models/wp_posts");
 var Term = require("../models/wp_terms");
 var Q = require('q');
 /**
- * add user
+ * 首页
  * @returns {Function}
  */
 exports.index = function () {
@@ -11,7 +11,9 @@ exports.index = function () {
 		//url:/^\/(index|)\/?$/,
 		url: "/",
 		controller: function (req, res, next) {
-			Q.all([Term.getAll(), Post.findArticleArchive(), Post.findNewestList()])
+			Q.all([Term.getAllCategory(),
+					Post.findArticleArchive(),
+					Post.findNewestList()])
 				.spread(function (termsList, articleArchList, postNewestList) {
 					req.termsList = termsList;
 					req.articleArchList = articleArchList;
@@ -30,17 +32,24 @@ exports.index = function () {
 		}
 	}
 };
+/**
+ * 关键字搜索
+ * @returns {{url: string, controller: controller}}
+ */
 exports.search = function () {
 	return {
-		//url:/^\/(index|)\/?$/,
 		url: "/search",
 		controller: function (req, res, next) {
 			var word = req.query.word;
-			Q.all([Term.getAll(), Post.findArticleArchive(), Post.findPostByWord(word)])
-				.spread(function (termsList, articleArchList, searchPostList) {
+			Q.all([Post.findPostByWord(word),
+					Term.getAllCategory(),
+					Post.findArticleArchive(),
+					Post.findNewestList()])
+				.spread(function (searchPostList, termsList, articleArchList, postNewestList) {
+					req.searchPostList = searchPostList;
 					req.termsList = termsList;
 					req.articleArchList = articleArchList;
-					req.searchPostList = searchPostList;
+					req.postNewestList = postNewestList;
 					req.home = {
 						type: "index",
 						homeList: searchPostList
@@ -55,6 +64,10 @@ exports.search = function () {
 		}
 	}
 };
+/**
+ * 阅读文章
+ * @returns {{url: RegExp, controller: controller}}
+ */
 exports.indexArticle = function () {
 	return {
 		//url:/^\/(index|)\/?$/,
@@ -71,7 +84,7 @@ exports.indexArticle = function () {
 			Q.all([Post.get(slug),
 					Post.getPrev(slug),
 					Post.getNext(slug),
-					Term.getAll(),
+					Term.getAllCategory(),
 					Post.findArticleArchive(),
 					Post.findNewestList()])
 				.spread(function (posts, prevPosts, nextPosts, termList, articleArchList, postNewestList) {
@@ -99,20 +112,21 @@ exports.indexArticle = function () {
 		}
 	}
 };
+/**
+ * 文章归档
+ * @returns {{url: RegExp, controller: controller}}
+ */
 exports.indexArchive = function () {
 	return {
 		//url:/^\/(index|)\/?$/,
 		url: /(\d{4})\/(\d{1,2})\/?$/,
 		controller: function (req, res, next) {
-			for (var key in req.params) {
-				console.log("key:" + key + ",value:" + req.params[key]);
-			}
 			var year = req.params[0];
 			var month = req.params[1];
-			Q.all([Post.findByYearMonth({
-					year: year,
-					month: month
-				}), Term.getAll(), Post.findArticleArchive(), Post.findNewestList()])
+			Q.all([Post.findByYearMonth({year: year, month: month}),
+					Term.getAllCategory(),
+					Post.findArticleArchive(),
+					Post.findNewestList()])
 				.spread(function (list1, list2, list3, list4) {
 					req.home = {
 						type: "archive",
@@ -135,6 +149,10 @@ exports.indexArchive = function () {
 		}
 	}
 };
+/**
+ * 分类归档
+ * @returns {{url: RegExp, controller: controller}}
+ */
 exports.indexCategory = function () {
 	return {
 		//url:/^\/(index|)\/?$/,
@@ -149,7 +167,10 @@ exports.indexCategory = function () {
 			if (pargs2) { //have children
 				console.log(pargs1 + "->" + pargs3);
 			} else {
-				Q.all([Post.findByCategory(pargs1), Term.getAll(), Post.findArticleArchive(), Post.findNewestList()])
+				Q.all([Post.findByCategory(pargs1),
+						Term.getAllCategory(),
+						Post.findArticleArchive(),
+						Post.findNewestList()])
 					.spread(function (list1, list2, list3, list4) {
 						req.home = {
 							type: "category",

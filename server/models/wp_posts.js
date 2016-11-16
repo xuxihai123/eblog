@@ -129,8 +129,9 @@ Post.findArticleArchive = function () {
  * @param word
  */
 Post.findPostByWord = function (word) {
-	var sql = "select ID, post_title,post_status,post_date, from wp_posts  where post_title like %" + sqlhelp.escape(word) + "%";
-	return sqlhelp.query(sql);
+	word = "%" + word + "%";
+	var sql = 'select ID, post_title,post_status,post_date from wp_posts  where post_title like ?';
+	return sqlhelp.query(sql, word);
 };
 /**
  * @return promise
@@ -156,4 +157,12 @@ Post.getPage = function (offset, limit) {
 Post.delete = function (post_id) {
 	var sql = "delete  from wp_posts where ID=?";
 	return sqlhelp.query(sql, post_id);
+};
+/**
+ * @return promise
+ * @param post
+ */
+Post.update = function (post) {
+	var sql = "update wp_posts set post_title = ?, post_content = ? where ID=?";
+	return sqlhelp.query(sql, [post.post_title,post.post_content,post.ID]);
 };

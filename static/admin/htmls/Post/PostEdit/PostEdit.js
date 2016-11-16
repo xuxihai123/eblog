@@ -1,6 +1,19 @@
-PostAddCtrl.$inject = ["$scope", "$remote"];
-function PostAddCtrl($scope, $remote) {
+PostEditCtrl.$inject = ["$scope", "$remote", "$routeParams"];
+function PostEditCtrl($scope, $remote, $routeParams) {
 	$scope.startup = function () {
+		if ($routeParams.PostId) {
+			$scope.PostId = $routeParams.PostId;
+			$scope.editFlag = true;
+			var pargs = {
+				post_id: $scope.PostId
+			};
+			$remote.post("admin/get_post.do", pargs, function (data) {
+				$scope.post_title = data.post_title;
+				$scope.term_id1 = data.term_id1;
+				$scope.term_id2 = data.term_id2;
+				$("#post_content").val(data.post_content);
+			});
+		}
 		$remote.post("admin/postAllCategory.do", {}, function (data) {
 			$scope.allCategory = data;
 		});
@@ -8,7 +21,7 @@ function PostAddCtrl($scope, $remote) {
 			$scope.allTag = data;
 		});
 		var testEditor = editormd("editormd", {
-			width: "90%",
+			width: "auto",
 			height: 640,
 			syncScrolling: "single",
 			path: "lib/plugins/editor/",
@@ -21,31 +34,14 @@ function PostAddCtrl($scope, $remote) {
 			searchReplace: true,
 			watch: false,                // 关闭实时预览
 			htmlDecode: "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启
-			//toolbar  : false,             //关闭工具栏
-			//previewCodeHighlight : false, // 关闭预览 HTML 的代码块高亮，默认开启
 			taskList: true,
-			toolbarIcons: function () {
-				// Or return editormd.toolbarModes[name]; // full, simple, mini
-				return ["undo", "redo", "|", "bold", "hr", "||", "watch", "fullscreen", "preview", "testIcon"];
-			},
 			imageUpload: true,
 			imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
 			imageUploadURL: "./php/upload.php",
-			onfullscreen: function () {
-				console.log('fullscreen');
-				$("body").addClass("editor-fullscreen");
-				$("#subbtn").hide();
-			},
-
-			onfullscreenExit: function () {
-				console.log('onfullscreenExit');
-				$("body").removeClass("editor-fullscreen");
-				$("#subbtn").show();
-			}
 		});
 	};
 
-	$scope.postAdd = function () {
+	$scope.postEdit = function () {
 		var post_content = $("#post_content").val();
 		if (!post_content) {
 			$scope.$alert({
@@ -59,11 +55,12 @@ function PostAddCtrl($scope, $remote) {
 			term_id2: $scope.term_id2,
 			post_content: post_content,
 		};
-		$remote.post("admin/post_new.do", pargs, function (data) {
+		pargs.post_id = $scope.PostId;
+		$remote.post("admin/edit_post.do", pargs, function (data) {
 			if (data.success == "ok") {
 				$scope.$alert({
-					title: "添加成功！",
-					content: "添加文章成功！",
+					title: "修改成功！",
+					content: "修改文章成功！",
 					ok: function () {
 						$scope.routeRefresh();
 					}

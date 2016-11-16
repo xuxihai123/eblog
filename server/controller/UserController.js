@@ -129,7 +129,7 @@ exports.signout = function () {
 };
 
 //管理接口
-exports.doPost = function () {
+exports.doAjax = function () {
 	return {
 		"/admin/getInfo.do": function (req, res, next) {
 			var user = req.session.user;

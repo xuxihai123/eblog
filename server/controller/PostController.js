@@ -8,7 +8,7 @@ var Q = require("q");
  * @returns {Function}
  */
 //管理接口
-exports.doPost = function () {
+exports.doAjax = function () {
 	return {
 		"/admin/postList.do": function (req, res, next) {
 			var req_pargs = req.body;
@@ -212,6 +212,42 @@ exports.doPost = function () {
 			function error(msg) {
 				res.json(msg);
 			}
+		},
+		"/admin/get_post.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var post_id = req_pargs.post_id;
+			Post.get(post_id).then(function (postList) {
+				if (postList.length > 0) {
+					res.json(postList[0]);
+				} else {
+					res.json({
+						errorMessage: "文章不存在"
+					});
+				}
+			}).fail(function (err) {
+				error(err)
+			});
+			function error(msg) {
+				res.json(msg);
+			}
+		},
+		"/admin/edit_post.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var post_id = req_pargs.post_id;
+			var post_title = req_pargs.post_title;
+			var post_content = req_pargs.post_content;
+			Post.update({
+				ID: post_id,
+				post_title: post_title,
+				post_content: post_content
+			}).then(function (okPacket) {
+				res.json({
+					success: "ok",
+					loginStatus: "1"
+				});
+			}).fail(function (err) {
+				res.render("admin/post_new", {"title": "Express", error: msg});
+			});
 		}
 	};
 };

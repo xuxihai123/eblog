@@ -15,9 +15,15 @@ function PostListCtrl($scope, $remote) {
 				capacity: data.recordCount,
 				List: data.recordList
 			};
-		})
+		});
+		$scope.range = {
+			offset: offset,
+			limit: limit,
+		};
 	};
-
+	$scope.editPost = function (post) {
+		$scope.goto("/PostEdit/" + post.ID);
+	};
 	$scope.deletePost = function (post) {
 		$scope.$confirm({
 			title: "警告!",
@@ -28,7 +34,10 @@ function PostListCtrl($scope, $remote) {
 				};
 				$remote.post("admin/delete_post.do", pargs, function (data) {
 					if (data.success == "ok") {
-						$scope.routeRefresh();
+						if($scope.pageModel.List.length==1){
+							$scope.range.offset = $scope.range.offset - $scope.range.limit;
+						}
+						$scope.doQuery($scope.range.offset, $scope.range.limit);
 					}
 				});
 			}

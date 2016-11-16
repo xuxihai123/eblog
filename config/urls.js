@@ -13,15 +13,15 @@ exports.config = function (app) {
 			if (key == "doGet") { //注册多个get
 				var routes = controller[key]();
 				for (var key2 in routes) {
-					if(routes.hasOwnProperty(key2)){
+					if (routes.hasOwnProperty(key2)) {
 						app.get(key2, routes[key2]);
 						console.log("doGet register router:" + key2 + ",method:get");
 					}
 				}
-			} else if (key == "doPost") {//注册多个post
+			} else if (key == "doPost" || key == "doAjax") {//注册多个post
 				var routes = controller[key]();
 				for (var key2 in routes) {
-					if(routes.hasOwnProperty(key2)){
+					if (routes.hasOwnProperty(key2)) {
 						app.post(key2, routes[key2]);
 						console.log("do Post register router:" + key2 + ",method:get");
 					}

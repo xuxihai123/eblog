@@ -36,6 +36,9 @@ app.run(["$rootScope", "$location", "$remote", "$modal", "$route", function ($ro
 		$rootScope.$nextRouteWrapper = preparedRoute;
 		$rootScope.$lastRouteWrapper = lastRoute;
 		$rootScope.$currentRoute = preparedRoute && preparedRoute.$$route;
+		if($rootScope.$currentRoute&&$rootScope.$currentRoute.originalPath){
+			$rootScope.$Bread = getBread($rootScope.$currentRoute.originalPath);
+		}
 	});
 
 	$rootScope.$confirm = function (message) {

@@ -2,41 +2,51 @@
 	<div id="sub-wrapper">
 		<ul class="toolbar-left">
 			<li>
-				<a class="logo" href="/user/about">
-					<i class=" icon-info-sign icon-large"></i>
-				</a>
-			</li>
-
-			<li>
-				<a class="user">
+				<a class="user level1" href="">
 					<i class="icon-home icon-large"></i>
+					<span>x373241884y</span>
 				</a>
 			</li>
 			<li>
-				<a class="nice">
-					<i class=" icon-info-sign icon-large"></i>
-					<span>昵称:xxxx</span>
+				<a class="email level1" href="">
+					<i class="icon-folder-open-alt icon-large "></i>
+					<span>快捷通道</span>
 				</a>
-			</li>
-			<li>
-				<a class="email">
-					<i class=" icon-info-sign icon-large "></i>
-					<span>用户邮箱:{{$userinfo.user_email}}</span>
-				</a>
+				<ul class="toolbar-sub" style="display: none">
+					<li><a class="level2" ng-click="goto('/PostAdd')">写文章</a></li>
+					<li><a class="level2" ng-click="goto('/PostCategory')">添加分类</a></li>
+					<li><a class="level2" ng-click="goto('/PostTag')">添加书签</a></li>
+					<li><a class="level2" ng-click="goto('/UserList')">所有用户</a></li>
+					<li><a class="level2" ng-click="goto('/UserInfo')">个人资料</a></li>
+				</ul>
+
 			</li>
 		</ul>
 		<ul class="toolbar-right">
 			<li>
-				<a class="user">
-					<span>用户:{{$userinfo.user_login}}</span>
+				<a class="user level1" href="">
 					<i class="  icon-user icon-large"></i>
+					<span>{{$userinfo.user_login}}</span>
 				</a>
+				<ul class="toolbar-sub" style="display: none">
+					<li><a class="level2" ng-click="goto('/UserInfo')">编辑个人</a></li>
+					<li><a class="level2" ng-click="logout()">登出</a></li>
+				</ul>
 			</li>
 			<li>
-				<a class="logout" ng-click="logout()" href="">
+				<a class="logout level1" ng-click="logout()" href="">
+					<i class="icon-off icon-large"></i>
 					<span>退出</span>
 				</a>
 			</li>
 		</ul>
 	</div>
 </div>
+<script type="text/javascript">
+	$("#sub-wrapper>ul>li").hover(function () {
+				$(this).find("ul").show();
+			},
+			function () {
+				$(this).find("ul").hide();
+			});
+</script>

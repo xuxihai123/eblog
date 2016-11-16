@@ -130,3 +130,30 @@ body {
 #admincontent .mainContent .content_title {
     padding: 0px 20px;
 }
+
+body.editor-fullscreen #header {
+    height: 0px;
+    z-index: -1;
+}
+
+body.editor-fullscreen #footer {
+    height: 0px;
+    z-index: -1;
+}
+
+#sub-wrapper .toolbar-sub {
+    display: block;
+    list-style: none;
+    width: 100%;
+    position: absolute;
+    z-index: 100;
+    background-color: gray;
+}
+
+#sub-wrapper .toolbar-sub li > a:hover {
+    background-color: #555;
+}
+
+#sub-wrapper .toolbar-sub li {
+    width: 100%;
+}
