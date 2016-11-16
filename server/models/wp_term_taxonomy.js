@@ -39,6 +39,23 @@ TermTaxonomy.delByTermId = function (term_id, callback) {
 };
 /**
  * @return promise
+ * @param termTaxonomy
+ * @param callback
+ */
+TermTaxonomy.updateCategory = function save(termTaxonomy) {
+	var sql = "update wp_term_taxonomy set description = ?, parent = ? where term_id=?";
+	return sqlhelp.query(sql, [termTaxonomy.description,termTaxonomy.parent,termTaxonomy.term_id]);
+};
+/**
+ * @return promise
+ * @param termTaxonomy
+ */
+TermTaxonomy.updateTag = function save(termTaxonomy) {
+	var sql = "update wp_term_taxonomy set description = ? where term_id=?";
+	return sqlhelp.query(sql, [termTaxonomy.description,termTaxonomy.term_id]);
+};
+/**
+ * @return promise
  * @param term_taxonomy_id
  * @param callback
  */

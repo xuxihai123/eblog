@@ -19,12 +19,42 @@ function PostTagCtrl($scope, $remote, $location) {
 	};
 
 	$scope.postTag = function () {
+		if($scope.editFlag){
+			$scope.editTag();
+		}else{
+			var pargs = {
+				name: $scope.name,
+				slug: $scope.slug,
+				description: $scope.description,
+			};
+			$remote.post("admin/post_tag.do", pargs, function (data) {
+				if (data.success == "ok") {
+					$scope.$alert({
+						title: "success",
+						content: "success",
+						ok: function () {
+							$scope.routeRefresh();
+						}
+					});
+				}
+			});
+		}
+	};
+	$scope.editTagPre=function(row) {
+		$scope.editFlag = true;
+		$scope.term_id = row.term_id;
+		$scope.name = row.name;
+		$scope.slug = row.slug;
+		$scope.description = row.description;
+	};
+	$scope.editTag=function() {
 		var pargs = {
 			name: $scope.name,
 			slug: $scope.slug,
 			description: $scope.description,
 		};
-		$remote.post("admin/post_tag.do", pargs, function (data) {
+		pargs.term_id = $scope.term_id;
+		$remote.post("admin/edit_tag.do", pargs, function (data) {
 			if (data.success == "ok") {
 				$scope.$alert({
 					title: "success",
@@ -36,7 +66,6 @@ function PostTagCtrl($scope, $remote, $location) {
 			}
 		});
 	};
-
 	$scope.deleteTag = function (row) {
 		if (row.count != 0) {
 			$scope.$confirm({

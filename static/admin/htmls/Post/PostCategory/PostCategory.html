@@ -6,8 +6,11 @@
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="span4">
-					<div><h4>添加新分类目录</h4></div>
-					<form class="form-horizontal" name="categoryForm" action="/admin/post_category" method="post">
+					<div><h4>
+						<span ng-show="!editFlag">添加新分类目录</span>
+						<span ng-show="editFlag">编辑分类目录</span>
+					</h4></div>
+					<form class="form-horizontal" name="categoryForm" novalidate>
 						<div class="control-group">
 							<label>名称</label>
 							<input type="text" name="name" ng-model="name" required placeholder="这将是它在站点上显示的名字">
@@ -21,6 +24,7 @@
 							<label>父节点</label>
 							<select name="parent" ng-model="parent"
 							        ng-options="row.term_id as row.slug for row in allCategory">
+								<option value="">请选择</option>
 							</select>
 						</div>
 						<div class="control-group">
@@ -51,7 +55,7 @@
 							<td><span ng-bind="row.description"></span></td>
 							<td><span ng-bind="row.slug"></span></td>
 							<td><span ng-bind="row.count"></span></td>
-							<td><a href="" ng-click="editCategory(row)"><i class="icon-edit icon-large"></i></a>&nbsp;&nbsp;<a
+							<td><a href="" ng-click="editCategoryPre(row)"><i class="icon-edit icon-large"></i></a>&nbsp;&nbsp;<a
 									href="" ng-click="deleteCategory(row)"><i class="icon-remove icon-large"></i></a></td>
 						</tr>
 						</tbody>

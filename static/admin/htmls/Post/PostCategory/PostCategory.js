@@ -21,14 +21,45 @@ function PostCategoryCtrl($scope, $remote, $location) {
 		})
 	};
 
-	$scope.postCategory = function (row) {
+	$scope.postCategory = function () {
+		if($scope.editFlag){
+			$scope.editCategory();
+		}else{
+			var pargs = {
+				name: $scope.name,
+				slug: $scope.slug,
+				parent: $scope.parent,
+				description: $scope.description,
+			};
+			$remote.post("admin/post_category.do", pargs, function (data) {
+				$scope.$alert({
+					title: "success",
+					content: "success",
+					ok: function () {
+						$scope.routeRefresh();
+					}
+				});
+			});
+		}
+	};
+
+	$scope.editCategoryPre = function (row) {
+		$scope.editFlag = true;
+		$scope.name=row.name;
+		$scope.slug=row.slug;
+		$scope.parent=row.parent;
+		$scope.description=row.description;
+		$scope.term_id=row.term_id;
+	};
+	$scope.editCategory=function() {
 		var pargs = {
 			name: $scope.name,
 			slug: $scope.slug,
 			parent: $scope.parent,
 			description: $scope.description,
 		};
-		$remote.post("admin/post_category.do", pargs, function (data) {
+		pargs.term_id = $scope.term_id;
+		$remote.post("admin/edit_category.do", pargs, function (data) {
 			$scope.$alert({
 				title: "success",
 				content: "success",
@@ -37,10 +68,6 @@ function PostCategoryCtrl($scope, $remote, $location) {
 				}
 			});
 		});
-	};
-
-	$scope.editCategory = function (row) {
-
 	};
 	$scope.deleteCategory = function (row) {
 		if (row.count != 0) {

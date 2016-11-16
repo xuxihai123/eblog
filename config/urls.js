@@ -20,12 +20,14 @@ exports.config = function (app) {
 				}
 			} else if (key == "doPost" || key == "doAjax") {//注册多个post
 				var routes = controller[key]();
+				console.log(key+" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start");
 				for (var key2 in routes) {
 					if (routes.hasOwnProperty(key2)) {
 						app.post(key2, routes[key2]);
 						console.log("do Post register router:" + key2 + ",method:get");
 					}
 				}
+				console.log(key+" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> end");
 			} else {
 				var small_router = controller[key]();
 				var url;

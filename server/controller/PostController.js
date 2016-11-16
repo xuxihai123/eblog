@@ -231,6 +231,24 @@ exports.doAjax = function () {
 				res.json(msg);
 			}
 		},
+		"/admin/get_category.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var post_id = req_pargs.post_id;
+			Post.get(post_id).then(function (postList) {
+				if (postList.length > 0) {
+					res.json(postList[0]);
+				} else {
+					res.json({
+						errorMessage: "文章分类不存在"
+					});
+				}
+			}).fail(function (err) {
+				error(err)
+			});
+			function error(msg) {
+				res.json(msg);
+			}
+		},
 		"/admin/edit_post.do": function (req, res, next) {
 			var req_pargs = req.body;
 			var post_id = req_pargs.post_id;
@@ -247,6 +265,70 @@ exports.doAjax = function () {
 				});
 			}).fail(function (err) {
 				res.render("admin/post_new", {"title": "Express", error: msg});
+			});
+		},
+		"/admin/edit_category.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var term_id = req_pargs.term_id;
+			var name = req_pargs.name;
+			var slug = req_pargs.slug;
+			var parent = req_pargs.parent;
+			var description = req_pargs.description;
+			if(!term_id){
+				res.json({
+					errorMessage: "term_id>>>?X?????"
+				});
+			}
+			Q.all([
+				Term.update({
+					term_id: term_id,
+					name: name,
+					slug: slug
+				}),
+				TermTaxonomy.updateCategory({
+					term_id: term_id,
+					parent: parent,
+					description: description
+				})]).spread(function (okPacket1, okPacket2) {
+				res.json({
+					success: "ok",
+					loginStatus: "1",
+				});
+			}).fail(function (err) {
+				res.json({
+					errorMessage: JSON.stringify(err)
+				});
+			});
+		},
+		"/admin/edit_tag.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var term_id = req_pargs.term_id;
+			var name = req_pargs.name;
+			var slug = req_pargs.slug;
+			var description = req_pargs.description;
+			if(!term_id){
+				res.json({
+					errorMessage: "term_id>>>?X?????"
+				});
+			}
+			Q.all([
+				Term.update({
+					term_id: term_id,
+					name: name,
+					slug: slug
+				}),
+				TermTaxonomy.updateTag({
+					term_id: term_id,
+					description: description
+				})]).spread(function (okPacket1, okPacket2) {
+				res.json({
+					success: "ok",
+					loginStatus: "1",
+				});
+			}).fail(function (err) {
+				res.json({
+					errorMessage: JSON.stringify(err)
+				});
 			});
 		}
 	};

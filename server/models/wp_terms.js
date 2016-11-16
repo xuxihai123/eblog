@@ -26,9 +26,23 @@ Term.save = function save(term, callback) {
 	var sql = "insert into wp_terms set ?";
 	return sqlhelp.query(sql, term);
 };
+/**
+ * @return promise
+ * @param term_id
+ * @param callback
+ */
 Term.delCategory = function del(term_id, callback) {
 	var sql = "delete from wp_terms where term_id=?";
 	return sqlhelp.query(sql, term_id);
+};
+/**
+ * @return promise
+ * @param term
+ * @param callback
+ */
+Term.update = function save(term, callback) {
+	var sql = "update wp_terms set name = ?, slug = ? where term_id=?";
+	return sqlhelp.query(sql, [term.name,term.slug,term.term_id]);
 };
 /**
  * @return promise
