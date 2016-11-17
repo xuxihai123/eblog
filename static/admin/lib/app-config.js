@@ -3,6 +3,17 @@ var app = angular.module("app", [
 	"oc.lazyLoad",
 	"ui.bootstrap",
 ]);
+/**
+ * 系统错误分类
+ * 9开头为系统及服务器错误
+ * 6开头业务逻辑错误
+ *
+ * @type {string[]}
+ */
+configLog.$inject = ["$logProvider"];
+function configLog($logProvider) {
+	$logProvider.debugEnabled(true);
+}
 
 configRemote.$inject = ["$remoteProvider"];
 function configRemote($remoteProvider) {
@@ -11,12 +22,21 @@ function configRemote($remoteProvider) {
 			return true;
 		}
 	});
+	$remoteProvider.setSendBeforeFn(function(config) {
+		console.log('setSendBeforeFn');
+	});
+	$remoteProvider.setSendAfterFn(function (config) {
+		console.log('setSendAfterFn');
+	});
 	$remoteProvider.setErrorCallback(function (data, status, headers, config) {
-		if (data.errorCode == "999999") {
+		if (data.errorCode == "999999") { //会话超时或未登录
 			window.location.href = "login.html";
+		}else if(data.errorCode=="600404"){
+
 		}
 	});
 }
+app.config(configLog);
 app.config(configRemote);
 
 app.run(["$rootScope", "$location", "$remote", "$cookieService", function ($rootScope, $location, $remote, $cookieService) {

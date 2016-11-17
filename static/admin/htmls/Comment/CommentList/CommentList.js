@@ -15,20 +15,29 @@ function CommentListCtrl($scope, $remote) {
 				capacity: data.recordCount,
 				List: data.recordList
 			};
-		})
+		});
+		$scope.range = {
+			offset: offset,
+			limit: limit,
+		};
 	};
-
-	$scope.deleteUser = function (row) {
+	$scope.editComment = function (row) {
+		$scope.goto('/CommentApprove/' + row.comment_ID);
+	};
+	$scope.deleteComment = function (row) {
 		$scope.$confirm({
 			title: "警告!",
 			content: "文章删除不可恢复!",
 			ok: function () {
 				var pargs = {
-					user_login: row.user_login
+					comment_ID: row.comment_ID
 				};
-				$remote.post("admin/delete_user.do", pargs, function (data) {
+				$remote.post("admin/delete_comment.do", pargs, function (data) {
 					if (data.success == "ok") {
-						$scope.routeRefresh();
+						if ($scope.pageModel.List.length == 1) {
+							$scope.range.offset = $scope.range.offset - $scope.range.limit;
+						}
+						$scope.doQuery($scope.range.offset, $scope.range.limit);
 					}
 				});
 			}

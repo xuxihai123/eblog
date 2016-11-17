@@ -27,11 +27,8 @@ exports.index = function () {
 					};
 					return res.render("index", {"title": "Express"});
 				}).fail(function (err) {
-				error('getAll error');
+				res.errorProxy("SqlException", err);
 			});
-			function error(msg) {
-				res.render("index", {"title": "Express", error: msg});
-			}
 		}
 	}
 };
@@ -60,11 +57,8 @@ exports.search = function () {
 					};
 					return res.render("index", {"title": "Express"});
 				}).fail(function (err) {
-				error('getAll error');
+				res.errorProxy("SqlException", err);
 			});
-			function error(msg) {
-				res.render("index", {"title": "Express", error: msg});
-			}
 		}
 	}
 };
@@ -105,11 +99,8 @@ exports.indexArticle = function () {
 					return res.render("index", {"title": "Express"});
 				})
 				.fail(function (err) {
-					error(JSON.stringify(err));
+					res.errorProxy("SqlException", err);
 				});
-			function error(msg) {
-				res.render("index", {"title": "Express", error: msg});
-			}
 		}
 	}
 };
@@ -143,12 +134,8 @@ exports.indexArchive = function () {
 					res.render("index", {"title": "Express"});
 				})
 				.fail(function (err) {
-					error(JSON.stringify(err));
+					res.errorProxy("SqlException", err);
 				});
-
-			function error(msg) {
-				res.render("index", {"title": "Express", error: msg});
-			}
 		}
 	}
 };
@@ -170,7 +157,7 @@ exports.indexCategory = function () {
 			if (pargs2) { //have children
 				console.log(pargs1 + "->" + pargs3);
 			} else {
-				Q.all([Post.findByCategoryPage(pargs1,offset,limit),
+				Q.all([Post.findByCategoryPage(pargs1, offset, limit),
 						Term.getAllCategory(),
 						Post.findArticleArchive(),
 						Post.findNewestList()])
@@ -186,13 +173,8 @@ exports.indexCategory = function () {
 						res.render("index", {"title": "Express"});
 					})
 					.fail(function (err) {
-						error(JSON.stringify(err));
+						res.errorProxy("SqlException", err);
 					});
-			}
-
-
-			function error(msg) {
-				res.render("index", {"title": "Express", error: msg});
 			}
 		}
 	}

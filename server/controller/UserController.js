@@ -100,6 +100,7 @@ exports.login = function () {
 
 				} else {
 					res.json({
+						errorCode: "600404",
 						errorMessage: "用户不存在！"
 					});
 				}
@@ -149,7 +150,7 @@ exports.doAjax = function () {
 			User.getPage(offset, limit).then(function (pageModel) {
 				res.json(pageModel);
 			}, function (err) {
-				error(err);
+				res.errorProxy("SqlException", err);
 			});
 		},
 		"/admin/userinfo.do": function (req, res, next) {
@@ -196,13 +197,11 @@ exports.doAjax = function () {
 							"loginStatus": "1",
 						})
 					}).fail(function (err) {
-						res.json({
-							errorMessage: "添加出错"
-						});
+						res.errorProxy("SqlException", err);
 					});
 				}
 			}, function (err) {
-				res.json(err);
+				res.errorProxy("SqlException", err);
 			});
 		},
 		"/admin/delete_user.do": function (req, res, next) {
@@ -212,8 +211,8 @@ exports.doAjax = function () {
 				if (users.length > 0) {
 					var user = users[0];
 					if (user.user_login == "admin" || user.user_login == "java_way") {
-						res.json({
-							errorMessage: "管理员用户不能删除"
+						res.errorProxy("SqlException", {
+							errorMessage:"管理员用户不能删除"
 						});
 					} else {
 						User.delete(user_login).then(function (okPacket) {
@@ -222,20 +221,18 @@ exports.doAjax = function () {
 								loginStatus: "1"
 							});
 						}).fail(function (err) {
-							res.json(err);
+							res.errorProxy("SqlException", err);
 						});
 					}
 				} else {
 					res.json({
+						errorCode: "600404",
 						errorMessage: "用户不存在"
 					});
 				}
 			}).fail(function (err) {
-				error(err)
+				res.errorProxy("SqlException", err);
 			});
-			function error(msg) {
-				res.json(msg);
-			}
 		}
 	};
 };

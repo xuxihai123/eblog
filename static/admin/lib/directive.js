@@ -1,20 +1,5 @@
 (function (window, angular) {
 	var app = angular.module("app");
-	app.directive("uiDatePicker", ["$filter", function ($filter) {
-
-		return {
-			restrict: 'A',
-			require: 'ngModel',
-			link: function (scope, element, attrs, ctrl) {
-				console.log(attrs.vModel);
-				console.log(attrs.ngModel);
-			}
-		};
-	}]);
-})(window, angular);
-
-(function (window, angular) {
-	var app = angular.module("app");
 	app.directive("uiSlideToggle", function () {
 		return {
 			restrict: 'A',

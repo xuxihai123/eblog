@@ -17,14 +17,14 @@ exports.doAjax = function () {
 			Post.getPage(offset, limit).then(function (pageModel) {
 				res.json(pageModel);
 			}, function (err) {
-				error(err);
+				res.errorProxy("SqlException", err);
 			});
 		},
 		"/admin/postAllTag.do": function (req, res, next) {
 			Term.getAllTag().then(function (allTag) {
 				res.json(allTag);
 			}, function (err) {
-				error(err);
+				res.errorProxy("SqlException", err);
 			});
 		},
 		"/admin/postTagList.do": function (req, res, next) {
@@ -34,14 +34,14 @@ exports.doAjax = function () {
 			Term.getTagPage(offset, limit).then(function (pageModel) {
 				res.json(pageModel);
 			}, function (err) {
-				error(err);
+				res.errorProxy("SqlException", err);
 			});
 		},
 		"/admin/postAllCategory.do": function (req, res, next) {
 			Term.getAllCategory().then(function (allCategory) {
 				res.json(allCategory);
 			}, function (err) {
-				error(err);
+				res.errorProxy("SqlException", err);
 			});
 		},
 		"/admin/postCategoryList.do": function (req, res, next) {
@@ -51,7 +51,7 @@ exports.doAjax = function () {
 			Term.getCategoryPage(offset, limit).then(function (pageModel) {
 				res.json(pageModel);
 			}, function (err) {
-				error(err);
+				res.errorProxy("SqlException", err);
 			});
 		},
 		"/admin/post_new.do": function (req, res, next) {
@@ -84,7 +84,7 @@ exports.doAjax = function () {
 					loginStatus: "1"
 				});
 			}).fail(function (err) {
-				res.render("admin/post_new", {"title": "Express", error: msg});
+				res.errorProxy("SqlException", err);
 			});
 		},
 		"/admin/post_category.do": function (req, res, next) {
@@ -113,8 +113,7 @@ exports.doAjax = function () {
 					loginStatus: "1",
 				})
 			}).fail(function (err) {
-				req.session.error = err.errorCode;
-				res.redirect("/admin/post?post_type=category");
+				res.errorProxy("SqlException", err);
 			});
 
 		},
@@ -142,9 +141,7 @@ exports.doAjax = function () {
 					loginStatus: "1"
 				});
 			}).fail(function (err) {
-				console.log(err.message);
-				req.session.error = err.message;
-				res.redirect("/admin/post?post_type=tag");
+				res.errorProxy("SqlException", err);
 			});
 		},
 		"/admin/delete_post.do": function (req, res, next) {
@@ -158,7 +155,7 @@ exports.doAjax = function () {
 					});
 				}
 			}).fail(function (err) {
-				res.json(err);
+				res.errorProxy("SqlException", err);
 			});
 		},
 		"/admin/delete_category.do": function (req, res, next) {
@@ -177,15 +174,12 @@ exports.doAjax = function () {
 							loginStatus: "1"
 						});
 					}).fail(function (err) {
-						res.json(err);
+						res.errorProxy("SqlException", err);
 					})
 				}
 			}).fail(function (err) {
-				error(err)
+				res.errorProxy("SqlException", err);
 			});
-			function error(msg) {
-				res.json(msg);
-			}
 		},
 		"/admin/delete_tag.do": function (req, res, next) {
 			var req_pargs = req.body;
@@ -203,15 +197,12 @@ exports.doAjax = function () {
 							loginStatus: "1"
 						});
 					}).fail(function (err) {
-						res.json(err);
-					})
+						res.errorProxy("SqlException", err);
+					});
 				}
 			}).fail(function (err) {
-				error(err)
+				res.errorProxy("SqlException", err);
 			});
-			function error(msg) {
-				res.json(msg);
-			}
 		},
 		"/admin/get_post.do": function (req, res, next) {
 			var req_pargs = req.body;
@@ -221,15 +212,13 @@ exports.doAjax = function () {
 					res.json(postList[0]);
 				} else {
 					res.json({
+						errorCode: "600404",
 						errorMessage: "文章不存在"
 					});
 				}
 			}).fail(function (err) {
-				error(err)
+				res.errorProxy("SqlException", err);
 			});
-			function error(msg) {
-				res.json(msg);
-			}
 		},
 		"/admin/get_category.do": function (req, res, next) {
 			var req_pargs = req.body;
@@ -239,15 +228,13 @@ exports.doAjax = function () {
 					res.json(postList[0]);
 				} else {
 					res.json({
+						errorCode: "600404",
 						errorMessage: "文章分类不存在"
 					});
 				}
 			}).fail(function (err) {
-				error(err)
+				res.errorProxy("SqlException", err);
 			});
-			function error(msg) {
-				res.json(msg);
-			}
 		},
 		"/admin/edit_post.do": function (req, res, next) {
 			var req_pargs = req.body;
@@ -264,7 +251,7 @@ exports.doAjax = function () {
 					loginStatus: "1"
 				});
 			}).fail(function (err) {
-				res.render("admin/post_new", {"title": "Express", error: msg});
+				res.errorProxy("SqlException", err);
 			});
 		},
 		"/admin/edit_category.do": function (req, res, next) {
@@ -274,7 +261,7 @@ exports.doAjax = function () {
 			var slug = req_pargs.slug;
 			var parent = req_pargs.parent;
 			var description = req_pargs.description;
-			if(!term_id){
+			if (!term_id) {
 				res.json({
 					errorMessage: "term_id>>>?X?????"
 				});
@@ -295,9 +282,7 @@ exports.doAjax = function () {
 					loginStatus: "1",
 				});
 			}).fail(function (err) {
-				res.json({
-					errorMessage: JSON.stringify(err)
-				});
+				res.errorProxy("SqlException", err);
 			});
 		},
 		"/admin/edit_tag.do": function (req, res, next) {
@@ -306,7 +291,7 @@ exports.doAjax = function () {
 			var name = req_pargs.name;
 			var slug = req_pargs.slug;
 			var description = req_pargs.description;
-			if(!term_id){
+			if (!term_id) {
 				res.json({
 					errorMessage: "term_id>>>?X?????"
 				});
@@ -326,9 +311,7 @@ exports.doAjax = function () {
 					loginStatus: "1",
 				});
 			}).fail(function (err) {
-				res.json({
-					errorMessage: JSON.stringify(err)
-				});
+				res.errorProxy("SqlException", err);
 			});
 		}
 	};

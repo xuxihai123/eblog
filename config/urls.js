@@ -1,7 +1,8 @@
 var fs = require("fs");
 var path = require("path");
 var viewUtils = require("../server/utils/viewUtils");
-exports.config = function (app) {
+var errorProxy = require("../server/utils/errorProxy");
+exports.configRoute = function (app) {
 	var setting = app.myset;
 	var ctrls_path = setting.contrlllers_path, ctrl_path, controller;
 
@@ -20,14 +21,14 @@ exports.config = function (app) {
 				}
 			} else if (key == "doPost" || key == "doAjax") {//注册多个post
 				var routes = controller[key]();
-				console.log(key+" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start");
+				console.log(key + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start");
 				for (var key2 in routes) {
 					if (routes.hasOwnProperty(key2)) {
 						app.post(key2, routes[key2]);
 						console.log("do Post register router:" + key2 + ",method:get");
 					}
 				}
-				console.log(key+" >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> end");
+				console.log(key + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> end");
 			} else {
 				var small_router = controller[key]();
 				var url;
@@ -51,6 +52,9 @@ exports.config = function (app) {
 //重写render方法，给所有的render view添加request,response,session
 function rewriteRender(app) {
 	var render = app.response.render;
+	app.response.errorProxy = function (exceptType, error) {
+		errorProxy.apply(this, [exceptType, error]);
+	};
 	app.response.render = function (view, options, callback) {
 		var res, req, session, done;
 		res = this;
@@ -76,7 +80,7 @@ function rewriteRender(app) {
 	};
 }
 
-exports.autoproxy = function (app) {
+exports.autoproxyView = function (app) {
 	rewriteRender(app);
 
 	app.use(function (req, res, next) {

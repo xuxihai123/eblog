@@ -2,6 +2,22 @@ var Comment = require("../models/wp_comments");
 var util = require("../utils/dateutils");
 var Q = require("q");
 
+exports.doGet = function () {
+	return {
+		"/comment/commentlistByPostId": function (req, res, next) {
+			var req_pargs = req.body;
+			var post_id = req_pargs.post_id;
+			var offset = req_pargs.offset || 0;
+			var limit = req_pargs.limit || 10;
+			Comment.getPageByPostId(post_id, offset, limit).then(function (pageModel) {
+				res.json(pageModel);
+			}, function (err) {
+				error(err);
+			});
+		}
+	}
+};
+
 exports.doPost = function () {
 	return {
 		"/comment/post_comment.do": function (req, res, next) {
@@ -56,5 +72,53 @@ exports.doAjax = function () {
 				error(err);
 			});
 		},
+		"/admin/get_comment.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var comment_ID = req_pargs.comment_ID;
+			Comment.get(comment_ID).then(function (commentList) {
+				if (commentList.length > 0) {
+					res.json(commentList[0]);
+				} else {
+					res.json({
+						errorCode: "600404",
+						errorMessage: "没有找到该条评论"
+					});
+				}
+			}).fail(function (err) {
+				throw err;
+			});
+		},
+		"/admin/commentApprove.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var comment_ID = req_pargs.comment_ID;
+			var comment_approved = req_pargs.comment_approved;
+			Comment.updateByApprove({
+				comment_ID: comment_ID,
+				comment_approved: comment_approved
+			}).then(function (okPacket) {
+				res.json({
+					success: "ok",
+					loginStatus: "1"
+				});
+			}).fail(function (err) {
+				res.json({
+					errorMessage: JSON.stringify(err)
+				});
+			});
+		},
+		"/admin/delete_comment.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var comment_ID = req_pargs.comment_ID;
+			Comment.delete(comment_ID).then(function (okPacket) {
+				res.json({
+					success: "ok",
+					loginStatus: "1"
+				});
+			}).fail(function (err) {
+				res.json({
+					errorMessage: err
+				});
+			});
+		}
 	}
 };

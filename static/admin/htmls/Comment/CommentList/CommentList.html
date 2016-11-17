@@ -16,12 +16,12 @@
 					<tbody>
 					<tr ng-repeat="row in pageModel.List">
 						<td><span ng-bind="row.comment_author"></span></td>
-						<td><span ng-bind="row.comment_content"></span></td>
+						<td><span ng-bind="row.comment_content|cut:30"></span></td>
 						<td><span ng-bind="row.comment_parent"></span></td>
 						<td><span ng-bind="row.comment_date|date:'yyyy-MM-dd HH:mm:ss'"></span></td>
 						<td>
-							<a href="" ng-click="editUser(row)"><i class="icon-edit icon-large"></i></a>&nbsp;&nbsp;
-							<a href="" ng-click="deleteUser(row)"><i class="icon-remove icon-large"></i></a>
+							<a href="" ng-click="editComment(row)"><i class="icon-edit icon-large"></i></a>&nbsp;&nbsp;
+							<a href="" ng-click="deleteComment(row)"><i class="icon-remove icon-large"></i></a>
 						</td>
 
 					</tr>

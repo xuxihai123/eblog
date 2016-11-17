@@ -83,8 +83,8 @@
 				}, {
 					"ActionName": "评论审核",
 					"Level": "2",
-					"NodeName": "CommentListx",
-					"RouteUrl": "/CommentListx/:PostId"
+					"NodeName": "CommentApprove",
+					"RouteUrl": "/CommentApprove/:CommentId"
 				}
 			]
 		}

@@ -29,7 +29,7 @@ function Comment(comment) {
 	this.comment_date_gmt = comment.comment_date_gmt || "0000-00-00 00:00:00";
 	this.comment_content = comment.comment_content;
 	this.comment_karma = comment.comment_karma || 0;
-	this.comment_approved = comment.comment_approved || 1;
+	this.comment_approved = comment.comment_approved || 0;
 	this.comment_agent = comment.comment_agent;
 	this.comment_type = comment.comment_type || "";
 	this.comment_parent = comment.comment_parent || 0;
@@ -39,13 +39,30 @@ module.exports = Comment;
 
 var sqlhelp = require("../utils/sqlHelper");
 var pagehelp = require("./pageHelper");
+/**
+ * @return promise
+ * @param comment
+ */
 Comment.save = function save(comment) {
 	var sql = "insert into wp_comments set ?";
 	return sqlhelp.query(sql, comment);
 };
-Comment.get = function get(user_login, callback) {
-	var sql = 'select * from wp_comments where user_login=?';
-	return sqlhelp.query(sql, [user_login]);
+/**
+ * @return promise
+ * @param comment
+ */
+Comment.updateByApprove = function updateByApprove(comment) {
+	var sql = "update wp_comments set comment_approved = ? where comment_ID=?";
+	return sqlhelp.query(sql, [comment.comment_approved, comment.comment_ID]);
+};
+/**
+ * @return promise
+ * @param comment_ID
+ * @param callback
+ */
+Comment.get = function get(comment_ID, callback) {
+	var sql = 'select * from wp_comments where comment_ID=?';
+	return sqlhelp.query(sql, [comment_ID]);
 };
 Comment.getAll = function get(callback) {
 	var sql = "select * from wp_comments";
@@ -60,13 +77,15 @@ Comment.getPage = function (offset, limit) {
 	var sql = "select * from wp_comments";
 	return pagehelp.getPageModel(offset, limit, sql);
 };
-Comment.getPageByPost = function (offset, limit) {
-	var sql = "select * from wp_comments";
+
+Comment.getPageByPostId = function (post_id, offset, limit) {
+	var sql = "select * from wp_comments where comment_post_ID=?";
+	sql = sqlhelp.format(sql, [post_id]);
 	return pagehelp.getPageModel(offset, limit, sql);
 };
 /**
  * @return promise
- * @param user_login
+ * @param comment_ID
  * @param callback
  */
 Comment.delete = function (comment_ID, callback) {
