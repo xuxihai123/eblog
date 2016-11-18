@@ -14,7 +14,17 @@ exports.doAjax = function () {
 			var req_pargs = req.body;
 			var offset = req_pargs.offset || 0;
 			var limit = req_pargs.limit || 10;
-			Post.getPage(offset, limit).then(function (pageModel) {
+			Post.getPostPage(offset, limit).then(function (pageModel) {
+				res.json(pageModel);
+			}, function (err) {
+				res.errorProxy("SqlException", err);
+			});
+		},
+		"/admin/pageList.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var offset = req_pargs.offset || 0;
+			var limit = req_pargs.limit || 10;
+			Post.getPageList(offset, limit).then(function (pageModel) {
 				res.json(pageModel);
 			}, function (err) {
 				res.errorProxy("SqlException", err);
@@ -79,6 +89,27 @@ exports.doAjax = function () {
 				}
 				return TermRelationship.saveMulti(relations);
 			}).then(function (okPacket) {
+				res.json({
+					success: "ok",
+					loginStatus: "1"
+				});
+			}).fail(function (err) {
+				res.errorProxy("SqlException", err);
+			});
+		},
+		"/admin/page_new.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var post_title = req_pargs.post_title;
+			var post_content = req_pargs.post_content;
+			var newPost = new Post({
+				post_author: req.session.user.ID,
+				post_title: post_title,
+				post_content: post_content,
+				post_date: new Date(),
+				post_date_gmt: new Date()
+			});
+			newPost.post_type = "page";
+			Post.save(newPost).then(function (okPacket) {
 				res.json({
 					success: "ok",
 					loginStatus: "1"

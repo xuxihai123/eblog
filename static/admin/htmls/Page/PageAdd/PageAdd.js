@@ -1,37 +1,67 @@
 PageAddCtrl.$inject = ["$scope", "$remote"];
 function PageAddCtrl($scope, $remote) {
 	$scope.startup = function () {
-		$scope.doQuery(0, 10);
+		var testEditor = editormd("editormd", {
+			width: "90%",
+			height: 640,
+			syncScrolling: "single",
+			path: "lib/plugins/editor/",
+			theme: "default",
+			previewTheme: "default",
+			editorTheme: "default",
+			codeFold: true,
+			//syncScrolling : false,
+			saveHTMLToTextarea: true,    // 保存 HTML 到 Textarea
+			searchReplace: true,
+			watch: false,                // 关闭实时预览
+			htmlDecode: "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启
+			//toolbar  : false,             //关闭工具栏
+			//previewCodeHighlight : false, // 关闭预览 HTML 的代码块高亮，默认开启
+			taskList: true,
+			toolbarIcons: function () {
+				// Or return editormd.toolbarModes[name]; // full, simple, mini
+				return ["undo", "redo", "|", "bold", "hr", "||", "watch", "fullscreen", "preview", "testIcon"];
+			},
+			imageUpload: true,
+			imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+			imageUploadURL: "./php/upload.php",
+			onfullscreen: function () {
+				console.log('fullscreen');
+				$("body").addClass("editor-fullscreen");
+				$("#subbtn").hide();
+			},
+
+			onfullscreenExit: function () {
+				console.log('onfullscreenExit');
+				$("body").removeClass("editor-fullscreen");
+				$("#subbtn").show();
+			}
+		});
 	};
 
-	$scope.doQuery = function (offset, limit) {
-		$remote.post("admin/PageAdd.do", {
-			offset: offset,
-			limit: limit
-		}, function (data) {
-			$scope.pageModel = {
-				offset: data.offset,
-				limit: data.limit,
-				capacity: data.recordCount,
-				List: data.recordList
-			};
-		})
-	};
-
-	$scope.deleteUser = function (row) {
-		$scope.$confirm({
-			title: "警告!",
-			content: "文章删除不可恢复!",
-			ok: function () {
-				var pargs = {
-					user_login: row.user_login
-				};
-				$remote.post("admin/delete_user.do", pargs, function (data) {
-					if (data.success == "ok") {
+	$scope.pageNew = function () {
+		var post_content = $("#post_content").val();
+		if (!post_content) {
+			$scope.$alert({
+				title: "错误！",
+				content: "请填写文章内容！"
+			});
+		}
+		var pargs = {
+			post_title: $scope.post_title,
+			post_content: post_content,
+		};
+		$remote.post("admin/page_new.do", pargs, function (data) {
+			if (data.success == "ok") {
+				$scope.$alert({
+					title: "添加成功！",
+					content: "添加页面成功！",
+					ok: function () {
 						$scope.routeRefresh();
 					}
 				});
 			}
 		});
+
 	};
 }

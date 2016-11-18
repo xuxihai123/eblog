@@ -1,34 +1,34 @@
 <div oc-lazy-load="htmls/Page/PageAdd/PageAdd.js">
 	<div class="mainContent" ng-controller="PageAddCtrl" ng-init="startup()">
 		<div class="content_title">
-			<h3>用户列表</h3>
+			<h3>编辑页面 </h3>
 		</div>
-		<div class="container-fluid">
-			<div class="user-list">
-				<table class="table table-bordered">
-					<thead>
-					<th>用户名</th>
-					<th>电子邮件</th>
-					<th>角色</th>
-					<th>用户状态</th>
-					<th>操作</th>
-					</thead>
-					<tbody>
-					<tr ng-repeat="row in pageModel.List">
-						<td><span ng-bind="row.user_login"></span></td>
-						<td><span ng-bind="row.user_email"></span></td>
-						<td><span ng-bind="row.display_name"></span></td>
-						<td><span ng-bind="row.user_status"></span></td>
-						<td>
-							<a href="" ng-click="editUser(row)"><i class="icon-edit icon-large"></i></a>&nbsp;&nbsp;
-							<a href="" ng-click="deleteUser(row)"><i class="icon-remove icon-large"></i></a>
-						</td>
+		<div class="post">
+			<div class="container-fluid">
+				<div class="row-fluid">
+					<div class="span10">
+						<form class="form-horizontal" name="postnewForm" novalidate>
+							<div class="control-group">
+								<label for="post_title">标题*</label>
+								<input type="text" id="post_title" name="post_title" ng-model="post_title" required
+								       placeholder="标题">
+							</div>
+							<div class="control-group">
+								<label for="post_content">内容*</label>
 
-					</tr>
-					</tbody>
-				</table>
-				<div class="pull-right">
-					<div ui-pager="pageModel" callback="doQuery"></div>
+								<div id="editormd">
+									<textarea id="post_content" name="post_content"></textarea>
+								</div>
+
+							</div>
+							<div class="text-center" id="subbtn">
+								<button class="btn btn-primary" type="button" ng-click="pageNew()"
+								        ng-disabled="postnewForm.$invalid">submit
+								</button>
+							</div>
+							<div class="text-center"></div>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>

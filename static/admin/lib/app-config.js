@@ -22,17 +22,26 @@ function configRemote($remoteProvider) {
 			return true;
 		}
 	});
-	$remoteProvider.setSendBeforeFn(function(config) {
+	$remoteProvider.setSendBeforeFn(function (config) {
 		console.log('setSendBeforeFn');
 	});
 	$remoteProvider.setSendAfterFn(function (config) {
 		console.log('setSendAfterFn');
 	});
 	$remoteProvider.setErrorCallback(function (data, status, headers, config) {
+		var $rootScope = angular.element("body").scope();
 		if (data.errorCode == "999999") { //会话超时或未登录
 			window.location.href = "login.html";
-		}else if(data.errorCode=="600404"){
-
+		} else if (data.errorCode == "591000") {
+			$rootScope.$alert({
+				title: "数据库操作异常！",
+				content: data.errorMessage
+			});
+		} else {
+			$rootScope.$alert({
+				title: data.errorType + "[" + data.errorCode + "]",
+				content: data.errorMessage
+			});
 		}
 	});
 }
@@ -56,7 +65,7 @@ app.run(["$rootScope", "$location", "$remote", "$modal", "$route", function ($ro
 		$rootScope.$nextRouteWrapper = preparedRoute;
 		$rootScope.$lastRouteWrapper = lastRoute;
 		$rootScope.$currentRoute = preparedRoute && preparedRoute.$$route;
-		if($rootScope.$currentRoute&&$rootScope.$currentRoute.originalPath){
+		if ($rootScope.$currentRoute && $rootScope.$currentRoute.originalPath) {
 			$rootScope.$Bread = getBread($rootScope.$currentRoute.originalPath);
 		}
 	});

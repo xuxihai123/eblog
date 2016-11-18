@@ -64,6 +64,7 @@ Post.save = function save(post) {
 	var sql = "insert into wp_posts set ?";
 	return sqlhelp.query(sql, post);
 };
+
 /**
  * @return promise
  * @param ID
@@ -135,6 +136,13 @@ Post.findNewestList = function () {
 };
 /**
  * @return promise
+ */
+Post.findNewestPage = function () {
+	var sql = 'select ID, post_title,post_status,post_date,year(post_date),month(post_date),day(post_date) from wp_posts  where post_type=\'page\' order by post_date desc limit 6';
+	return sqlhelp.query(sql);
+};
+/**
+ * @return promise
  * @param offset
  * @param limit
  */
@@ -184,8 +192,18 @@ Post.getAll = function get() {
  * @param pageSize
  * @returns promise(pageModel)
  */
-Post.getPage = function (offset, limit) {
-	var sql = "select * from wp_posts";
+Post.getPostPage = function (offset, limit) {
+	var sql = "select * from wp_posts as T1 left join wp_users as T2 on T1.post_author=T2.ID where post_type='post'";
+	return pagehelp.getPageModel(offset, limit, sql);
+};
+/**
+ * @return promise
+ * @param offset
+ * @param limit
+ * @returns {*}
+ */
+Post.getPageList = function (offset, limit) {
+	var sql = "select * from wp_posts as T1 left join wp_users as T2 on T1.post_author=T2.ID where post_type='page'";
 	return pagehelp.getPageModel(offset, limit, sql);
 };
 /**

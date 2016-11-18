@@ -152,6 +152,7 @@ body.editor-fullscreen #footer {
 
 #sub-wrapper .toolbar-sub li > a:hover {
     background-color: #555;
+    cursor:pointer ;
 }
 
 #sub-wrapper .toolbar-sub li {

@@ -10,10 +10,19 @@
         <nav id="site-navigation" class="navigation main-navigation" role="navigation">
             <div class="nav-menu">
                 <ul>
-                    <li class="page_item page-item-2"><a href="#">示例页面1</a></li>
-                    <li class="page_item page-item-2"><a href="#">示例页面2</a></li>
-                    <li class="page_item page-item-2"><a href="#">示例页面3</a></li>
-                    <li class="page_item page-item-2"><a href="#">示例页面4</a></li>
+                    <% request.pageNewestList.forEach(function(post){ %>
+                    <li class="page_item ">
+                        <%
+                            var year, month, day, id, url;
+                            year = post["year(post_date)"];
+                            month = post["month(post_date)"];
+                            day = post["day(post_date)"];
+                            id = post.ID;
+                            url = "/" + year + "/" + month + "/" + day + "/" + id;
+                        %>
+                        <a href="<%= url %>"><%= utils.cutMaxTitle(post.post_title, 16) %></a>
+                    </li>
+                    <% }); %>
                 </ul>
             </div>
         </nav>

@@ -6,3 +6,7 @@
 .form-horizontal .control-group input[type=text].ng-invalid, .form-horizontal .control-group input[type=password].ng-invalid, .form-horizontal .control-group select.ng-invalid {
     border: 1px solid red;
 }
+
+.editormd{
+    margin: 0px;
+}

@@ -12,7 +12,7 @@ exports.doGet = function () {
 			Comment.getPageByPostId(post_id, offset, limit).then(function (pageModel) {
 				res.json(pageModel);
 			}, function (err) {
-				error(err);
+				res.errorProxy("SqlException", err);
 			});
 		}
 	}
@@ -79,13 +79,12 @@ exports.doAjax = function () {
 				if (commentList.length > 0) {
 					res.json(commentList[0]);
 				} else {
-					res.json({
-						errorCode: "600404",
+					res.errorProxy("NotFoundException", {
 						errorMessage: "没有找到该条评论"
 					});
 				}
 			}).fail(function (err) {
-				throw err;
+				res.errorProxy("SqlException", err);
 			});
 		},
 		"/admin/commentApprove.do": function (req, res, next) {
