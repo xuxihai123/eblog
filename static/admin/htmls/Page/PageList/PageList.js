@@ -18,15 +18,19 @@ function PageListCtrl($scope, $remote) {
 		})
 	};
 
-	$scope.deleteUser = function (row) {
+	$scope.editPage=function(row) {
+		$scope.goto("/PageEdit/" + row.ID);
+	};
+
+	$scope.deletePage = function (row) {
 		$scope.$confirm({
 			title: "警告!",
 			content: "文章删除不可恢复!",
 			ok: function () {
 				var pargs = {
-					user_login: row.user_login
+					post_id: row.ID
 				};
-				$remote.post("admin/delete_user.do", pargs, function (data) {
+				$remote.post("admin/delete_page.do", pargs, function (data) {
 					if (data.success == "ok") {
 						$scope.routeRefresh();
 					}

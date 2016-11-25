@@ -1,1 +1,1 @@
-# blog ...http://www.haorooms.com/page/guanggaohz
+# blog ...http://www.xuxihai.top

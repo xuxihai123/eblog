@@ -13,12 +13,7 @@
                     <% request.pageNewestList.forEach(function(post){ %>
                     <li class="page_item ">
                         <%
-                            var year, month, day, id, url;
-                            year = post["year(post_date)"];
-                            month = post["month(post_date)"];
-                            day = post["day(post_date)"];
-                            id = post.ID;
-                            url = "/" + year + "/" + month + "/" + day + "/" + id;
+                            var url = utils.dateFormat(post.post_date, "/yyyy/MM/dd/page") + post.ID;
                         %>
                         <a href="<%= url %>"><%= utils.cutMaxTitle(post.post_title, 16) %></a>
                     </li>
@@ -43,34 +38,25 @@
                     <% request.postNewestList.forEach(function(post){ %>
                     <li>
                         <%
-                            var year, month, day, id, url;
-                            year = post["year(post_date)"];
-                            month = post["month(post_date)"];
-                            day = post["day(post_date)"];
-                            id = post.ID;
-                            url = "/" + year + "/" + month + "/" + day + "/" + id;
+                            var url = utils.dateFormat(post.post_date, "/yyyy/MM/dd/post") + post.ID;
                         %>
-                        <a href="<%= url %>"><%= utils.cutMaxTitle(post.post_title, 16) %></a>
+                        <a href="<%= url %>"><%= utils.cutMaxTitle(post.post_title, 16) %></a> <span><%=post.comment_count%></span>
                     </li>
                     <% }); %>
                 </ul>
-            </aside>
-            <aside id="recent-comments-2" class="widget widget_recent_comments">
-                <h3 class="widget-title">近期评论</h3>
-                <ul id="recentcomments"></ul>
             </aside>
             <aside id="archives-2" class="widget widget_archive">
                 <h3 class="widget-title">文章归档</h3>
                 <ul>
                     <% request.articleArchList.forEach(function(arch){ %>
                     <%
-                        var month = arch['month(post_date)'];
+                        var month = arch.month;
                         if ((month + "").length == 1) {
                             month = "0" + month;
                         }
                     %>
                     <li>
-                        <a href="/<%= arch['year(post_date)'] %>/<%= month %>"><%= arch['year(post_date)'] %>
+                        <a href="/<%= arch.year %>/<%= month %>"><%= arch.year %>
                             年<%= month %>月</a>
                     </li>
                     <% }); %>

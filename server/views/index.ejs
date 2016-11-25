@@ -28,34 +28,15 @@
             }
             %>
             <!--index-->
-            <% if(type == "index"){ %>
-            <%- include post/index %>
-            <% } %>
-            <!--article-->
             <% if(type == "article"){ %>
-            <%- include post/article %>
-            <% } %>
-            <!--category-->
-            <% if(type == "category"){ %>
-            <% locals.type = 'category' %>
-            <%- include post/article_list %>
-            <% } %>
-            <!--archive-->
-            <% if(type == "archive"){ %>
-            <% locals.type = 'archive' %>
-            <%- include post/article_list %>
-            <% } %>
-            <!--search-->
-            <% if(type == "search"){ %>
-            <% locals.type = 'search' %>
-            <%- include post/article_list %>
+                <%- include post/article %>
+            <% }else { %>
+                <%- include post/list %>
             <% } %>
         </div>
 
         <div id="foot">
-            <a href="#" title="优雅的个人发布平台">由WordPress自豪地提供</a>.
-            主题：Flat 1.7.6 by <a rel="nofollow" href="https://themeisle.com/themes/flat/"
-                                title="Flat WordPress Theme">Themeisle</a>
+            <a title="优雅的个人发布平台">由x373241884y设计. 主题：Flat 1.7.6 by Themeisle</a> <span><a style="color:dodgerblue" href="https://github.com/x373241884y/xxhblog">Github</a></span>
         </div>
     </div>
 </div>

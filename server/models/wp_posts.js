@@ -57,8 +57,8 @@ var pagehelp = require("./pageHelper");
 /**
  *
  * @param post
- *
  * @return promise
+ * 添加文章
  */
 Post.save = function save(post) {
 	var sql = "insert into wp_posts set ?";
@@ -68,7 +68,7 @@ Post.save = function save(post) {
 /**
  * @return promise
  * @param ID
- *
+ * 获取文章
  */
 Post.get = function get(ID) {
 	var sql = 'select * from wp_posts where ID=?';
@@ -77,6 +77,7 @@ Post.get = function get(ID) {
 /**
  * @return promise
  * @param ID
+ * 获取前一篇文章
  */
 Post.getPrev = function (ID) {
 	var sql = 'select * from wp_posts where ID<? order by ID desc limit 1';
@@ -85,6 +86,7 @@ Post.getPrev = function (ID) {
 /**
  * @return promise
  * @param ID
+ * 下一篇文章
  */
 Post.getNext = function (ID) {
 	var sql = 'select * from wp_posts where ID>? order by ID  limit 1';
@@ -93,14 +95,21 @@ Post.getNext = function (ID) {
 /**
  * @return promise
  * @param category
- *
+ *通过分类查找文章
  */
 Post.findByCategory = function (category) {
 	var sql = 'select * from wp_terms as T1,wp_term_relationships as T2,wp_posts as T3 where T1.slug=? and T1.term_id=T2.term_taxonomy_id and T2.object_id=T3.ID';
 	return sqlhelp.query(sql, [category]);
 
 };
-Post.findByCategoryPage = function (category, offset, limit) {
+/**
+ * 通过分类查找文章带分页
+ * @param category
+ * @param offset
+ * @param limit
+ * @returns {*}
+ */
+Post.findByCategoryPageModel = function (category, offset, limit) {
 	var sql = 'select * from wp_terms as T1,wp_term_relationships as T2,wp_posts as T3 where T1.slug=? and T1.term_id=T2.term_taxonomy_id and T2.object_id=T3.ID';
 	sql = sqlhelp.format(sql, [category]);
 	return pagehelp.getPageModel(offset, limit, sql);
@@ -108,63 +117,66 @@ Post.findByCategoryPage = function (category, offset, limit) {
 /**
  * @return promise
  * @param obj
- *
+ *通过年月查找文章
  */
 Post.findByYearMonth = function (obj) {
 	var sql = 'select *  from wp_posts where year(post_date)=? and month(post_date)=? and post_status=\'publish\'';
 	return sqlhelp.query(sql, [obj.year, obj.month]);
 };
-/**
+/**通过年月查找文章支持分页
  * @return promise
  * @param obj
  * @param offset
  * @param limit
  * @returns {*}
  */
-Post.findByYearMonthPage = function (obj, offset, limit) {
-	var sql = 'select *  from wp_posts where year(post_date)=? and month(post_date)=? and post_status=\'publish\'';
+Post.findByYearMonthPageModel = function (obj, offset, limit) {
+	var sql = 'select *  from wp_posts where year(post_date)=? and month(post_date)=? and post_type=\'post\' and post_status=\'publish\'';
 	sql = sqlhelp.format(sql, [obj.year, obj.month]);
 	return pagehelp.getPageModel(offset, limit, sql);
 };
 /**
  * @return promise
- *
+ * 获取最新的6则文章(左侧最新文章显示)
  */
 Post.findNewestList = function () {
-	var sql = 'select ID, post_title,post_status,post_date,year(post_date),month(post_date),day(post_date) from wp_posts  where post_status=\'publish\' order by post_date desc limit 6';
+	var sql = 'select ID, post_title,post_status,post_date from wp_posts  where post_type=\'post\' and post_status=\'publish\' order by post_date desc limit 6';
 	return sqlhelp.query(sql);
 };
 /**
  * @return promise
+ * 获取最新的6则页面(左侧关于...)
  */
 Post.findNewestPage = function () {
-	var sql = 'select ID, post_title,post_status,post_date,year(post_date),month(post_date),day(post_date) from wp_posts  where post_type=\'page\' order by post_date desc limit 6';
+	var sql = 'select ID, post_title,post_status,post_date from wp_posts  where post_type=\'page\' order by post_date desc limit 6';
 	return sqlhelp.query(sql);
 };
 /**
+ * 获取最新的文章，带分页,降序，状态为已经发布
  * @return promise
  * @param offset
  * @param limit
  */
-Post.findNewestListPage = function (offset, limit) {
-	var sql = 'select ID, post_title,post_status,post_date,year(post_date),month(post_date),day(post_date) from wp_posts  where post_status=\'publish\' order by post_date desc';
+Post.findNewestListPageModel = function (offset, limit) {
+	var sql = 'select ID, post_title,post_content,post_status,post_date from wp_posts  where post_type=\'post\'and  post_status=\'publish\' order by post_date desc';
 	return pagehelp.getPageModel(offset, limit, sql);
 };
 /**
  * @return promise
- *
+ * 获取所有文章的归档，即年月集合
  */
 Post.findArticleArchive = function () {
-	var sql = 'select year(post_date),month(post_date),count(ID) from wp_posts group by year(post_date),month(post_date) order by year(post_date) desc,month(post_date)desc';
+	var sql = 'select year(post_date) as year,month(post_date) as month,count(ID) from wp_posts group by year(post_date),month(post_date) order by year(post_date) desc,month(post_date)desc';
 	return sqlhelp.query(sql);
 };
 /**
  * @return promise
  * @param word
+ * 文章搜索
  */
 Post.findPostByWord = function (word) {
 	word = "%" + word + "%";
-	var sql = 'select ID, post_title,post_status,post_date from wp_posts  where post_title like ?';
+	var sql = 'select ID, post_title,post_status,post_date from wp_posts  where  post_title like ?';
 	return sqlhelp.query(sql, word);
 };
 /**
@@ -172,28 +184,27 @@ Post.findPostByWord = function (word) {
  * @param word
  * @param start
  * @param limit
+ * 文章搜索,带分页
  */
-Post.findPostByWordPage = function (word, offset, limit) {
+Post.findPostByWordPageModel = function (word, offset, limit) {
 	word = "%" + word + "%";
-	var sql = 'select ID, post_title,post_status,post_date from wp_posts  where post_title like ?';
+	var sql = 'select ID, post_title,post_content,post_status,post_date from wp_posts  where post_type=\'post\'and  post_status=\'publish\' and post_title like ?';
 	sql = sqlhelp.format(sql, [word]);
 	return pagehelp.getPageModel(offset, limit, sql);
 };
-/**
- * @return promise
- *
- */
-Post.getAll = function get() {
-	var sql = "select * from wp_posts";
-	return sqlhelp.query(sql);
-};
+
 /**
  * @param pageNum
  * @param pageSize
  * @returns promise(pageModel)
+ * 获取所有文章，用于后台管理
  */
-Post.getPostPage = function (offset, limit) {
-	var sql = "select * from wp_posts as T1 left join wp_users as T2 on T1.post_author=T2.ID where post_type='post'";
+Post.getPostPageModel = function (offset, limit) {
+	var sql = "" +
+		"select " +
+		"T1.ID,post_title,user_login,post_type,menu_order,comment_count,post_date " +
+		"from wp_posts as T1 left join wp_users as T2 on T1.post_author=T2.ID " +
+		"where post_type='post'";
 	return pagehelp.getPageModel(offset, limit, sql);
 };
 /**
@@ -201,14 +212,21 @@ Post.getPostPage = function (offset, limit) {
  * @param offset
  * @param limit
  * @returns {*}
+ * 获取所有页面，用于后台管理
  */
-Post.getPageList = function (offset, limit) {
-	var sql = "select * from wp_posts as T1 left join wp_users as T2 on T1.post_author=T2.ID where post_type='page'";
+Post.getPagePageModel = function (offset, limit) {
+	var sql = "" +
+		"select " +
+		"T1.ID,post_title,user_login,post_type,menu_order,comment_count,post_date " +
+		"from wp_posts as T1 " +
+		"left join wp_users as T2 on T1.post_author=T2.ID " +
+		"where post_type='page'";
 	return pagehelp.getPageModel(offset, limit, sql);
 };
 /**
  *@return promise
  * @param post_id
+ * 删除文章或页面
  */
 Post.delete = function (post_id) {
 	var sql = "delete  from wp_posts where ID=?";
@@ -217,6 +235,7 @@ Post.delete = function (post_id) {
 /**
  * @return promise
  * @param post
+ * 更新文章
  */
 Post.update = function (post) {
 	var sql = "update wp_posts set post_title = ?, post_content = ? where ID=?";

@@ -27,7 +27,9 @@ body.custom-background {
 #page:after {
     clear: both;
 }
-
+#page a{
+    text-decoration: none;
+}
 #left {
     width: 25%;
     float: left;

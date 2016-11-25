@@ -37,8 +37,13 @@ function cutMaxTitle(str, length) {
 	}
 }
 
+function postSnippet(str) {
+	return cutMaxTitle(str,200);
+}
+
 exports.dateFormat = formatDate;
 
 exports.cutMaxTitle = cutMaxTitle;
+exports.postSnippet = postSnippet;
 
 exports.marked = marked;

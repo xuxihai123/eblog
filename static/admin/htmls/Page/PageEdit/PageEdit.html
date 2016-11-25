@@ -1,0 +1,37 @@
+<div oc-lazy-load="htmls/Page/PageEdit/PageEdit.js">
+	<div class="mainContent" ng-controller="PageEditCtrl" ng-init="startup()">
+		<div class="content_title">
+			<h3>编辑页面 </h3>
+		</div>
+		<div class="post">
+			<div class="container-fluid">
+				<div class="row-fluid">
+					<div class="span10">
+						<form class="form-horizontal" name="postnewForm" novalidate>
+							<div class="control-group">
+								<label for="post_title">标题*</label>
+								<input type="text" id="post_title" name="post_title" ng-model="post_title" required
+								       placeholder="标题">
+							</div>
+							<div class="control-group">
+								<label for="post_content">内容*</label>
+
+								<div id="editormd">
+									<textarea id="post_content" name="post_content"></textarea>
+								</div>
+
+							</div>
+							<div class="text-center" id="subbtn">
+								<button class="btn btn-primary" type="button" ng-click="pageEdit()"
+								        ng-disabled="postnewForm.$invalid">submit
+								</button>
+							</div>
+							<div class="text-center"></div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>

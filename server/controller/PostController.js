@@ -14,7 +14,7 @@ exports.doAjax = function () {
 			var req_pargs = req.body;
 			var offset = req_pargs.offset || 0;
 			var limit = req_pargs.limit || 10;
-			Post.getPostPage(offset, limit).then(function (pageModel) {
+			Post.getPostPageModel(offset, limit).then(function (pageModel) {
 				res.json(pageModel);
 			}, function (err) {
 				res.errorProxy("SqlException", err);
@@ -24,7 +24,7 @@ exports.doAjax = function () {
 			var req_pargs = req.body;
 			var offset = req_pargs.offset || 0;
 			var limit = req_pargs.limit || 10;
-			Post.getPageList(offset, limit).then(function (pageModel) {
+			Post.getPagePageModel(offset, limit).then(function (pageModel) {
 				res.json(pageModel);
 			}, function (err) {
 				res.errorProxy("SqlException", err);
@@ -189,6 +189,20 @@ exports.doAjax = function () {
 				res.errorProxy("SqlException", err);
 			});
 		},
+		"/admin/delete_page.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var post_id = req_pargs.post_id;
+			Post.delete(post_id).then(function (okPacket) {
+				if (okPacket) {
+					res.json({
+						success: "ok",
+						loginStatus: "1"
+					});
+				}
+			}).fail(function (err) {
+				res.errorProxy("SqlException", err);
+			});
+		},
 		"/admin/delete_category.do": function (req, res, next) {
 			var req_pargs = req.body;
 			var term_id = req_pargs.term_id;
@@ -242,9 +256,23 @@ exports.doAjax = function () {
 				if (postList.length > 0) {
 					res.json(postList[0]);
 				} else {
-					res.json({
-						errorCode: "600404",
+					res.errorProxy("NotFoundException", {
 						errorMessage: "文章不存在"
+					});
+				}
+			}).fail(function (err) {
+				res.errorProxy("SqlException", err);
+			});
+		},
+		"/admin/get_page.do":function(req,res,next){
+			var req_pargs = req.body;
+			var post_id = req_pargs.post_id;
+			Post.get(post_id).then(function (postList) {
+				if (postList.length > 0) {
+					res.json(postList[0]);
+				} else {
+					res.errorProxy("NotFoundException", {
+						errorMessage: "页面不存在"
 					});
 				}
 			}).fail(function (err) {
@@ -258,8 +286,7 @@ exports.doAjax = function () {
 				if (postList.length > 0) {
 					res.json(postList[0]);
 				} else {
-					res.json({
-						errorCode: "600404",
+					res.errorProxy("NotFoundException", {
 						errorMessage: "文章分类不存在"
 					});
 				}
@@ -268,6 +295,24 @@ exports.doAjax = function () {
 			});
 		},
 		"/admin/edit_post.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var post_id = req_pargs.post_id;
+			var post_title = req_pargs.post_title;
+			var post_content = req_pargs.post_content;
+			Post.update({
+				ID: post_id,
+				post_title: post_title,
+				post_content: post_content
+			}).then(function (okPacket) {
+				res.json({
+					success: "ok",
+					loginStatus: "1"
+				});
+			}).fail(function (err) {
+				res.errorProxy("SqlException", err);
+			});
+		},
+		"/admin/edit_page.do":function(req,res,next){
 			var req_pargs = req.body;
 			var post_id = req_pargs.post_id;
 			var post_title = req_pargs.post_title;

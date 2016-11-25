@@ -68,6 +68,11 @@
 					"ActionName": "新建页面",
 					"Level": "2",
 					"NodeName": "PageAdd",
+				}, {
+					"ActionName": "编辑页面",
+					"Level": "2",
+					"NodeName": "PageEdit",
+					"RouteUrl": "/PageEdit/:PostId"
 				}
 			]
 		},

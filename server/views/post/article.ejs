@@ -16,10 +16,13 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
                         <time class="entry-date published"><%= date %></time>
                     </a>
                 </span>
+                <% if(post.post_type == "post"){ %>
                 <span class="sep">·</span>
                 <span class="comments-link">
-                    <a href="http://localhost:8889/wordpress/?p=21#respond" itemprop="discussionUrl">0评论</a>
+                    <a href="http://localhost:8889/wordpress/?p=21#respond"
+                       itemprop="discussionUrl"><%= post.comment_count %>评论</a>
                 </span>
+                <% } %>
             </div>
         </div>
 
@@ -29,11 +32,11 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
             </div>
         </div>
     </div>
-
+    <% if(post.post_type == "post"){ %>
     <div id="nav-links">
         <% if(prev){ %>
         <div class="nav-previous">
-            <a href="<%= utils.dateFormat(prev.post_date, "/yyyy/MM/dd/") + prev.ID %>" rel="prev">
+            <a href="<%= utils.dateFormat(prev.post_date, "/yyyy/MM/dd/post") + prev.ID %>" rel="prev">
                 <span class="meta-nav">上篇文章</span>
                 <span class="post-title"><%= prev.post_title %></span>
             </a>
@@ -41,7 +44,7 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
         <% } %>
         <% if(next){ %>
         <div class="nav-next">
-            <a href="<%= utils.dateFormat(next.post_date, "/yyyy/MM/dd/") + next.ID %>" rel="next">
+            <a href="<%= utils.dateFormat(next.post_date, "/yyyy/MM/dd/post") + next.ID %>" rel="next">
                 <span class="meta-nav">下篇文章</span>
                 <span class="post-title"><%= next.post_title %></span>
             </a>
@@ -90,5 +93,5 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
 
 
     </div>
-
+    <% } %>
 </div>
