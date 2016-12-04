@@ -6,62 +6,6 @@ var dateutils = require("../utils/dateutils");
  * @returns {Function}
  */
 //通用接口
-exports.register = function () {
-	return {
-		url: "/user/signup",
-		method: "post",
-		controller: function (req, res, next) {
-			var req_pargs = req.body;
-			var user_login = req_pargs.user_login;
-			var user_pass = req_pargs.user_pass;
-			var user_pass2 = req_pargs.user_pass2;
-			var display_name = req_pargs.display_name;
-			var user_nicename = req_pargs.user_nicename;
-			var user_url = req_pargs.user_url;
-			var user_email = req_pargs.user_email;
-
-			if (user_pass != user_pass2) {
-				//req.flash('error', '两次输入的密码不一致!');
-				req.session.error = "两次输入的密码不一致";
-				return res.redirect('/signup.c');//返回主册页
-			}
-			//生成密码的 md5 值
-			var md5 = crypto.createHash('md5'),
-				user_pass = md5.update(user_pass).digest('hex');
-			var newUser = new User({
-				user_login: user_login,
-				user_pass: user_pass,
-				display_name: display_name,
-				user_nicename: user_nicename,
-				user_email: user_email,
-				user_url: user_url,
-
-			});
-			//检查用户名是否已经存在
-			User.get(newUser.user_login).then(function (user) {
-				if (user && user.length > 0) {
-					req.session.error = "用户已存在";
-					return res.redirect('/signup.c');//返回注册页
-				} else {
-					newUser.user_status = "0";
-					newUser.user_activation_key = dateutils.randomStr(16);
-					newUser.user_registered = dateutils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
-					//如果不存在则新增用户
-					User.save(newUser).then(function (result) {
-						//req.session.user = user;//用户信息存入 session
-						return res.redirect('/');//注册成功后返回主页
-					}).fail(function (err) {
-						req.session.error = err;
-						return res.redirect('/signup.c');//注册失败返回主册页
-					});
-				}
-			}, function (err) {
-				req.session.error = err;
-				return res.redirect('/signup.c');//注册失败返回主册页
-			});
-		}
-	};
-};
 exports.login = function () {
 	return {
 		url: "/user/signin",
@@ -128,7 +72,62 @@ exports.signout = function () {
 		}
 	};
 };
-
+exports.reset = function () {
+	return {
+		url: "/user/reset",
+		method: "post",
+		controller: function (req, res, next) {
+			var req_pargs = req.body;
+			var user_login = req_pargs.user_login;
+			var user_pass = req_pargs.user_pass;
+			var user_pass2 = req_pargs.user_pass2;
+			var reset_key = req_pargs.reset_key;
+            if(reset_key!="227754"){
+                req.session.error = "reset_key 不正确";
+                return res.redirect('/reset.c');//返回主册页
+            }
+			if (user_pass != user_pass2) {
+				//req.flash('error', '两次输入的密码不一致!');
+				req.session.error = "两次输入的密码不一致";
+				return res.redirect('/reset.c');//返回主册页
+			}
+			//生成密码的 md5 值
+			var md5 = crypto.createHash('md5'),
+				user_pass = md5.update(user_pass).digest('hex');
+			var newUser = new User({
+				user_login: user_login,
+				user_pass: user_pass
+			});
+			//检查用户名是否已经存在
+			User.get(newUser.user_login).then(function (user) {
+				if (user && user.length > 0) {
+                    User.update(newUser).then(function (result) {
+                        //req.session.user = user;//用户信息存入 session
+                        return res.redirect('/');//注册成功后返回主页
+                    }).fail(function (err) {
+                        req.session.error = err;
+                        return res.redirect('/reset.c');//注册失败返回主册页
+                    });
+				} else {
+					newUser.user_status = "0";
+					newUser.user_activation_key = dateutils.randomStr(16);
+					newUser.user_registered = dateutils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
+					//如果不存在则新增用户
+					User.save(newUser).then(function (result) {
+						//req.session.user = user;//用户信息存入 session
+						return res.redirect('/');//注册成功后返回主页
+					}).fail(function (err) {
+						req.session.error = err;
+						return res.redirect('/signup.c');//注册失败返回主册页
+					});
+				}
+			}, function (err) {
+				req.session.error = err;
+				return res.redirect('/signup.c');//注册失败返回主册页
+			});
+		}
+	};
+};
 //管理接口
 exports.doAjax = function () {
 	return {

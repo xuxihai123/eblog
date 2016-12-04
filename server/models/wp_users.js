@@ -41,6 +41,10 @@ User.save = function save(user, callback) {
 	var sql = "insert into wp_users set ?";
 	return sqlhelp.query(sql, user);
 };
+User.update = function save(user, callback) {
+	var sql = "update wp_users set user_pass=? where user_login=?";
+	return sqlhelp.query(sql, [user.user_pass,user.user_login]);
+};
 User.get = function get(user_login, callback) {
 	var sql = 'select * from wp_users where user_login=?';
 	return sqlhelp.query(sql, [user_login]);

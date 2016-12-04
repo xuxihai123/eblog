@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>register page</title>
+    <title>reset page</title>
     <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"/>
     <script type="text/javascript" src="/js/jquery.js"></script>
 </head>
@@ -10,7 +10,7 @@
 <div class="container-fluid" style="margin: 120px auto;padding: 20px 15px; border: 1px solid grey;border-radius: 5px">
     <div class="row-fluid">
         <div class="span6 offset3">
-            <form class="form-horizontal" name="register" action="/user/signup" method="post">
+            <form class="form-horizontal" name="register" action="/user/reset" method="post">
                 <div class="control-group">
                     <label class="control-label" for="username">username</label>
 
@@ -33,31 +33,10 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="user_email">email</label>
+                    <label class="control-label" for="reset_key">reset_key</label>
 
                     <div class="controls">
-                        <input type="text" id="user_email" name="user_email" placeholder="email">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="user_nicename">nicename</label>
-
-                    <div class="controls">
-                        <input type="text" id="user_nicename" name="user_nicename" placeholder="nicename">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="display_name">displayname</label>
-
-                    <div class="controls">
-                        <input type="text" id="display_name" name="display_name" placeholder="displayname">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="user_url">url</label>
-
-                    <div class="controls">
-                        <input type="text" id="user_url" name="user_url" placeholder="user_url">
+                        <input type="password" id="reset_key" name="reset_key" placeholder="reset_key">
                     </div>
                 </div>
                 <div class="text-center">
