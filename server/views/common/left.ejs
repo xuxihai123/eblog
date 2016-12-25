@@ -1,3 +1,4 @@
+<div class="star"></div>
 <div class="left">
     <header id="masthead" class="site-header" role="banner">
         <div class="hgroup">
@@ -5,7 +6,7 @@
                 <a href="/" title="x373241884y" rel="home"><span itemprop="name">x373241884y</span></a>
             </h1>
 
-            <h2 itemprop="description" class="site-description">黑夜独自行走！</h2>
+            <h2 itemprop="description" class="site-description">绿水本无忧，因风而波涛！</h2>
         </div>
         <nav id="site-navigation" class="navigation main-navigation" role="navigation">
             <div class="nav-menu">
@@ -15,7 +16,7 @@
                         <%
                             var url = utils.dateFormat(post.post_date, "/yyyy/MM/dd/page") + post.ID;
                         %>
-                        <a href="<%= url %>"><%= utils.cutMaxTitle(post.post_title, 16) %></a>
+                        <a href="<%= url %>"><%= utils.cutMaxTitle(post.post_title, 14) %></a>
                     </li>
                     <% }); %>
                 </ul>
@@ -40,7 +41,7 @@
                         <%
                             var url = utils.dateFormat(post.post_date, "/yyyy/MM/dd/post") + post.ID;
                         %>
-                        <a href="<%= url %>"><%= utils.cutMaxTitle(post.post_title, 16) %></a> <span><%=post.comment_count%></span>
+                        <a href="<%= url %>"><%= utils.cutMaxTitle(post.post_title, 14) %></a> <span><%=post.comment_count%></span>
                     </li>
                     <% }); %>
                 </ul>

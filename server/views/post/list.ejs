@@ -22,10 +22,10 @@
         %>
         <article class="post type-post status-publish format-aside hentry ">
             <header class="entry-header">
-                <h2 class="entry-title" itemprop="name">
+                <h3 class="entry-title" itemprop="name">
                     <a itemprop="url" href="<%= "/" + url %>" title="链向<%= temp.post_title %>的固定链接"
                        rel="bookmark"><%= temp.post_title %></a>
-                </h2>
+                </h3>
 
                 <div class="entry-meta">
                         <span class="entry-date">
@@ -40,14 +40,14 @@
                         </span>
                 </div>
             </header>
-            <div class="entry-content" itemprop="articleBody">
+            <!-- <div class="entry-content" itemprop="articleBody">
                 <p><%- utils.marked(utils.postSnippet(temp.post_content)) %></p>
-            </div>
+            </div> -->
         </article>
 
         <% }); %>
     <div class="navigation pagination" role="navigation">
-        <h2 class="screen-reader-text">文章导航</h2>
+        <h3 class="screen-reader-text">文章导航</h3>
 
         <div class="nav-links">
             <span class="page-numbers current">1</span>
