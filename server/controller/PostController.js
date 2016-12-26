@@ -165,12 +165,14 @@ exports.doAjax = function () {
 					taxonomy: 'post_tag',
 					count: 0
 				});
-				return TermTaxonomy.save(newTaxonomy);
-			}).then(function (okPacket) {
-				res.json({
-					success: "ok",
-					loginStatus: "1"
-				});
+			    TermTaxonomy.save(newTaxonomy).then(function success() {
+					res.json({
+						success: "ok",
+						loginStatus: "1"
+					});
+			    }).fail(function (err) {
+							
+			    });
 			}).fail(function (err) {
 				res.errorProxy("SqlException", err);
 			});

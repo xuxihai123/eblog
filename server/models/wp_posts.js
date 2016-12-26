@@ -80,7 +80,7 @@ Post.get = function get(ID) {
  * 获取前一篇文章
  */
 Post.getPrev = function (ID) {
-	var sql = 'select * from wp_posts where ID<? order by ID desc limit 1';
+	var sql = 'select * from wp_posts where ID<? and post_type=\'post\' and post_status=\'publish\' order by ID desc limit 1';
 	return sqlhelp.query(sql, [ID]);
 };
 /**
@@ -89,7 +89,7 @@ Post.getPrev = function (ID) {
  * 下一篇文章
  */
 Post.getNext = function (ID) {
-	var sql = 'select * from wp_posts where ID>? order by ID  limit 1';
+	var sql = 'select * from wp_posts where ID>? and post_type=\'post\' and post_status=\'publish\' order by ID  limit 1';
 	return sqlhelp.query(sql, [ID]);
 };
 /**
@@ -110,7 +110,7 @@ Post.findByCategory = function (category) {
  * @returns {*}
  */
 Post.findByCategoryPageModel = function (category, offset, limit) {
-	var sql = 'select * from wp_terms as T1,wp_term_relationships as T2,wp_posts as T3 where T1.slug=? and T1.term_id=T2.term_taxonomy_id and T2.object_id=T3.ID';
+	var sql = 'select * from wp_terms as T1,wp_term_relationships as T2,wp_posts as T3 where T1.slug=? and T1.term_id=T2.term_taxonomy_id and T2.object_id=T3.ID and T3.post_status=\'publish\'';
 	sql = sqlhelp.format(sql, [category]);
 	return pagehelp.getPageModel(offset, limit, sql);
 };
