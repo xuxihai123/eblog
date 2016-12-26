@@ -183,7 +183,7 @@ exports.indexArchive = function () {
 exports.indexCategory = function () {
 	return {
 		//url:/^\/(index|)\/?$/,
-		url: /\/category\/(\w[\w\d_]+)(\/(\w[\w\d_]+)\/?|\/?)?$/,
+		url: /\/category\/([^\s\/]+)\/?$/,
 		controller: function (req, res, next) {
 
 			var pargs1 = req.params[0];

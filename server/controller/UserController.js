@@ -80,16 +80,11 @@ exports.reset = function () {
 			var req_pargs = req.body;
 			var user_login = req_pargs.user_login;
 			var user_pass = req_pargs.user_pass;
-			var user_pass2 = req_pargs.user_pass2;
 			var reset_key = req_pargs.reset_key;
-            if(reset_key!="227754"){
-                req.session.error = "reset_key 不正确";
-                return res.redirect('/reset.c');//返回主册页
-            }
-			if (user_pass != user_pass2) {
-				//req.flash('error', '两次输入的密码不一致!');
-				req.session.error = "两次输入的密码不一致";
-				return res.redirect('/reset.c');//返回主册页
+			if (reset_key != req.app.myset.reset_key) {
+				return res.json({
+					errorMessage: "reset_key 不正确"
+				});
 			}
 			//生成密码的 md5 值
 			var md5 = crypto.createHash('md5'),
@@ -101,29 +96,21 @@ exports.reset = function () {
 			//检查用户名是否已经存在
 			User.get(newUser.user_login).then(function (user) {
 				if (user && user.length > 0) {
-                    User.update(newUser).then(function (result) {
-                        //req.session.user = user;//用户信息存入 session
-                        return res.redirect('/');//注册成功后返回主页
-                    }).fail(function (err) {
-                        req.session.error = err;
-                        return res.redirect('/reset.c');//注册失败返回主册页
-                    });
-				} else {
-					newUser.user_status = "0";
-					newUser.user_activation_key = dateutils.randomStr(16);
-					newUser.user_registered = dateutils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
-					//如果不存在则新增用户
-					User.save(newUser).then(function (result) {
+					User.update(newUser).then(function (result) {
 						//req.session.user = user;//用户信息存入 session
-						return res.redirect('/');//注册成功后返回主页
+						return res.json({
+							success: "ok"
+						});
 					}).fail(function (err) {
-						req.session.error = err;
-						return res.redirect('/signup.c');//注册失败返回主册页
+						res.errorProxy("SqlException", err);
+					});
+				} else {
+					return res.json({
+						errorMessage: "用户不存在!"
 					});
 				}
 			}, function (err) {
-				req.session.error = err;
-				return res.redirect('/signup.c');//注册失败返回主册页
+				res.errorProxy("SqlException", err);
 			});
 		}
 	};
@@ -211,7 +198,7 @@ exports.doAjax = function () {
 					var user = users[0];
 					if (user.user_login == "admin" || user.user_login == "java_way") {
 						res.errorProxy("SqlException", {
-							errorMessage:"管理员用户不能删除"
+							errorMessage: "管理员用户不能删除"
 						});
 					} else {
 						User.delete(user_login).then(function (okPacket) {

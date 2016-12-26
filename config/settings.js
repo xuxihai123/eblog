@@ -13,6 +13,7 @@ exports.config = function (app) {
 		process.dbpool = pool;
 		app.myset = {
 			contrlllers_path: "../server/controller/",
+			reset_key:"227754"
 		};
 		process.on("exit", function () {
 			pool.end(function() {
