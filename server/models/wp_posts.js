@@ -92,16 +92,7 @@ Post.getNext = function (ID) {
 	var sql = 'select * from wp_posts where ID>? and post_type=\'post\' and post_status=\'publish\' order by ID  limit 1';
 	return sqlhelp.query(sql, [ID]);
 };
-/**
- * @return promise
- * @param category
- *通过分类查找文章
- */
-Post.findByCategory = function (category) {
-	var sql = 'select * from wp_terms as T1,wp_term_relationships as T2,wp_posts as T3 where T1.slug=? and T1.term_id=T2.term_taxonomy_id and T2.object_id=T3.ID';
-	return sqlhelp.query(sql, [category]);
 
-};
 /**
  * 通过分类查找文章带分页
  * @param category
@@ -110,19 +101,11 @@ Post.findByCategory = function (category) {
  * @returns {*}
  */
 Post.findByCategoryPageModel = function (category, offset, limit) {
-	var sql = 'select * from wp_terms as T1,wp_term_relationships as T2,wp_posts as T3 where T1.slug=? and T1.term_id=T2.term_taxonomy_id and T2.object_id=T3.ID and T3.post_status=\'publish\'';
+	var sql = 'select * from wp_terms as T1,wp_term_relationships as T2,wp_posts as T3 where T1.slug=? and T1.term_id=T2.term_taxonomy_id and T2.object_id=T3.ID and T3.post_status=\'publish\' order by post_date desc';
 	sql = sqlhelp.format(sql, [category]);
 	return pagehelp.getPageModel(offset, limit, sql);
 };
-/**
- * @return promise
- * @param obj
- *通过年月查找文章
- */
-Post.findByYearMonth = function (obj) {
-	var sql = 'select *  from wp_posts where year(post_date)=? and month(post_date)=? and post_status=\'publish\'';
-	return sqlhelp.query(sql, [obj.year, obj.month]);
-};
+
 /**通过年月查找文章支持分页
  * @return promise
  * @param obj
@@ -131,7 +114,7 @@ Post.findByYearMonth = function (obj) {
  * @returns {*}
  */
 Post.findByYearMonthPageModel = function (obj, offset, limit) {
-	var sql = 'select *  from wp_posts where year(post_date)=? and month(post_date)=? and post_type=\'post\' and post_status=\'publish\'';
+	var sql = 'select *  from wp_posts where year(post_date)=? and month(post_date)=? and post_type=\'post\' and post_status=\'publish\' order by post_date desc';
 	sql = sqlhelp.format(sql, [obj.year, obj.month]);
 	return pagehelp.getPageModel(offset, limit, sql);
 };
@@ -188,7 +171,7 @@ Post.findPostByWord = function (word) {
  */
 Post.findPostByWordPageModel = function (word, offset, limit) {
 	word = "%" + word + "%";
-	var sql = 'select ID, post_title,post_content,post_status,post_date from wp_posts  where post_type=\'post\'and  post_status=\'publish\' and post_title like ?';
+	var sql = 'select ID, post_title,post_content,post_status,post_date from wp_posts  where post_type=\'post\'and  post_status=\'publish\' and post_title like ? order by post_date desc';
 	sql = sqlhelp.format(sql, [word]);
 	return pagehelp.getPageModel(offset, limit, sql);
 };
@@ -204,7 +187,7 @@ Post.getPostPageModel = function (offset, limit) {
 		"select " +
 		"T1.ID,post_title,user_login,post_type,menu_order,comment_count,post_date " +
 		"from wp_posts as T1 left join wp_users as T2 on T1.post_author=T2.ID " +
-		"where post_type='post'";
+		"where post_type='post' order by T1.post_date desc";
 	return pagehelp.getPageModel(offset, limit, sql);
 };
 /**
@@ -220,7 +203,7 @@ Post.getPagePageModel = function (offset, limit) {
 		"T1.ID,post_title,user_login,post_type,menu_order,comment_count,post_date " +
 		"from wp_posts as T1 " +
 		"left join wp_users as T2 on T1.post_author=T2.ID " +
-		"where post_type='page'";
+		"where post_type='page' order by T1.post_date desc";
 	return pagehelp.getPageModel(offset, limit, sql);
 };
 /**

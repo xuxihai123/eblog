@@ -31,6 +31,9 @@ body.custom-background {
 #page a{
     text-decoration: none;
 }
+#page a.disabled {
+    display: none;
+}
 #left {
     width: 25%;
     float: left;

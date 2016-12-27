@@ -12,7 +12,7 @@ exports.index = function () {
 		url: "/",
 		controller: function (req, res, next) {
 			var offset = req.query.start || 0;
-			var limit = req.query.limit || 10;
+			var limit = req.query.limit || 5;
 			Q.all([Post.findNewestListPageModel(offset, limit),
 					Term.getAllCategory(),
 					Post.findArticleArchive(),
@@ -29,7 +29,7 @@ exports.index = function () {
 					};
 					return res.render("index", {"title": "Express"});
 				}).fail(function (err) {
-				res.errorProxy("SqlException", err);
+				res.errorProxy("500", err);
 			});
 		}
 	}
@@ -44,7 +44,10 @@ exports.search = function () {
 		controller: function (req, res, next) {
 			var word = req.query.word;
 			var offset = req.query.start || 0;
-			var limit = req.query.limit || 10;
+			var limit = req.query.limit || 5;
+			if(!word){
+					return res.redirect("/");
+			}
 			Q.all([Post.findPostByWordPageModel(word, offset, limit),
 					Term.getAllCategory(),
 					Post.findArticleArchive(),
@@ -57,11 +60,12 @@ exports.search = function () {
 					req.pageNewestList = pageNewestList;
 					req.home = {
 						type: "search",
+						word:word,
 						pageModel: pageModel
 					};
 					return res.render("index", {"title": "Express"});
 				}).fail(function (err) {
-				res.errorProxy("SqlException", err);
+				res.errorProxy("500", err);
 			});
 		}
 	}
@@ -102,7 +106,7 @@ exports.indexArticle = function () {
 					return res.render("index", {"title": "Express"});
 				})
 				.fail(function (err) {
-					res.errorProxy("SqlException", err);
+					res.errorProxy("500", err);
 				});
 		}
 	}
@@ -134,7 +138,7 @@ exports.indexPage = function () {
 					return res.render("index", {"title": "Express"});
 				})
 				.fail(function (err) {
-					res.errorProxy("SqlException", err);
+					res.errorProxy("500", err);
 				});
 		}
 	}
@@ -149,7 +153,7 @@ exports.indexArchive = function () {
 		url: /(\d{4})\/(\d{1,2})\/?$/,
 		controller: function (req, res, next) {
 			var offset = req.query.start || 0;
-			var limit = req.query.limit || 10;
+			var limit = req.query.limit || 5;
 			var year = req.params[0];
 			var month = req.params[1];
 			Q.all([Post.findByYearMonthPageModel({year: year, month: month}, offset, limit),
@@ -171,7 +175,7 @@ exports.indexArchive = function () {
 					res.render("index", {"title": "Express"});
 				})
 				.fail(function (err) {
-					res.errorProxy("SqlException", err);
+					res.errorProxy("500", err);
 				});
 		}
 	}
@@ -190,7 +194,7 @@ exports.indexCategory = function () {
 			var pargs2 = req.params[1];
 			var pargs3 = req.params[2];
 			var offset = req.query.start || 0;
-			var limit = req.query.limit || 10;
+			var limit = req.query.limit || 5;
 			if (pargs2) { //have children
 				console.log(pargs1 + "->" + pargs3);
 			} else {
@@ -212,7 +216,7 @@ exports.indexCategory = function () {
 						res.render("index", {"title": "Express"});
 					})
 					.fail(function (err) {
-						res.errorProxy("SqlException", err);
+						res.errorProxy("500", err);
 					});
 			}
 		}

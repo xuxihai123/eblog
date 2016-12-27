@@ -1,15 +1,27 @@
 <%
     var home = request.home;
     var pageModel = home.pageModel || [];
-    var articleList = pageModel.recordList, title;
-    if (home.type == "index") {
+    var articleList = pageModel.recordList,
+        title,pageUrl,
+        type=home.type,
+        current=pageModel.currentPage,
+        count=pageModel.pageCount,
+        limit=pageModel.limit;
+    if (type == "index") {
         home.title = "最近文章:";
-    } else if (home.type == "archive") {
+    } else if (type == "archive") {
         home.title = "月份：" + home.year + "年" + home.month + "月";
-    } else if (home.type == "category") {
+    } else if (type == "category") {
         home.title = "分类：" + home.category;
-    } else if (home.type == "search") {
-        home.title = "搜索结果:"
+    } else if (type == "search") {
+        home.title = "搜索结果:";
+        pageUrl="/search?word="+home.word+"&limit="+limit;
+    }
+    if(pageUrl===undefined){
+        pageUrl="?limit="+limit;
+    }
+    function calcUrl(url,toIndex){
+        return url+"&start="+(toIndex-1)*limit;
     }
 %>
 <h1 class="page-title"><%= home.title %></h1>
@@ -35,7 +47,7 @@
                             </a>
                         </span>
                         <span class="comments-link">
-                            <a href="http://localhost:8889/wordpress/2016/10/24/fffff/#respond"
+                            <a href="#"
                                itemprop="discussionUrl"><%=temp.comment_count%>评论</a>
                         </span>
                 </div>
@@ -47,16 +59,27 @@
 
         <% }); %>
     <div class="navigation pagination" role="navigation">
-        <h3 class="screen-reader-text">文章导航</h3>
+        <h3 class="screen-reader-text">文章导航<%=pageModel.currentPage%></h3>
 
         <div class="nav-links">
-            <span class="page-numbers current">1</span>
-            <a class="prev page-numbers" href="http://localhost:8889/wordpress/">
+            <a class="prev page-numbers <%=current==1?"disabled":""%>" href="<%=calcUrl(pageUrl,current-1)%>">
                 <i class="icon-chevron-left"></i>
             </a>
-            <a class="page-numbers" href="http://localhost:8889/wordpress/?paged=2">2</a>
-            <a class="page-numbers" href="http://localhost:8889/wordpress/?paged=3">3</a>
-            <a class="next page-numbers" href="http://localhost:8889/wordpress/?paged=2">
+            <% if(current> 2){ %>
+            <a class="page-numbers" href="<%=calcUrl(pageUrl,current-2)%>"><%=current-2%></a>
+            <%}%>
+            <% if(current> 1){ %>
+            <a class="page-numbers" href="<%=calcUrl(pageUrl,current-1)%>"><%=current-1%></a>
+            <%}%>
+            <span class="page-numbers current"><%=current%></span>
+            <% if(count-current> 0){ %>
+                <a class="page-numbers" href="<%=calcUrl(pageUrl,current+1)%>"><%=current+1%></a>
+            <%}%>
+            <% if(count-current> 1){ %>
+                <a class="page-numbers" href="<%=calcUrl(pageUrl,current+2)%>"><%=current+2%></a>
+            <%}%>
+
+            <a class="next page-numbers <%=current==pageModel.pageCount?"disabled":""%>" href="<%=calcUrl(pageUrl,current+1)%>">
                 <i class="icon-chevron-right"></i>
             </a>
         </div>
