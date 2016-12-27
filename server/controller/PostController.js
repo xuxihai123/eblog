@@ -129,22 +129,19 @@ exports.doAjax = function () {
 				slug: slug,
 				term_group: 0
 			});
-			Term.save(newTerm).then(function (okPacket) {
-				var newTaxonomy = new TermTaxonomy({
-					term_id: okPacket.insertId,
-					parent: parent,
-					description: description,
-					taxonomy: 'category',
-					count: 0
-				});
-				return TermTaxonomy.save(newTaxonomy);
-			}).then(function () {
+			var newTaxonomy = new TermTaxonomy({
+				parent: parent,
+				description: description,
+				taxonomy: 'category',
+				count: 0
+			});
+			Term.saveWithTrans(newTerm,newTaxonomy).then(function (okPacket) {
 				res.json({
-					success: "ok",
-					loginStatus: "1",
-				})
+					success:"ok",
+					loginStatus:"1"
+				});
 			}).fail(function (err) {
-				res.errorProxy("SqlException", err);
+					res.errorProxy("SqlException",err);
 			});
 
 		},
@@ -171,7 +168,7 @@ exports.doAjax = function () {
 						loginStatus: "1"
 					});
 			    }).fail(function (err) {
-							
+
 			    });
 			}).fail(function (err) {
 				res.errorProxy("SqlException", err);

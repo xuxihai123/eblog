@@ -17,6 +17,8 @@ module.exports = Term;
 
 var sqlhelp = require("../utils/sqlHelper");
 var pagehelp = require("./pageHelper");
+var TermTaxonomy=require("./wp_term_taxonomy");
+var Q=require('q');
 /**
  * @return promise
  * @param term
@@ -27,9 +29,61 @@ Term.save = function save(term, callback) {
 	return sqlhelp.query(sql, term);
 };
 
-Term.saveWithTrans=function saveWithTrans(term,callback) {
-	var 
-}
+Term.saveWithTrans=function saveWithTrans(term,taxonomy) {
+	var defered=Q.defer(),defered2=Q.defer(),conn;
+	sqlhelp.getConnection(function (err,connection) {
+			conn=connection;
+			if(err){
+				defered.reject(err);
+			}else{
+				connection.beginTransaction(function (err) {
+					if(err){
+						defered.reject(err);
+					}else{
+						var termSql="insert into wp_terms set ?";
+						connection.query(termSql,term,function (err,okPacket) {
+							if(err){
+								connection.rollback(function() {
+								  throw err;
+								});
+							}else{
+								taxonomy.term_id=okPacket.insertId;
+								connection.query("insert into wp_term_taxonomy set ?",taxonomy,function (err,okPacket) {
+									if(err){
+										connection.rollback(function() {
+										  throw err;
+										});
+									}else{
+										connection.commit(function(err) {
+										  if (err) {
+											  connection.rollback(function() {
+												throw err;
+											  });
+											}else{
+											  defered.resolve(okPacket);
+											}
+										});
+
+									}
+								});
+							}
+
+						});
+					}
+				});
+			}
+	});
+	defered.promise.then(function (okPacket) {
+		defered2.resolve(okPacket);
+	}).fail(function (err) {
+		console.log(err.stack);
+		if(conn){
+			conn.release();
+		}
+		defered2.reject(err);
+	});
+	return defered2.promise;
+};
 /**
  * @return promise
  * @param term_id
