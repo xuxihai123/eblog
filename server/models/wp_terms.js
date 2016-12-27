@@ -26,6 +26,10 @@ Term.save = function save(term, callback) {
 	var sql = "insert into wp_terms set ?";
 	return sqlhelp.query(sql, term);
 };
+
+Term.saveWithTrans=function saveWithTrans(term,callback) {
+	var 
+}
 /**
  * @return promise
  * @param term_id
@@ -104,6 +108,3 @@ Term.delete = function (term_id, callback) {
 	var sql = "delete  from wp_terms where term_id=?";
 	return sqlhelp.query(sql,term_id);
 };
-
-
-
