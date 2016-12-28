@@ -123,7 +123,7 @@ Post.findByYearMonthPageModel = function (obj, offset, limit) {
  * 获取最新的6则文章(左侧最新文章显示)
  */
 Post.findNewestList = function () {
-	var sql = 'select ID, post_title,post_status,post_date from wp_posts  where post_type=\'post\' and post_status=\'publish\' order by post_date desc limit 6';
+	var sql = 'select ID,comment_count, post_title,post_status,post_date from wp_posts  where post_type=\'post\' and post_status=\'publish\' order by post_date desc limit 6';
 	return sqlhelp.query(sql);
 };
 /**
@@ -141,7 +141,7 @@ Post.findNewestPage = function () {
  * @param limit
  */
 Post.findNewestListPageModel = function (offset, limit) {
-	var sql = 'select ID, post_title,post_content,post_status,post_date from wp_posts  where post_type=\'post\'and  post_status=\'publish\' order by post_date desc';
+	var sql = 'select ID,comment_count, post_title,post_content,post_status,post_date from wp_posts  where post_type=\'post\'and  post_status=\'publish\' order by post_date desc';
 	return pagehelp.getPageModel(offset, limit, sql);
 };
 /**
@@ -149,19 +149,10 @@ Post.findNewestListPageModel = function (offset, limit) {
  * 获取所有文章的归档，即年月集合
  */
 Post.findArticleArchive = function () {
-	var sql = 'select year(post_date) as year,month(post_date) as month,count(ID) from wp_posts group by year(post_date),month(post_date) order by year(post_date) desc,month(post_date)desc';
+	var sql = 'select year(post_date) as year,month(post_date) as month,count(ID) as archive_count from wp_posts where post_type=\'post\' group by year(post_date),month(post_date) order by year(post_date) desc,month(post_date)desc';
 	return sqlhelp.query(sql);
 };
-/**
- * @return promise
- * @param word
- * 文章搜索
- */
-Post.findPostByWord = function (word) {
-	word = "%" + word + "%";
-	var sql = 'select ID, post_title,post_status,post_date from wp_posts  where  post_title like ?';
-	return sqlhelp.query(sql, word);
-};
+
 /**
  * @return promise
  * @param word
@@ -171,7 +162,7 @@ Post.findPostByWord = function (word) {
  */
 Post.findPostByWordPageModel = function (word, offset, limit) {
 	word = "%" + word + "%";
-	var sql = 'select ID, post_title,post_content,post_status,post_date from wp_posts  where post_type=\'post\'and  post_status=\'publish\' and post_title like ? order by post_date desc';
+	var sql = 'select ID,comment_count, post_title,post_content,post_status,post_date from wp_posts  where post_type=\'post\'and  post_status=\'publish\' and post_title like ? order by post_date desc';
 	sql = sqlhelp.format(sql, [word]);
 	return pagehelp.getPageModel(offset, limit, sql);
 };

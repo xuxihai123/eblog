@@ -38,6 +38,7 @@ Term.saveWithTrans = function saveWithTrans(term, taxonomy) {
 
 	function reject(err, connection) {
 		connection.rollback(function () {
+			console.log('rollback.........');
 			defered.reject(err);
 			connection && connection.release();
 		});
