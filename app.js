@@ -46,32 +46,15 @@ urls.autoproxyView(app);
 app.use(function (req, res, next) {
 	var err = new Error('Not Found');
 	err.status = 404;
-	next(err);
+	console.info("Not Found "+req.url);
+	res.errorProxy("404", err);
+	//next(err);
 });
 
-// error handlers
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-	app.use(function (err, req, res, next) {
-		res.status(err.status || 500);
-		console.error(err.stack);
-		res.render('error', {
-			message: err.message,
-			error: err
-		});
-	});
-}
-
-// production error handler
-// no stacktraces leaked to user
 app.use(function (err, req, res, next) {
 	res.status(err.status || 500);
 	console.error(err.stack);
-	res.render('error', {
-		message: err.message,
-		error: err
-	});
+	res.errorProxy("500", err);
 });
 
 module.exports = app;

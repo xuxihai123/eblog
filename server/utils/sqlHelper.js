@@ -17,9 +17,9 @@ exports.query = function () {
 
 	return deferred.promise;
 };
-exports.getConnection=function () {
-	return process.dbpool.getConnection.apply(process.dbpool,arguments);
-}
+exports.getConnection = function () {
+	return process.dbpool.getConnection.apply(process.dbpool, arguments);
+};
 exports.escape = mysql.escape;
 exports.escapeId = mysql.escapeId;
 exports.format = mysql.format;

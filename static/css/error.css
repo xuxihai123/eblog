@@ -1,7 +1,6 @@
 
 /******reset******/
 html {color: #3a3a3a}
-body,html{height:100%}
 body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td {margin: 0;padding: 0;}
 body {background: #FFF; font: 12px "Helvetica Neue",Helvetica,STheiti,微软雅黑,黑体,Arial,Tahoma,sans-serif,serif;}
 table {border-collapse: collapse;border-spacing: 0;}

@@ -155,23 +155,18 @@ exports.doAjax = function () {
 				slug: slug,
 				term_group: 0
 			});
-			Term.save(newTerm).then(function (okPacket) {
-				var newTaxonomy = new TermTaxonomy({
-					term_id: okPacket.insertId,
-					description: description,
-					taxonomy: 'post_tag',
-					count: 0
+			var newTaxonomy = new TermTaxonomy({
+				description: description,
+				taxonomy: 'post_tag',
+				count: 0
+			});
+			Term.saveWithTrans(newTerm,newTaxonomy).then(function (okPacket) {
+				res.json({
+					success:"ok",
+					loginStatus:"1"
 				});
-			    TermTaxonomy.save(newTaxonomy).then(function success() {
-					res.json({
-						success: "ok",
-						loginStatus: "1"
-					});
-			    }).fail(function (err) {
-
-			    });
 			}).fail(function (err) {
-				res.errorProxy("SqlException", err);
+				res.errorProxy("SqlException",err);
 			});
 		},
 		"/admin/delete_post.do": function (req, res, next) {

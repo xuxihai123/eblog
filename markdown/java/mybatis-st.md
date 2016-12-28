@@ -1,4 +1,7 @@
-1. 编写全局配置文件configuration.xml
+·TOC]
+### mybatis使用入门
+1.编写全局配置文件configuration.xml
+
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE configuration
@@ -28,12 +31,11 @@
     </mappers>
 </configuration>
 ```
-2. 这里编写一个MyBatis工具类
+2.这里编写一个MyBatis工具类
+
 ```java
 package cn.sky.bookshop.utils;
-
 import java.io.IOException;
-
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -60,8 +62,10 @@ public final class MyBatisUtil {
     }
 }
 ```
-> 然后接可以先建立一个测试类加载测试一番了。。
-3. 按Javabean规范写的一个User类
+然后接可以先建立一个测试类加载测试一番了。。
+
+3.按Javabean规范写的一个User类
+
 ```java
 package cn.sky.bookshop.beans;
 
@@ -103,7 +107,8 @@ public class User {
     }
 }
 ```
-4. 这里将UserDao接口命名为UserMapper接口
+
+4.这里将UserDao接口命名为UserMapper接口
 
 ```java
 package cn.sky.bookshop.dao;
@@ -122,7 +127,9 @@ public interface UserMapper {
     public void deleteUserById(int id)throws Exception;
 }
 ```
-5. 关键是这里的UserMapper.xml
+
+5.关键是这里的UserMapper.xml
+
 ```java
 <?xml version="1.0" encoding="UTF-8" ?>
  <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -153,7 +160,9 @@ public interface UserMapper {
 </mapper>
 
 ```
-6. 注意：上面的步骤配置有些严格。。因为下面的接口动态代理对象（就是个接口的实现）是根据UserMapper接口和UserMapper.xml文件生成的! 下面是我的DAO测试类
+
+6.注意：上面的步骤配置有些严格。。因为下面的接口动态代理对象（就是个接口的实现）是根据UserMapper接口和UserMapper.xml文件生成的! 下面是我的DAO测试类
+
 ```java
 UserMapperTest
 package cn.sky.bookshop.test;

@@ -17,8 +17,7 @@ module.exports = Term;
 
 var sqlhelp = require("../utils/sqlHelper");
 var pagehelp = require("./pageHelper");
-var TermTaxonomy=require("./wp_term_taxonomy");
-var Q=require('q');
+var Q = require('q');
 /**
  * @return promise
  * @param term
@@ -28,58 +27,57 @@ Term.save = function save(term, callback) {
 	var sql = "insert into wp_terms set ?";
 	return sqlhelp.query(sql, term);
 };
+/**
+ * save term and save taxonomy
+ * @param term
+ * @param taxonomy
+ * @returns {*|promise.promise|jQuery.promise|d.promise|promise}
+ */
+Term.saveWithTrans = function saveWithTrans(term, taxonomy) {
+	var defered = Q.defer(), defered2 = Q.defer(), conn;
 
-Term.saveWithTrans=function saveWithTrans(term,taxonomy) {
-	var defered=Q.defer(),defered2=Q.defer(),conn;
-	sqlhelp.getConnection(function (err,connection) {
-			conn=connection;
-			if(err){
-				defered.reject(err);
-			}else{
-				connection.beginTransaction(function (err) {
-					if(err){
-						defered.reject(err);
-					}else{
-						var termSql="insert into wp_terms set ?";
-						connection.query(termSql,term,function (err,okPacket) {
-							if(err){
-								connection.rollback(function() {
-								  throw err;
-								});
-							}else{
-								taxonomy.term_id=okPacket.insertId;
-								connection.query("insert into wp_term_taxonomy set ?",taxonomy,function (err,okPacket) {
-									if(err){
-										connection.rollback(function() {
-										  throw err;
-										});
-									}else{
-										connection.commit(function(err) {
-										  if (err) {
-											  connection.rollback(function() {
-												throw err;
-											  });
-											}else{
-											  defered.resolve(okPacket);
-											}
-										});
+	function reject(err, connection) {
+		connection.rollback(function () {
+			defered.reject(err);
+			connection && connection.release();
+		});
+	}
 
-									}
-								});
+	sqlhelp.getConnection(function (err, connection) {
+		conn = connection;
+		if (err) {
+			return reject(err, conn);
+		}
+		connection.beginTransaction(function (err) {
+			if (err) {
+				return reject(err, conn);
+			}
+			connection.query("insert into wp_terms set ?", term, function (err, okPacket) {
+				if (err) {
+					return reject(err, conn);
+				}
+				taxonomy.term_id = okPacket.insertId;
+				connection.query("insert into wp_term_taxonomy set ?", taxonomy, function (err, okPacket) {
+					if (err) {
+						reject(err, conn);
+					} else {
+						connection.commit(function (err) {
+							if (err) {
+								reject(err, conn);
+							} else {
+								defered.resolve(okPacket);
 							}
-
 						});
+
 					}
 				});
-			}
+			});
+		});
 	});
 	defered.promise.then(function (okPacket) {
 		defered2.resolve(okPacket);
 	}).fail(function (err) {
 		console.log(err.stack);
-		if(conn){
-			conn.release();
-		}
 		defered2.reject(err);
 	});
 	return defered2.promise;
@@ -100,7 +98,7 @@ Term.delCategory = function del(term_id, callback) {
  */
 Term.update = function save(term, callback) {
 	var sql = "update wp_terms set name = ?, slug = ? where term_id=?";
-	return sqlhelp.query(sql, [term.name,term.slug,term.term_id]);
+	return sqlhelp.query(sql, [term.name, term.slug, term.term_id]);
 };
 /**
  * @return promise
@@ -160,5 +158,5 @@ Term.getCategoryPage = function (offset, limit) {
  */
 Term.delete = function (term_id, callback) {
 	var sql = "delete  from wp_terms where term_id=?";
-	return sqlhelp.query(sql,term_id);
+	return sqlhelp.query(sql, term_id);
 };
