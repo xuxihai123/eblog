@@ -1,5 +1,7 @@
 var sqlhelp = require("../utils/sqlHelper");
 var Q = require('q');
+var sqlfirewall=require("../utils/sqlFirewall");
+
 function PageModel(offset, limit, list, count) {
 	// 页面参数
 	this.offset = offset;
@@ -33,21 +35,25 @@ function PageModel(offset, limit, list, count) {
 
 }
 function getPageBean(offset, limit, sql, parameters) {
-	console.log("**********************分页查询开始************************");
-	var pagemodel, queryCountSql, limitSql;
-	limitSql = sql + " limit " + offset + "," + limit;
-	queryCountSql = sql.toLowerCase().replace(/select.*from/, "select count(*) from");
 	var defered = Q.defer();
-	Q.all([sqlhelp.query(queryCountSql, parameters), sqlhelp.query(limitSql, parameters)])
-		.spread(function (countResult, list) {
-			console.log("**********************分页查询结束************************");
-			pagemodel = new PageModel(offset, limit, list, countResult[0]["count(*)"]);
-			defered.resolve(pagemodel);
-		})
-		.fail(function (err) {
-			defered.reject(err);
-		});
-
+	if(sqlfirewall("number",[offset,limit])){
+		console.log("**********************分页查询开始************************");
+		var pagemodel, queryCountSql, limitSql;
+		limitSql = sql + " limit " + offset + "," + limit;
+		queryCountSql = sql.toLowerCase().replace(/select.*from/, "select count(*) from");
+		Q.all([sqlhelp.query(queryCountSql, parameters), sqlhelp.query(limitSql, parameters)])
+			.spread(function (countResult, list) {
+				console.log("**********************分页查询结束************************");
+				pagemodel = new PageModel(offset, limit, list, countResult[0]["count(*)"]);
+				defered.resolve(pagemodel);
+			})
+			.fail(function (err) {
+				defered.reject(err);
+			});
+	}else{
+		console.log('sqlinject.....???????????');
+		defered.reject("sqlInject");
+	}
 	return defered.promise;
 }
 

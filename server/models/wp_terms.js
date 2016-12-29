@@ -110,6 +110,11 @@ Term.get = function get(term_id, callback) {
 	var sql = 'select * from wp_terms where term_id=' + sqlhelp.escape(term_id);
 	return sqlhelp.query(sql);
 };
+
+Term.getBySlug = function get(slug) {
+	var sql = 'select * from wp_terms where slug=' + sqlhelp.escape(slug);
+	return sqlhelp.query(sql);
+};
 /**
  * @return promise
  * @param callback

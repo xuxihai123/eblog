@@ -27,10 +27,11 @@ exports.index = function () {
 						type: "index",
 						pageModel: postPageModel
 					};
-					return res.render("index", {"title": "Express"});
+					return res.render("index");
 				}).fail(function (err) {
 				res.errorProxy("500", err);
 			});
+
 		}
 	}
 };
@@ -63,7 +64,7 @@ exports.search = function () {
 						word:word,
 						pageModel: pageModel
 					};
-					return res.render("index", {"title": "Express"});
+					return res.render("index");
 				}).fail(function (err) {
 				res.errorProxy("500", err);
 			});
@@ -103,7 +104,7 @@ exports.indexArticle = function () {
 					req.home = {
 						type: "article"
 					};
-					return res.render("index", {"title": "Express"});
+					return res.render("index", {"title": req.previewPost.post_title});
 				})
 				.fail(function (err) {
 					res.errorProxy("500", err);
@@ -172,7 +173,7 @@ exports.indexArchive = function () {
 					req.articleArchList = list3;
 					req.postNewestList = list4;
 					req.pageNewestList = list5;
-					res.render("index", {"title": "Express"});
+					res.render("index");
 				})
 				.fail(function (err) {
 					res.errorProxy("500", err);
@@ -199,11 +200,12 @@ exports.indexCategory = function () {
 				console.log(pargs1 + "->" + pargs3);
 			} else {
 				Q.all([Post.findByCategoryPageModel(pargs1, offset, limit),
+						Term.getBySlug(pargs1),
 						Term.getAllCategory(),
 						Post.findArticleArchive(),
 						Post.findNewestList(),
 						Post.findNewestPage()])
-					.spread(function (pageModel, list2, list3, list4, list5) {
+					.spread(function (pageModel,term, list2, list3, list4, list5) {
 						req.home = {
 							type: "category",
 							category: pargs1,
@@ -213,7 +215,7 @@ exports.indexCategory = function () {
 						req.articleArchList = list3;
 						req.postNewestList = list4;
 						req.pageNewestList = list5;
-						res.render("index", {"title": "Express"});
+						res.render("index", {"title":term[0].name});
 					})
 					.fail(function (err) {
 						res.errorProxy("500", err);
