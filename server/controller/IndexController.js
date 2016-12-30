@@ -136,7 +136,7 @@ exports.indexPage = function () {
 					req.home = {
 						type: "article"
 					};
-					return res.render("index", {"title": "Express"});
+					return res.render("index", {"title": posts[0].name});
 				})
 				.fail(function (err) {
 					res.errorProxy("500", err);
