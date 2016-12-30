@@ -20,7 +20,8 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
                 <span class="sep">·</span>
                 <span class="comments-link">
                     <a href="http://localhost:8889/wordpress/?p=21#respond"
-                       itemprop="discussionUrl"><%= post.comment_count %>评论</a>
+                       itemprop="discussionUrl"></a>
+                    <span><%= post.comment_count %>评论</span>
                 </span>
                 <% } %>
             </div>
@@ -67,6 +68,10 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
                 <div class="control-group" style="display: none">
                     <label for="post">post</label>
                     <input id="post" name="post_id" type="text" value="<%= post.ID %>">
+                </div>
+                <div class="control-group" style="display: none">
+                    <label for="clientUrl">url</label>
+                    <input id="clientUrl" name="clientUrl" type="text" value="<%=request.url%>">
                 </div>
                 <div class="control-group">
                     <label for="content">评论</label>

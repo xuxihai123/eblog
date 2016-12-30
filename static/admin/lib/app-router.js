@@ -55,7 +55,7 @@
 					"NodeName": "PostTag",
 				}
 			]
-		},{
+		}, {
 			"ActionName": "页面",
 			"Level": "1",
 			"NodeName": "Page",
@@ -92,6 +92,18 @@
 					"RouteUrl": "/CommentApprove/:CommentId"
 				}
 			]
+		}, {
+			"ActionName": "设置",
+			"Level": "1",
+			"NodeName": "Setting",
+			"MenuList": [
+				{
+					"ActionName": "个性设置",
+					"Level": "2",
+					"NodeName": "PersonSetting"
+				}
+			]
+
 		}
 	];
 	//菜单生成导航数组
