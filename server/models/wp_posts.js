@@ -176,11 +176,20 @@ Post.findPostByWordPageModel = function (word, offset, limit) {
 Post.getPostPageModel = function (offset, limit) {
 	var sql = "" +
 		"select " +
-		"T1.ID,post_title,user_login,post_type,menu_order,comment_count,post_date " +
-		"from wp_posts as T1 left join wp_users as T2 on T1.post_author=T2.ID " +
-		"where post_type='post' order by T1.post_date desc";
+		"T1.ID,T5.name as category_name,post_title,user_login,post_type,menu_order,comment_count,post_date, " +
+		"(select  T5.name from   wp_posts as T1  "+
+ 		"right join wp_term_relationships as  T3 on T1.ID=T3.object_id "+
+  		"right join wp_term_taxonomy as  T4 on T3.term_taxonomy_id=T4.term_taxonomy_id "+
+		"right join wp_terms as T5 on T4.term_id=T5.term_id where post_type='post' and T4.taxonomy='post_tag')tag_name "+
+		"from wp_posts as T1 "+
+		"left join wp_users as T2 on T1.post_author=T2.ID "+
+		"left join wp_term_relationships as T3 on T1.ID=T3.object_id "+
+		"right join wp_term_taxonomy as T4 on T3.term_taxonomy_id=T4.term_taxonomy_id "+
+		"right join wp_terms as T5 on T4.term_id=T5.term_id " +
+		"where post_type='post' and T4.taxonomy='category' order by T1.post_date desc";
 	return pagehelp.getPageModel(offset, limit, sql);
 };
+
 /**
  * @return promise
  * @param offset

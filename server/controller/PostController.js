@@ -67,8 +67,8 @@ exports.doAjax = function () {
 		"/admin/post_new.do": function (req, res, next) {
 			var req_pargs = req.body;
 			var post_title = req_pargs.post_title;
-			var term_id1 = req_pargs.term_id1;
-			var term_id2 = req_pargs.term_id2;
+			var term_taxonomy_id1 = req_pargs.term_id1;
+			var term_taxonomy_id2 = req_pargs.term_id2;
 			var post_content = req_pargs.post_content;
 			var newPost = new Post({
 				post_author: req.session.user.ID,
@@ -78,13 +78,13 @@ exports.doAjax = function () {
 				post_date_gmt: new Date(),
 			});
 			Post.save(newPost).then(function (okPacket) {
-				var relationships1 = [okPacket.insertId, term_id1, 0];
-				var relationships2 = [okPacket.insertId, term_id2, 0];
+				var relationships1 = [okPacket.insertId, term_taxonomy_id1, 0];
+				var relationships2 = [okPacket.insertId, term_taxonomy_id2, 0];
 				var relations = [];
-				if (term_id1) {
+				if (term_taxonomy_id1) {
 					relations.push(relationships1);
 				}
-				if (term_id2) {
+				if (term_taxonomy_id2) {
 					relations.push(relationships2);
 				}
 				return TermRelationship.saveMulti(relations);
