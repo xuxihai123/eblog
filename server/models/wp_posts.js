@@ -54,6 +54,7 @@ module.exports = Post;
 
 var sqlhelp = require("../utils/sqlHelper");
 var pagehelp = require("./pageHelper");
+var postSqls = require("./sqlTemplate").postSql;
 /**
  *
  * @param post
@@ -61,18 +62,31 @@ var pagehelp = require("./pageHelper");
  * 添加文章
  */
 Post.save = function save(post) {
-	var sql = "insert into wp_posts set ?";
-	return sqlhelp.query(sql, post);
+	return sqlhelp.query(postSqls.save, post);
 };
-
+/**
+ *@return promise
+ * @param post_id
+ * 删除文章或页面
+ */
+Post.delete = function (post_id) {
+	return sqlhelp.query(postSqls.delete, post_id);
+};
+/**
+ * @return promise
+ * @param post
+ * 更新文章
+ */
+Post.update = function (post) {
+	return sqlhelp.query(postSqls.update, [post.post_title, post.post_content, post.ID]);
+};
 /**
  * @return promise
  * @param ID
  * 获取文章
  */
 Post.get = function get(ID) {
-	var sql = 'select * from wp_posts where ID=?';
-	return sqlhelp.query(sql, [ID]);
+	return sqlhelp.query(postSqls.get, [ID]);
 };
 /**
  * @return promise
@@ -80,8 +94,7 @@ Post.get = function get(ID) {
  * 获取前一篇文章
  */
 Post.getPrev = function (ID) {
-	var sql = 'select * from wp_posts where ID<? and post_type=\'post\' and post_status=\'publish\' order by ID desc limit 1';
-	return sqlhelp.query(sql, [ID]);
+	return sqlhelp.query(postSqls.getPrev, [ID]);
 };
 /**
  * @return promise
@@ -89,8 +102,7 @@ Post.getPrev = function (ID) {
  * 下一篇文章
  */
 Post.getNext = function (ID) {
-	var sql = 'select * from wp_posts where ID>? and post_type=\'post\' and post_status=\'publish\' order by ID  limit 1';
-	return sqlhelp.query(sql, [ID]);
+	return sqlhelp.query(postSqls.getNext, [ID]);
 };
 
 /**
@@ -101,8 +113,7 @@ Post.getNext = function (ID) {
  * @returns {*}
  */
 Post.findByCategoryPageModel = function (category, offset, limit) {
-	var sql = 'select * from wp_terms as T1,wp_term_relationships as T2,wp_posts as T3 where T1.slug=? and T1.term_id=T2.term_taxonomy_id and T2.object_id=T3.ID and T3.post_status=\'publish\' order by post_date desc';
-	sql = sqlhelp.format(sql, [category]);
+	var sql = sqlhelp.format(postSqls.findByCategoryPageModel, [category]);
 	return pagehelp.getPageModel(offset, limit, sql);
 };
 
@@ -114,8 +125,7 @@ Post.findByCategoryPageModel = function (category, offset, limit) {
  * @returns {*}
  */
 Post.findByYearMonthPageModel = function (obj, offset, limit) {
-	var sql = 'select *  from wp_posts where year(post_date)=? and month(post_date)=? and post_type=\'post\' and post_status=\'publish\' order by post_date desc';
-	sql = sqlhelp.format(sql, [obj.year, obj.month]);
+	var sql = sqlhelp.format(postSqls.findByYearMonthPageModel, [obj.year, obj.month]);
 	return pagehelp.getPageModel(offset, limit, sql);
 };
 /**
@@ -123,16 +133,14 @@ Post.findByYearMonthPageModel = function (obj, offset, limit) {
  * 获取最新的6则文章(左侧最新文章显示)
  */
 Post.findNewestList = function () {
-	var sql = 'select ID,comment_count, post_title,post_status,post_date from wp_posts  where post_type=\'post\' and post_status=\'publish\' order by post_date desc limit 6';
-	return sqlhelp.query(sql);
+	return sqlhelp.query(postSqls.findNewestList);
 };
 /**
  * @return promise
  * 获取最新的6则页面(左侧关于...)
  */
 Post.findNewestPage = function () {
-	var sql = 'select ID, post_title,post_status,post_date from wp_posts  where post_type=\'page\' order by post_date desc limit 6';
-	return sqlhelp.query(sql);
+	return sqlhelp.query(postSqls.findNewestPage);
 };
 /**
  * 获取最新的文章，带分页,降序，状态为已经发布
@@ -141,16 +149,14 @@ Post.findNewestPage = function () {
  * @param limit
  */
 Post.findNewestListPageModel = function (offset, limit) {
-	var sql = 'select ID,comment_count, post_title,post_content,post_status,post_date from wp_posts  where post_type=\'post\'and  post_status=\'publish\' order by post_date desc';
-	return pagehelp.getPageModel(offset, limit, sql);
+	return pagehelp.getPageModel(offset, limit, postSqls.findNewestListPageModel);
 };
 /**
  * @return promise
  * 获取所有文章的归档，即年月集合
  */
 Post.findArticleArchive = function () {
-	var sql = 'select year(post_date) as year,month(post_date) as month,count(ID) as archive_count from wp_posts where post_type=\'post\' group by year(post_date),month(post_date) order by year(post_date) desc,month(post_date)desc';
-	return sqlhelp.query(sql);
+	return sqlhelp.query(postSqls.findArticleArchive);
 };
 
 /**
@@ -162,7 +168,7 @@ Post.findArticleArchive = function () {
  */
 Post.findPostByWordPageModel = function (word, offset, limit) {
 	word = "%" + word + "%";
-	var sql = 'select ID,comment_count, post_title,post_content,post_status,post_date from wp_posts  where post_type=\'post\'and  post_status=\'publish\' and post_title like ? order by post_date desc';
+	var sql = postSqls.findPostByWordPageModel;
 	sql = sqlhelp.format(sql, [word]);
 	return pagehelp.getPageModel(offset, limit, sql);
 };
@@ -174,20 +180,7 @@ Post.findPostByWordPageModel = function (word, offset, limit) {
  * 获取所有文章，用于后台管理
  */
 Post.getPostPageModel = function (offset, limit) {
-	var sql = "" +
-		"select " +
-		"T1.ID,T5.name as category_name,post_title,user_login,post_type,menu_order,comment_count,post_date, " +
-		"(select  T5.name from   wp_posts as T1  "+
- 		"right join wp_term_relationships as  T3 on T1.ID=T3.object_id "+
-  		"right join wp_term_taxonomy as  T4 on T3.term_taxonomy_id=T4.term_taxonomy_id "+
-		"right join wp_terms as T5 on T4.term_id=T5.term_id where post_type='post' and T4.taxonomy='post_tag')tag_name "+
-		"from wp_posts as T1 "+
-		"left join wp_users as T2 on T1.post_author=T2.ID "+
-		"left join wp_term_relationships as T3 on T1.ID=T3.object_id "+
-		"right join wp_term_taxonomy as T4 on T3.term_taxonomy_id=T4.term_taxonomy_id "+
-		"right join wp_terms as T5 on T4.term_id=T5.term_id " +
-		"where post_type='post' and T4.taxonomy='category' order by T1.post_date desc";
-	return pagehelp.getPageModel(offset, limit, sql);
+	return pagehelp.getPageModel(offset, limit, postSqls.getPostPageModel);
 };
 
 /**
@@ -198,29 +191,6 @@ Post.getPostPageModel = function (offset, limit) {
  * 获取所有页面，用于后台管理
  */
 Post.getPagePageModel = function (offset, limit) {
-	var sql = "" +
-		"select " +
-		"T1.ID,post_title,user_login,post_type,menu_order,comment_count,post_date " +
-		"from wp_posts as T1 " +
-		"left join wp_users as T2 on T1.post_author=T2.ID " +
-		"where post_type='page' order by T1.post_date desc";
-	return pagehelp.getPageModel(offset, limit, sql);
+	return pagehelp.getPageModel(offset, limit, postSqls.getPagePageModel);
 };
-/**
- *@return promise
- * @param post_id
- * 删除文章或页面
- */
-Post.delete = function (post_id) {
-	var sql = "delete  from wp_posts where ID=?";
-	return sqlhelp.query(sql, post_id);
-};
-/**
- * @return promise
- * @param post
- * 更新文章
- */
-Post.update = function (post) {
-	var sql = "update wp_posts set post_title = ?, post_content = ? where ID=?";
-	return sqlhelp.query(sql, [post.post_title, post.post_content, post.ID]);
-};
+

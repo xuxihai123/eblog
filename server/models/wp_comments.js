@@ -83,6 +83,11 @@ Comment.getPageByPostId = function (post_id, offset, limit) {
 	sql = sqlhelp.format(sql, [post_id]);
 	return pagehelp.getPageModel(offset, limit, sql);
 };
+Comment.getCommentByPostId=function(post_id) {
+	var sql = "select * from wp_comments where comment_post_ID=?";
+	sql = sqlhelp.format(sql, [post_id]);
+	return sqlhelp.query(sql);
+};
 /**
  * @return promise
  * @param comment_ID

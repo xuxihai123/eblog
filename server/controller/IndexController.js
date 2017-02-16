@@ -1,6 +1,7 @@
 var User = require("../models/wp_users");
 var Post = require("../models/wp_posts");
 var Term = require("../models/wp_terms");
+var comment = require("../models/wp_comments");
 var Q = require('q');
 /**
  * 首页
@@ -85,11 +86,12 @@ exports.indexArticle = function () {
 			Q.all([Post.get(slug),
 					Post.getPrev(slug),
 					Post.getNext(slug),
+					comment.getCommentByPostId(slug),
 					Term.getAllCategory(),
 					Post.findArticleArchive(),
 					Post.findNewestList(),
 					Post.findNewestPage()])
-				.spread(function (posts, prevPosts, nextPosts, categoryList, articleArchList, postNewestList, pageNewestList) {
+				.spread(function (posts, prevPosts, nextPosts,commentList, categoryList, articleArchList, postNewestList, pageNewestList) {
 					req.previewPost = posts[0];
 					if (prevPosts.length > 0) {
 						req.prevPost = prevPosts[0];
@@ -97,6 +99,7 @@ exports.indexArticle = function () {
 					if (nextPosts.length > 0) {
 						req.nextPost = nextPosts[0];
 					}
+					req.commentList = commentList;
 					req.categoryList = categoryList;
 					req.articleArchList = articleArchList;
 					req.postNewestList = postNewestList;

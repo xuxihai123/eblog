@@ -2,6 +2,7 @@
 var post = request.previewPost;
 var prev = request.prevPost;
 var next = request.nextPost;
+var commentList=request.commentList;
 var url = utils.dateFormat(post.post_date, "yyyy/MM/");
 var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
 %>
@@ -64,37 +65,50 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
                     </a>
                 </small>
             </h3>
-            <form class="form-horizontal" name="post-new" action="/comment/post_comment.do" method="post">
-                <div class="control-group" style="display: none">
+            <form  name="post-new" action="/comment/post_comment.do" method="post">
+                <div class="form-group" style="display: none">
                     <label for="post">post</label>
-                    <input id="post" name="post_id" type="text" value="<%= post.ID %>">
+                    <input id="post" class="form-control" name="post_id" type="text" value="<%= post.ID %>">
                 </div>
-                <div class="control-group" style="display: none">
+                <div class="form-group" style="display: none">
                     <label for="clientUrl">url</label>
-                    <input id="clientUrl" name="clientUrl" type="text" value="<%=request.url%>">
+                    <input id="clientUrl" class="form-control" name="clientUrl" type="text" value="<%=request.url%>">
                 </div>
-                <div class="control-group">
+                <div class="form-group">
                     <label for="content">评论</label>
-                    <textarea name="content" required="required"></textarea>
+                    <textarea name="content" class="form-control" required="required"></textarea>
                 </div>
-                <div class="control-group">
+                <div class="form-group">
                     <label for="author">姓名 <span class="required">*</span></label>
-                    <input id="author" name="author" type="text" required="required">
+                    <input id="author" class="form-control" name="author" type="text" required="required">
                 </div>
-                <div class="control-group">
+                <div class="form-group">
                     <label for="email">电子邮件 <span class="required">*</span></label>
-                    <input id="email" name="email" type="email" required="required">
+                    <input id="email" class="form-control" name="email" type="email" required="required">
                 </div>
-                <div class="control-group">
+                <div class="form-group">
                     <label for="url">站点</label>
-                    <input id="url" name="url" type="url">
+                    <input id="url" class="form-control" name="url" type="url">
                 </div>
                 <div class="btn-div">
                     <button type="submit" id="submit" class="btn" value="">发表评论</button>
                 </div>
             </form>
         </div><!-- #respond -->
-
+        <div class="row-fluid">
+            <% commentList.forEach(function(temp){%>
+            <div class="timeline-comment-wrapper">
+                <div class="timeline-comment">
+                    <div class="timeline-comment-header">
+                        <span><%=temp.comment_author%></span>
+                    </div>
+                    <div class="timeline-comment-body">
+                        <p><%=temp.comment_content%></p>
+                    </div>
+                </div>
+            </div>
+            <%})%>
+        </div>
 
     </div>
     <% } %>

@@ -17,6 +17,7 @@ module.exports = Term;
 
 var sqlhelp = require("../utils/sqlHelper");
 var pagehelp = require("./pageHelper");
+var termsqls = require("./sqlTemplate").termSql;
 var Q = require('q');
 /**
  * @return promise
@@ -117,19 +118,16 @@ Term.getBySlug = function get(slug) {
 };
 /**
  * @return promise
- * @param callback
  */
-Term.getAllCategory = function get(callback) {
-	var sql = "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id and T2.taxonomy='category'";
-	return sqlhelp.query(sql);
+Term.getAllCategory = function get() {
+	return sqlhelp.query(termsqls.getAllCategory);
 };
 /**
  * return promise
  * @param callback
  */
 Term.getAllTag = function get(callback) {
-	var sql = "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id and T2.taxonomy='post_tag'";
-	return sqlhelp.query(sql);
+	return sqlhelp.query(termsqls.getAllTag);
 };
 /**
  * return promise
@@ -145,8 +143,7 @@ Term.getAll = function get(callback) {
  * @returns {*}
  */
 Term.getTagPage = function (offset, limit) {
-	var sql = "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id and T2.taxonomy='post_tag'";
-	return pagehelp.getPageModel(offset, limit, sql);
+	return pagehelp.getPageModel(offset, limit, termsqls.getTagPage);
 };
 /**
  * @param offset
@@ -154,8 +151,7 @@ Term.getTagPage = function (offset, limit) {
  * @returns {*}
  */
 Term.getCategoryPage = function (offset, limit) {
-	var sql = "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id and T2.taxonomy='category'";
-	return pagehelp.getPageModel(offset, limit, sql);
+	return pagehelp.getPageModel(offset, limit, termsqls.getCategoryPage);
 };
 /**
  *@return promise
