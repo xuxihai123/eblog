@@ -10,7 +10,7 @@ var postSql = {
 	//更新文章
 	update: "update wp_posts set post_title = ?, post_content = ? where ID=?",
 	//获取文章
-	get: "select * from wp_posts where ID=?",
+	get: "select * from wp_posts as T1,wp_term_relationships as T2,wp_term_taxonomy as T3 where ID=? T1.ID=T2.object_id and T2.term_taxonomy_id=T3.term_taxonomy_id",
 	//获取前一篇文章
 	getPrev: "select * from wp_posts where ID<? and post_type=\'post\' and post_status=\'publish\' order by ID desc limit 1",
 	//下一篇文章

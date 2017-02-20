@@ -96,11 +96,16 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
             </form>
         </div><!-- #respond -->
         <div class="row-fluid">
-            <% commentList.forEach(function(temp){%>
+            <% commentList.forEach(function(temp,index){%>
             <div class="timeline-comment-wrapper">
-                <div class="timeline-comment">
+                <div class="timeline-comment" id="comment_<%=index+1%>">
                     <div class="timeline-comment-header">
-                        <span><%=temp.comment_author%></span>
+                        <div class="comment-header-lt">
+                            <span><%=temp.comment_author%>&nbsp;&nbsp;&nbsp;&nbsp;<%=utils.dateFormat(temp.comment_date,'yyyy-MM-dd HH:mm:ss')%></span>
+                        </div>
+                        <div class="comment-header-rt">
+                            <span><a href="javascript:void(0);" onclick="scrollToId('comment_<%=index+1%>')">comment <%=index+1%></a></span>
+                        </div>
                     </div>
                     <div class="timeline-comment-body">
                         <p><%=temp.comment_content%></p>
@@ -113,3 +118,15 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
     </div>
     <% } %>
 </div>
+<script type="text/javascript">
+    function scrollToId(id){
+        $("#page").css({
+            "overflow":"auto"
+        });
+        document.getElementById(id).scrollIntoView();
+        $("#page").css({
+            "overflow":"hidden"
+        });
+        return false;
+    }
+</script>

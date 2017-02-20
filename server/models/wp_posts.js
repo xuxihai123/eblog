@@ -86,7 +86,7 @@ Post.update = function (post) {
  * 获取文章
  */
 Post.get = function get(ID) {
-	return sqlhelp.query(postSqls.get, [ID]);
+	return sqlhelp.query(postSqls.getPost, [ID]);
 };
 /**
  * @return promise

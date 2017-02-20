@@ -382,9 +382,23 @@ body.custom-background {
 .timeline-comment-header {
     padding-right: 15px;
     padding-left: 15px;
+    line-height: 32px;
+    height: 32px;
     color: #767676;
     background-color: #f7f7f7;
     border-bottom: 1px solid #ddd;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
+}
+.timeline-comment-body{
+    min-height: 120px;
+}
+.timeline-comment-header:after{
+    clear: both;
+}
+.comment-header-lt{
+    float:left
+}
+.comment-header-rt{
+    float:right;
 }
