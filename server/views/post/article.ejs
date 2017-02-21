@@ -2,6 +2,7 @@
 var post = request.previewPost;
 var prev = request.prevPost;
 var next = request.nextPost;
+var postTags = post.tagList;
 var commentList=request.commentList;
 var url = utils.dateFormat(post.post_date, "yyyy/MM/");
 var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
@@ -33,7 +34,13 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
                 <%- utils.marked(post.post_content) %>
             </div>
         </div>
+        <div class="post_taginfo">
+            <% postTags.forEach(function(temp,index){%>
+            <span class="label label-info"><a href="/category/<%= temp.slug %>"><%=temp.name%></a></span>
+            <%})%>
+        </div>
     </div>
+
     <% if(post.post_type == "post"){ %>
     <div id="nav-links">
         <% if(prev){ %>
@@ -98,17 +105,23 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
         <div class="row-fluid">
             <% commentList.forEach(function(temp,index){%>
             <div class="timeline-comment-wrapper">
-                <div class="timeline-comment" id="comment_<%=index+1%>">
+                <div class="timeline-comment" id="comment_<%=temp.comment_ID%>">
                     <div class="timeline-comment-header">
                         <div class="comment-header-lt">
                             <span><%=temp.comment_author%>&nbsp;&nbsp;&nbsp;&nbsp;<%=utils.dateFormat(temp.comment_date,'yyyy-MM-dd HH:mm:ss')%></span>
                         </div>
                         <div class="comment-header-rt">
-                            <span><a href="javascript:void(0);" onclick="scrollToId('comment_<%=index+1%>')">comment <%=index+1%></a></span>
+                            <span><a href="javascript:void(0);" onclick="scrollToId('comment_<%=index+1%>')"><%=index+1%>楼</a></span>
                         </div>
                     </div>
                     <div class="timeline-comment-body">
-                        <p><%=temp.comment_content%></p>
+                        <div class="comment-by">
+                            <p><%=temp.comment_content%></p>
+                        </div>
+                        <div class="comment-ft">
+                            <span class="label label-info">顶(15)</span>
+                            <span class="label label-info">踩(25)</span>
+                        </div>
                     </div>
                 </div>
             </div>

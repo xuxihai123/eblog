@@ -126,8 +126,8 @@ Term.getAllCategory = function get() {
  * return promise
  * @param callback
  */
-Term.getAllTag = function get(callback) {
-	return sqlhelp.query(termsqls.getAllTag);
+Term.getAllTags = function get(callback) {
+	return sqlhelp.query(termsqls.getAllTags);
 };
 /**
  * return promise

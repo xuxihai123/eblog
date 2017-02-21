@@ -392,6 +392,13 @@ body.custom-background {
 }
 .timeline-comment-body{
     min-height: 120px;
+    padding: 10px 15px;
+    position: relative;
+}
+.timeline-comment-body .comment-ft{
+    position: absolute;
+    right: 5px;
+    bottom:5px;
 }
 .timeline-comment-header:after{
     clear: both;
@@ -401,4 +408,8 @@ body.custom-background {
 }
 .comment-header-rt{
     float:right;
+}
+
+.post_taginfo{
+    text-align: right;
 }

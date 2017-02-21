@@ -60,7 +60,7 @@ MySQL [wp_blog2]> select ID,post_title,term_taxonomy_id from wp_posts as T1,wp_t
 | 43 | 个人笔记--Servlet之过滤器实现权限拦截                                                                                                 |               14 |
 +----+---------------------------------------------------------------------------------------------------------------------------------------+------------------+
 32 rows in set (0.00 sec)
-
+select T1.ID,T2.*,T3.*,T4.* from wp_posts as T1,wp_term_relationships as T2,wp_term_taxonomy as T3,wp_terms as T4 where ID=110 and T1.ID=T2.object_id and T2.term_taxonomy_id=T3.term_taxonomy_id and T3.term_id=T4.term_id;
 //最近文章
 MySQL [wp_blog]> select  post_title,post_status,post_date from wp_posts  where post_status='publish' order by post_date desc limit 6;
 +------------------------------------------------------+-------------+---------------------+

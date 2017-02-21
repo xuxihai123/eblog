@@ -4,9 +4,9 @@ exports.config = function (app) {
 	var pool = mysql.createPool({
 		connectionLimit: 10,
 		host: 'localhost',
-		user: 'xxhblog',
-		password: 'xxhblog',
-		database: 'wp_blog2'
+		user: 'root',
+		password: '227754',
+		database: 'wp_blog'
 	});
 	if (pool) {
 		console.log('createPool success');

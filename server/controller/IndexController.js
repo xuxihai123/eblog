@@ -2,6 +2,7 @@ var User = require("../models/wp_users");
 var Post = require("../models/wp_posts");
 var Term = require("../models/wp_terms");
 var comment = require("../models/wp_comments");
+var filters = require("../utils/filters");
 var Q = require('q');
 /**
  * 首页
@@ -16,13 +17,15 @@ exports.index = function () {
 			var limit = req.query.limit || 5;
 			Q.all([Post.findNewestListPageModel(offset, limit),
 					Term.getAllCategory(),
+					Term.getAllTags(),
 					Post.findArticleArchive(),
 					Post.findNewestList(),
 					Post.findNewestPage()])
-				.spread(function (postPageModel, categoryList, articleArchList, postNewestList, pageNewestList) {
+				.spread(function (postPageModel, categoryList,tagsList, articleArchList, postNewestList, pageNewestList) {
 					req.postNewestList = postNewestList;
 					req.articleArchList = articleArchList;
 					req.categoryList = categoryList;
+					req.tagsList = tagsList;
 					req.pageNewestList = pageNewestList;
 					req.home = {
 						type: "index",
@@ -52,11 +55,13 @@ exports.search = function () {
 			}
 			Q.all([Post.findPostByWordPageModel(word, offset, limit),
 					Term.getAllCategory(),
+					Term.getAllTags(),
 					Post.findArticleArchive(),
 					Post.findNewestList(),
 					Post.findNewestPage()])
-				.spread(function (pageModel, categoryList, articleArchList, postNewestList, pageNewestList) {
+				.spread(function (pageModel, categoryList,tagsList, articleArchList, postNewestList, pageNewestList) {
 					req.categoryList = categoryList;
+					req.tagsList = tagsList;
 					req.articleArchList = articleArchList;
 					req.postNewestList = postNewestList;
 					req.pageNewestList = pageNewestList;
@@ -88,11 +93,14 @@ exports.indexArticle = function () {
 					Post.getNext(slug),
 					comment.getCommentByPostId(slug),
 					Term.getAllCategory(),
+					Term.getAllTags(),
 					Post.findArticleArchive(),
 					Post.findNewestList(),
 					Post.findNewestPage()])
-				.spread(function (posts, prevPosts, nextPosts,commentList, categoryList, articleArchList, postNewestList, pageNewestList) {
+				.spread(function (posts, prevPosts, nextPosts,commentList, categoryList,tagsList, articleArchList, postNewestList, pageNewestList) {
 					req.previewPost = posts[0];
+					req.previewPost.categoryList = filters.filterPostCategory(posts);
+					req.previewPost.tagList = filters.filterPostTags(posts);
 					if (prevPosts.length > 0) {
 						req.prevPost = prevPosts[0];
 					}
@@ -101,6 +109,7 @@ exports.indexArticle = function () {
 					}
 					req.commentList = commentList;
 					req.categoryList = categoryList;
+					req.tagsList = tagsList;
 					req.articleArchList = articleArchList;
 					req.postNewestList = postNewestList;
 					req.pageNewestList = pageNewestList;
@@ -127,12 +136,14 @@ exports.indexPage = function () {
 
 			Q.all([Post.get(id),
 					Term.getAllCategory(),
+						Term.getAllTags(),
 					Post.findArticleArchive(),
 					Post.findNewestList(),
 					Post.findNewestPage()])
-				.spread(function (posts, categoryList, articleArchList, postNewestList, pageNewestList) {
+				.spread(function (posts, categoryList,tagsList, articleArchList, postNewestList, pageNewestList) {
 					req.previewPost = posts[0];
 					req.categoryList = categoryList;
+					req.tagsList = tagsList;
 					req.articleArchList = articleArchList;
 					req.postNewestList = postNewestList;
 					req.pageNewestList = pageNewestList;
@@ -162,20 +173,22 @@ exports.indexArchive = function () {
 			var month = req.params[1];
 			Q.all([Post.findByYearMonthPageModel({year: year, month: month}, offset, limit),
 					Term.getAllCategory(),
+						Term.getAllTags(),
 					Post.findArticleArchive(),
 					Post.findNewestList(),
 					Post.findNewestPage()])
-				.spread(function (pageModel, list2, list3, list4, list5) {
+				.spread(function (pageModel, categoryList,tagsList, articleArchList, postNewestList, pageNewestList) {
 					req.home = {
 						type: "archive",
 						year: year,
 						month: month,
 						pageModel: pageModel
 					};
-					req.categoryList = list2;
-					req.articleArchList = list3;
-					req.postNewestList = list4;
-					req.pageNewestList = list5;
+					req.categoryList = categoryList;
+					req.tagsList = tagsList;
+					req.articleArchList = articleArchList;
+					req.postNewestList = postNewestList;
+					req.pageNewestList = pageNewestList;
 					res.render("index");
 				})
 				.fail(function (err) {
@@ -205,19 +218,21 @@ exports.indexCategory = function () {
 				Q.all([Post.findByCategoryPageModel(pargs1, offset, limit),
 						Term.getBySlug(pargs1),
 						Term.getAllCategory(),
+						Term.getAllTags(),
 						Post.findArticleArchive(),
 						Post.findNewestList(),
 						Post.findNewestPage()])
-					.spread(function (pageModel,term, list2, list3, list4, list5) {
+					.spread(function (pageModel,term, categoryList,tagsList, articleArchList, postNewestList, pageNewestList) {
 						req.home = {
 							type: "category",
 							category: pargs1,
 							pageModel: pageModel
 						};
-						req.categoryList = list2;
-						req.articleArchList = list3;
-						req.postNewestList = list4;
-						req.pageNewestList = list5;
+						req.categoryList = categoryList;
+						req.tagsList = tagsList;
+						req.articleArchList = articleArchList;
+						req.postNewestList = postNewestList;
+						req.pageNewestList = pageNewestList;
 						res.render("index", {"title":term[0].name});
 					})
 					.fail(function (err) {

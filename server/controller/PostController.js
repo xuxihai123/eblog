@@ -31,7 +31,7 @@ exports.doAjax = function () {
 			});
 		},
 		"/admin/postAllTag.do": function (req, res, next) {
-			Term.getAllTag().then(function (allTag) {
+			Term.getAllTags().then(function (allTag) {
 				res.json(allTag);
 			}, function (err) {
 				res.errorProxy("SqlException", err);
