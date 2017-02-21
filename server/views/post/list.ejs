@@ -61,6 +61,7 @@ function calcUrl(url, toIndex) {
 
     <% }); %>
     <div class="text-center">
+        <%if(count>1){%>
         <div class="navigation pagination " role="navigation">
             <ul class="pagination">
                 <%if(current===1){%>
@@ -86,6 +87,7 @@ function calcUrl(url, toIndex) {
                 <%}%>
             </ul>
         </div>
+        <%}%>
     </div>
     <% } else{ %>
     <article
