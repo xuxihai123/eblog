@@ -25,20 +25,24 @@
 //| post_type             | varchar(20)         | NO   | MUL | post                |                |
 //| post_mime_type        | varchar(100)        | NO   |     |                     |                |
 //| comment_count         | bigint(20)          | NO   |     | 0                   |                |
-module.exports = function(sequelize, DataTypes) {
-	var Post = sequelize.define("posts", {
-		ID: {type: DataTypes.BIGINT(20), autoIncrement: true, primaryKey: true},
-		post_author: {type:DataTypes.STRING(200),allowNull:false},
-		post_date: {type:DataTypes.DATE,allowNull:false},
-		post_date_gmt: {type:DataTypes.DATE,allowNull:false},
-		post_content: {type:DataTypes.TEXT,allowNull:false},
-		post_title: {type:DataTypes.TEXT,allowNull:false},
-		post_status: {type:DataTypes.STRING(200),allowNull:false},
-		comment_status: {type:DataTypes.STRING(20),defaultValue:'open'},
-		post_name: {type:DataTypes.STRING(200)},
-		post_type: {type:DataTypes.STRING(20),allowNull:false},
-		comment_count: {type:DataTypes.INTEGER(20),defaultValue:0}
-	});
+module.exports = function (sequelize, DataTypes) {
+	var Post = sequelize.define("Post",
+		{
+			ID: {type: DataTypes.BIGINT(20), autoIncrement: true, primaryKey: true},
+			post_author: {type: DataTypes.STRING(200), allowNull: false},
+			post_date: {type: DataTypes.DATE, allowNull: false},
+			post_date_gmt: {type: DataTypes.DATE, allowNull: false},
+			post_content: {type: DataTypes.TEXT, allowNull: false},
+			post_title: {type: DataTypes.TEXT, allowNull: false},
+			post_status: {type: DataTypes.STRING(200), allowNull: false},
+			comment_status: {type: DataTypes.STRING(20), defaultValue: 'open'},
+			post_name: {type: DataTypes.STRING(200)},
+			post_type: {type: DataTypes.STRING(20), allowNull: false},
+			comment_count: {type: DataTypes.INTEGER(20), defaultValue: 0}
+		},
+		{
+			tableName: "posts"
+		});
 
 	return Post;
 };

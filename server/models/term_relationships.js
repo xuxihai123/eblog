@@ -8,12 +8,16 @@
 //+------------------+---------------------+------+-----+---------+-------+
 
 "use strict";
-module.exports = function(sequelize, DataTypes) {
-	var TermRelationShips = sequelize.define("term_relationships", {
-		object_id: {type: DataTypes.BIGINT(20), defaultValue:0, primaryKey: true},
-		term_taxonomy_id: {type:DataTypes.BIGINT(20), defaultValue:0,primaryKey:true},
-		term_order: {type:DataTypes.INTEGER(11),defaultValue:0}
-	});
+module.exports = function (sequelize, DataTypes) {
+	var TermRelationShip = sequelize.define("TermRelationShip",
+		{
+			object_id: {type: DataTypes.BIGINT(20), defaultValue: 0, primaryKey: true},
+			term_taxonomy_id: {type: DataTypes.BIGINT(20), defaultValue: 0, primaryKey: true},
+			term_order: {type: DataTypes.INTEGER(11), defaultValue: 0}
+		},
+		{
+			tableName: "term_relationship"
+		});
 
-	return TermRelationShips;
+	return TermRelationShip;
 };

@@ -18,15 +18,13 @@ exports.login = function () {
 			//生成密码的 md5 值
 			var md5 = crypto.createHash('md5'),
 				user_pass = md5.update(user_pass).digest('hex');
-			var newUser = new User({
-				user_login: user_login,
-				user_pass: user_pass,
-			});
 			//检查用户名是否已经存在
-			models.User.get(newUser.user_login).then(function (result) {
-				if (result && result.length > 0) {
-					var user = result[0];
-					if (user.user_pass == newUser.user_pass) {
+			models.User.findAll({
+				user_login: user_login
+			}).then(function (results) {
+				if (results.length>0) {
+					var user = results[0];
+					if (user.user_pass == user_pass) {
 						req.session.user = user;
 						res.json({
 							user_login: user.user_login,
@@ -48,10 +46,6 @@ exports.login = function () {
 						errorMessage: "用户不存在！"
 					});
 				}
-			}).fail(function (err) {
-				req.session.error = err;
-				console.log(err.message);
-				return res.redirect('/signin.c');//注册失败返回主册页
 			});
 		}
 	};
@@ -64,44 +58,43 @@ exports.signup = function () {
 			var req_pargs = req.body;
 			var user_login = req_pargs.user_login;
 			var user_pass = req_pargs.user_pass;
+			var user_email = req_pargs.user_email;
+			var user_url = req_pargs.user_url;
+			var display_name = req_pargs.display_name;
+			var user_nicename = req_pargs.user_nicename;
 
 			//生成密码的 md5 值
 			var md5 = crypto.createHash('md5'),
 					user_pass = md5.update(user_pass).digest('hex');
-			var newUser = new User({
-				user_login: user_login,
-				user_pass: user_pass,
-			});
-			//检查用户名是否已经存在
-			models.User.get(newUser.user_login).then(function (result) {
-				if (result && result.length > 0) {
-					var user = result[0];
-					if (user.user_pass == newUser.user_pass) {
-						req.session.user = user;
-						res.json({
-							user_login: user.user_login,
-							display_name: user.display_name,
-							user_nicename: user.user_nicename,
-							user_email: user.user_email,
-							user_url: user.user_url,
-							user_status: user.user_status
-						});
-					} else {
-						res.json({
-							errorMessage: "密码错误！"
-						});
-					}
 
-				} else {
+			//检查用户名是否已经存在
+			models.User.findAll({
+				where: {
+					user_login: user_login
+				}
+			}).then(function (result) {
+				if (result && result.length > 0) {
+
 					res.json({
 						errorCode: "600404",
-						errorMessage: "用户不存在！"
+						errorMessage: "用户已存在！"
+					});
+				} else {
+					var newUser = {
+						user_login: user_login,
+						user_pass: user_pass,
+						user_email: user_email,
+						user_url: user_url,
+						display_name: display_name,
+						user_nicename: user_nicename,
+					};
+					models.User.create(newUser).then(function (user) {
+						if(user.user_login){
+							res.json(user);
+						}
+						console.log(JSON.stringify(user, null, 4));
 					});
 				}
-			}).fail(function (err) {
-				req.session.error = err;
-				console.log(err.message);
-				return res.redirect('/signin.c');//注册失败返回主册页
 			});
 		}
 	};

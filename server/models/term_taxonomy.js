@@ -9,15 +9,19 @@
 //| parent           | bigint(20) unsigned | NO   |     | 0       |                |
 //| count            | bigint(20)          | NO   |     | 0       |                |
 //+------------------+---------------------+------+-----+---------+----------------+
-module.exports = function(sequelize, DataTypes) {
-	var TermTaxonomy = sequelize.define("term_taxonomy", {
-		term_taxonomy_id: {type: DataTypes.BIGINT(20), autoIncrement: true, primaryKey: true},
-		term_id: {type: DataTypes.BIGINT(20), defaultValue:0},
-		taxonomy: {type:DataTypes.STRING(32),allowNull:false},
-		description: {type:DataTypes.TEXT,defaultValue:""},
-		parent: {type:DataTypes.BIGINT(20),defaultValue:0},
-		count: {type:DataTypes.BIGINT(20),defaultValue:0}
-	});
+module.exports = function (sequelize, DataTypes) {
+	var TermTaxonomy = sequelize.define("TermTaxonomy",
+		{
+			term_taxonomy_id: {type: DataTypes.BIGINT(20), autoIncrement: true, primaryKey: true},
+			term_id: {type: DataTypes.BIGINT(20), defaultValue: 0},
+			taxonomy: {type: DataTypes.STRING(32), allowNull: false},
+			description: {type: DataTypes.TEXT, defaultValue: ""},
+			parent: {type: DataTypes.BIGINT(20), defaultValue: 0},
+			count: {type: DataTypes.BIGINT(20), defaultValue: 0}
+		},
+		{
+			tableName: "term_taxonomy"
+		});
 
 	return TermTaxonomy;
 };

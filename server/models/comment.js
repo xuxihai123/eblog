@@ -19,21 +19,25 @@
 //| comment_parent       | bigint(20) unsigned | NO   | MUL | 0                   |                |
 //| user_id              | bigint(20) unsigned | NO   |     | 0                   |                |
 //+----------------------+---------------------+------+-----+---------------------+----------------+
-module.exports = function(sequelize, DataTypes) {
-	var Comment = sequelize.define("posts", {
-		comment_ID: {type: DataTypes.BIGINT(20), autoIncrement: true, primaryKey: true},
-		comment_post_ID: {type: DataTypes.BIGINT(20), defaultValue:0},
-		comment_author: {type:DataTypes.STRING(255),allowNull:false},
-		comment_author_email: {type:DataTypes.STRING(100),allowNull:false},
-		comment_author_url: {type:DataTypes.STRING(200)},
-		comment_author_IP: {type:DataTypes.STRING(100)},
-		comment_date: {type:DataTypes.DATE,allowNull:false},
-		comment_date_gmt: {type:DataTypes.DATE,allowNull:false},
-		comment_content: {type:DataTypes.TEXT,allowNull:false},
-		comment_approved: {type:DataTypes.STRING(20),defaultValue:'1'},
-		comment_agent: {type:DataTypes.STRING(255),allowNull:false},
-		comment_type: {type:DataTypes.STRING(20),allowNull:false},
-		user_id: {type:DataTypes.BIGINT(20),defaultValue:0}
-	});
+module.exports = function (sequelize, DataTypes) {
+	var Comment = sequelize.define("Comment",
+		{
+			comment_ID: {type: DataTypes.BIGINT(20), autoIncrement: true, primaryKey: true},
+			comment_post_ID: {type: DataTypes.BIGINT(20), defaultValue: 0},
+			comment_author: {type: DataTypes.STRING(255), allowNull: false},
+			comment_author_email: {type: DataTypes.STRING(100), allowNull: false},
+			comment_author_url: {type: DataTypes.STRING(200)},
+			comment_author_IP: {type: DataTypes.STRING(100)},
+			comment_date: {type: DataTypes.DATE, allowNull: false},
+			comment_date_gmt: {type: DataTypes.DATE, allowNull: false},
+			comment_content: {type: DataTypes.TEXT, allowNull: false},
+			comment_approved: {type: DataTypes.STRING(20), defaultValue: '1'},
+			comment_agent: {type: DataTypes.STRING(255), allowNull: false},
+			comment_type: {type: DataTypes.STRING(20), allowNull: false},
+			user_id: {type: DataTypes.BIGINT(20), defaultValue: 0}
+		},
+		{
+			tableName: "comments"
+		});
 	return Comment;
 };
