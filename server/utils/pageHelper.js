@@ -1,6 +1,6 @@
-var sqlhelp = require("../utils/sqlHelper");
+var sqlhelp = require("sqlHelper");
 var Q = require('q');
-var sqlfirewall=require("../utils/sqlFirewall");
+var sqlfirewall=require("sqlFirewall");
 
 function PageModel(offset, limit, list, count) {
 	// 页面参数

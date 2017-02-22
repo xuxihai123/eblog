@@ -1,0 +1,23 @@
+"use strict";
+//+------------------+---------------------+------+-----+---------+----------------+
+//| Field            | Type                | Null | Key | Default | Extra          |
+//+------------------+---------------------+------+-----+---------+----------------+
+//| term_taxonomy_id | bigint(20) unsigned | NO   | PRI | NULL    | auto_increment |
+//| term_id          | bigint(20) unsigned | NO   | MUL | 0       |                |
+//| taxonomy         | varchar(32)         | NO   | MUL |         |                |
+//| description      | longtext            | NO   |     | NULL    |                |
+//| parent           | bigint(20) unsigned | NO   |     | 0       |                |
+//| count            | bigint(20)          | NO   |     | 0       |                |
+//+------------------+---------------------+------+-----+---------+----------------+
+module.exports = function(sequelize, DataTypes) {
+	var TermTaxonomy = sequelize.define("term_taxonomy", {
+		term_taxonomy_id: {type: DataTypes.BIGINT(20), autoIncrement: true, primaryKey: true},
+		term_id: {type: DataTypes.BIGINT(20), defaultValue:0},
+		taxonomy: {type:DataTypes.STRING(32),allowNull:false},
+		description: {type:DataTypes.TEXT,defaultValue:""},
+		parent: {type:DataTypes.BIGINT(20),defaultValue:0},
+		count: {type:DataTypes.BIGINT(20),defaultValue:0}
+	});
+
+	return TermTaxonomy;
+};

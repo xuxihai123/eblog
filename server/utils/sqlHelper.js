@@ -1,10 +1,10 @@
 var mysql = require('mysql');
-var Q = require('q');
+var Promise = require('bluebird');
 exports.query = function () {
 	console.info("sql query " + arguments[0]);
 	var params = Array.prototype.slice.call(arguments, 0);
 
-	var deferred = Q.defer();
+	var deferred = Promise.defer();
 	params.push(function (err) {
 		var args = Array.prototype.slice.call(arguments, 1);
 		if (err) {
