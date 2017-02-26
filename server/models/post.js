@@ -38,10 +38,12 @@ module.exports = function (sequelize, DataTypes) {
 			comment_status: {type: DataTypes.STRING(20), defaultValue: 'open'},
 			post_name: {type: DataTypes.STRING(200)},
 			post_type: {type: DataTypes.STRING(20), allowNull: false},
+			user_id:{type: DataTypes.BIGINT(20),allowNull:false},
 			comment_count: {type: DataTypes.INTEGER(20), defaultValue: 0}
 		},
 		{
-			tableName: "posts"
+			tableName: "posts",
+			timestamps:false
 		});
 
 	return Post;

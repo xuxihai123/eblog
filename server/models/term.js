@@ -9,7 +9,8 @@ module.exports = function (sequelize, DataTypes) {
 			term_group: {type: DataTypes.BIGINT(10), defaultValue: 0},
 		},
 		{
-			tableName: 'terms'
+			tableName: 'terms',
+			timestamps:false
 		});
 
 	return Term;

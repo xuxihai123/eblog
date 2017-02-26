@@ -33,8 +33,10 @@ app.use(session({
 	cookie: {secure: false, maxAge: 1000 * 60 * 30}
 }));
 //auth user
-var auth_intercepter = require('./server/interceptor/authIntercept');
-app.use(auth_intercepter());
+var setup_interceptor = require('./server/interceptor/setupFilter');
+app.use(setup_interceptor());
+var auth_interceptor = require('./server/interceptor/authIntercept');
+app.use(auth_interceptor());
 //config of app
 settings.config(app);
 //all controllers

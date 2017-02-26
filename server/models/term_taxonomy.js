@@ -20,7 +20,8 @@ module.exports = function (sequelize, DataTypes) {
 			count: {type: DataTypes.BIGINT(20), defaultValue: 0}
 		},
 		{
-			tableName: "term_taxonomy"
+			tableName: "term_taxonomy",
+			timestamps:false
 		});
 
 	return TermTaxonomy;

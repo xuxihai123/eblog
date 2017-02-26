@@ -32,5 +32,11 @@ Object.keys(db).forEach(function (modelName) {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-
+db.isExistManager = function () {
+	return db.User.findOne({
+		where: {
+			user_level: 9
+		}
+	});
+};
 module.exports = db;

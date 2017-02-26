@@ -1,6 +1,7 @@
 var exceptMap = {
 	DefaultExcept: "123456",
 	SqlException: "591000",
+	ExistException:"592000",
 	NotFoundException: "404000",
 	SystemException: "5150000",
 	SessionTimeoutException: "999999"
