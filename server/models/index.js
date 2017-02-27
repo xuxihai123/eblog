@@ -3,6 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 var Sequelize = require('sequelize');
+var Promise = require('bluebird');
 var basename = path.basename(module.filename);
 var env = process.env.NODE_ENV || 'development';
 var config = require(__dirname + '/../../config/config.json')[env];
@@ -28,6 +29,17 @@ Object.keys(db).forEach(function (modelName) {
 	if (db[modelName].associate) {
 		db[modelName].associate(db);
 	}
+});
+
+Promise.config({
+	// Enable warnings
+	warnings: true,
+	// Enable long stack traces
+	longStackTraces: true,
+	// Enable cancellation
+	cancellation: true,
+	// Enable monitoring
+	monitoring: true
 });
 
 db.sequelize = sequelize;

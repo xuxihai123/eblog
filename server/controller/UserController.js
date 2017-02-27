@@ -1,4 +1,3 @@
-var dateutils = require("../utils/dateutils");
 var userService = require('../service/index').UserService;
 /**
  * add user

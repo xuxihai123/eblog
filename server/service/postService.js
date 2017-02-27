@@ -3,11 +3,11 @@ var User = require("../models").User;
 var pageHelper = require('../utils/pageHelper');
 var Promise = require('bluebird');
 var crypto = require('crypto');
+var md5 = crypto.createHash('md5');
 var dateutils = require('../utils/dateutils');
 module.exports = {
 	userLogin: function (username, password) {
 		return new Promise(function (resolve, reject) {
-			var md5 = crypto.createHash('md5');
 			password = md5.update(password).digest('hex');
 			User.findOne({
 				where: {
@@ -20,7 +20,6 @@ module.exports = {
 							errorMessage: "密码错误！"
 						});
 					} else {
-						delete user.user_pass;
 						resolve(user);
 					}
 				} else {
@@ -74,7 +73,6 @@ module.exports = {
 		});
 	},
 	addUser: function (user) {
-		var md5 = crypto.createHash('md5');
 		user.user_pass = md5.update(user.user_pass).digest('hex');
 		user.user_status = "0";
 		user.user_activation_key = dateutils.randomStr(16);
@@ -109,7 +107,6 @@ module.exports = {
 				}
 			}).then(function (user) {
 				if (user) {
-					delete user.user_pass;
 					resolve(user);
 				} else {
 					reject({
@@ -124,10 +121,7 @@ module.exports = {
 		return new Promise(function (resove, reject) {
 			User.findAndCountAll({
 				offset: offset,
-				limit: limit,
-				attributes:{
-					exclude:['user_pass','user_activation_key']
-				}
+				limit: limit
 			}).then(function (result) {
 				var pageObj = new pageHelper.PageModel(offset, limit, result.rows, result.count);
 				resove(pageObj);

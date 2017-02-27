@@ -62,7 +62,7 @@
 			user_login: username,
 			user_pass: password,
 		}, function (data) {
-			if (data.user_login) {
+			if (data.user&&data.user.user_login) {
 				window.location.href = "index.html";
 			}else{
 				$("#error").text(data.errorMessage);
