@@ -58,7 +58,7 @@
 	function doSubmit() {
 		var username = $("#user_login").val();
 		var password = $("#user_pass").val();
-		$.post("/user/signin", {
+		$.post("/user/login.do", {
 			user_login: username,
 			user_pass: password,
 		}, function (data) {

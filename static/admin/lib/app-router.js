@@ -20,6 +20,11 @@
 					"ActionName": "用户信息",
 					"Level": "2",
 					"NodeName": "UserInfo",
+				},{
+					"ActionName":"用户编辑",
+					"Level":"2",
+					"NodeName":"UserEdit",
+					"RouteUrl": "/UserEdit/:UserId"
 				}
 			]
 		},

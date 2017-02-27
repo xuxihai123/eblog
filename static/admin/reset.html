@@ -70,7 +70,7 @@
 		var user_pass2 = $("#user_pass2").val();
 		var reset_key = $("#reset_key").val();
 		if (password === user_pass2) {
-			$.post("/user/reset", {
+			$.post("/user/resetpwd.do", {
 				user_login: username,
 				user_pass: password,
 				reset_key: reset_key,

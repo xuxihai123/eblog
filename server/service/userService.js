@@ -89,7 +89,7 @@ module.exports = {
 		return new Promise(function (resolve, reject) {
 			User.destroy({
 				where: {
-					user_id: user_id
+					ID: user_id
 				}
 			}).then(function (result) {
 				resolve(result);
@@ -98,14 +98,51 @@ module.exports = {
 			});
 		});
 	},
-	updateUser: function () {
-		return User.update.apply(User, arguments);
+	updateUser: function (user) {
+		return new Promise(function(resolve,reject){
+			if(!user.ID){
+				reject({
+					errorCode: "600404",
+					errorMessage: "ID必须！"
+				});
+			}else if(!user.oldpassword){
+				reject({
+					errorCode: "600404",
+					errorMessage: "password必须！"
+				});
+			}else{
+				User.findOne({
+					where:{
+						ID:user.ID
+					}
+				}).then(function(selectUser){
+					var md5 = crypto.createHash('md5');
+					user.user_pass = md5.update(user.oldpassword).digest('hex');
+					if(user.user_pass===selectUser.user_pass){
+						resolve(selectUser.update({
+							user_login:user.user_login,
+							user_email:user.user_email,
+							user_nicename:user.user_nicename,
+							display_name:user.display_name,
+							user_url:user.user_url
+						}));
+					}else{
+						reject({
+							errorCode: "600404",
+							errorMessage: "密码错误！"
+						});
+					}
+				})
+			}
+
+
+		});
 	},
-	getUserInfo: function (username) {
+	getUserInfo: function (UserId) {
 		return new Promise(function (resolve, reject) {
 			User.findOne({
 				where: {
-					user_login: username
+					ID: UserId
 				}
 			}).then(function (user) {
 				if (user) {

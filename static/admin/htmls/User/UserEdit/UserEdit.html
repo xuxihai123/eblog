@@ -1,7 +1,7 @@
-<div oc-lazy-load="htmls/User/UserAdd/UserAdd.js">
-	<div class="mainContent" ng-controller="UserAddCtrl" ng-init="startup()">
+<div oc-lazy-load="htmls/User/UserEdit/UserEdit.js">
+	<div class="mainContent" ng-controller="UserEditCtrl" ng-init="startup()">
 		<div class="content_title">
-			<h3>用户添加</h3>
+			<h3>用户修改</h3>
 		</div>
 		<div class="container-fluid">
 			<div class="row-fluid">
@@ -16,19 +16,19 @@
 							</div>
 						</div>
 						<div class="control-group">
-							<label class="control-label" for="user_pass">password</label>
+							<label class="control-label" for="oldpassword">oldpassword*</label>
 
 							<div class="controls">
-								<input type="password" id="user_pass" name="user_pass" ng-model="user_pass" required
-								       placeholder="user_pass">
+								<input type="password" id="oldpassword" name="oldpassword" ng-model="oldpassword" required
+								       placeholder="oldpassword">
 							</div>
 						</div>
 						<div class="control-group">
-							<label class="control-label" for="user_pass2">password2</label>
+							<label class="control-label" for="newpassword">newpassword</label>
 
 							<div class="controls">
-								<input type="password" id="user_pass2" name="user_pass2" ng-model="user_pass2" required
-								       placeholder="user_pass2">
+								<input type="password" id="newpassword" name="newpassword" ng-model="newpassword"
+								       placeholder="newpassword">
 							</div>
 						</div>
 						<div class="control-group">
@@ -67,7 +67,7 @@
 						</div>
 						<div class="text-center">
 							<button class="btn btn-primary" type="button" ng-disabled="registerForm.$invalid"
-							        ng-click="userAdd()">submit
+							        ng-click="userEdit()">submit
 							</button>
 						</div>
 						<div class="text-center text-error"></div>

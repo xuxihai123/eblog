@@ -101,7 +101,7 @@
 //		| user_registered     | datetime     | YES  |     | NULL    |                |
 //		| user_activation_key | varchar(255) | YES  |     | NULL    |                |
 //		| user_status         | int(11)      | NO   |     | 0       |
-		$.post("/user/signup", {
+		$.post("/user/register.do", {
 			user_login: username,
 			user_pass: password,
 			user_email: $("#user_email").val(),

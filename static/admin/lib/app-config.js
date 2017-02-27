@@ -139,7 +139,7 @@ app.run(["$rootScope", "$location", "$remote", "$modal", "$route", function ($ro
 		$route.reload();
 	};
 	$rootScope.logout = function () {
-		$remote.post("user/signout", {}, function (data) {
+		$remote.post("user/logout.do", {}, function (data) {
 			if (data && data.success == "ok") {
 				window.location.href = "login.html";
 			}

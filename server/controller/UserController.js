@@ -3,16 +3,15 @@ var userService = require('../service/index').UserService;
  * add user
  * @returns {Function}
  */
-//通用接口
-exports.login = function () {
+//ajax接口
+exports.doAjax = function () {
 	return {
-		url: "/user/signin",
-		method: "post",
-		controller: function (req, res, next) {
+		"/user/login.do": function (req, res, next) {
 			var req_pargs = req.body;
 			var user_login = req_pargs.user_login;
 			var user_pass = req_pargs.user_pass;
 			userService.userLogin(user_login, user_pass).then(function (user) {
+				req.session.user = user;
 				res.json({
 					success: "ok",
 					user: user
@@ -22,41 +21,32 @@ exports.login = function () {
 					errorMessage: error.message
 				});
 			});
-		}
-	};
-};
-exports.signup = function () {
-	return {
-		url: "/user/signup",
-		method: "post",
-		controller: function (req, res, next) {
-			var req_pargs = req.body;
-			var newUser = {
-				user_login: req_pargs.user_login,
-				user_pass: req_pargs.user_pass,
-				user_email: req_pargs.user_email,
-				user_url: req_pargs.user_url,
-				display_name: req_pargs.display_name,
-				user_nicename: req_pargs.user_nicename
-			};
-			userService.userRegister(newUser).then(function (user) {
-				res.json({
-					success: "ok",
-					user: user
-				});
-			}).caught(function (error) {
-				res.json({
-					errorMessage: error.message
-				});
+		},
+		"/user/register.do": function (req, res, next) {
+			//var req_pargs = req.body;
+			//var newUser = {
+			//	user_login: req_pargs.user_login,
+			//	user_pass: req_pargs.user_pass,
+			//	user_email: req_pargs.user_email,
+			//	user_url: req_pargs.user_url,
+			//	display_name: req_pargs.display_name,
+			//	user_nicename: req_pargs.user_nicename
+			//};
+			//userService.userRegister(newUser).then(function (user) {
+			//	res.json({
+			//		success: "ok",
+			//		user: user
+			//	});
+			//}).caught(function (error) {
+			//	res.json({
+			//		errorMessage: error.message
+			//	});
+			//});
+			res.json({
+				errorMessage: '接口不可用!'
 			});
-		}
-	};
-};
-exports.signout = function () {
-	return {
-		url: "/user/signout",
-		method: "post",
-		controller: function (req, res, next) {
+		},
+		"/user/logout.do": function (req, res, next) {
 			var user = req.session.user;
 			if (user) {
 				req.session.user = undefined;
@@ -65,14 +55,8 @@ exports.signout = function () {
 				success: "ok",
 				loginStatus: "0"
 			});
-		}
-	};
-};
-exports.reset = function () {
-	return {
-		url: "/user/reset",
-		method: "post",
-		controller: function (req, res, next) {
+		},
+		"/user/resetpwd.do": function (req, res, next) {
 			var req_pargs = req.body;
 			var reset_key = req_pargs.reset_key;
 			var newUser = new User({
@@ -88,12 +72,7 @@ exports.reset = function () {
 			}).caught(function (error) {
 				res.errorProxy("SqlException", err);
 			});
-		}
-	};
-};
-//管理接口
-exports.doAjax = function () {
-	return {
+		},
 		"/admin/getInfo.do": function (req, res, next) {
 			var user = req.session.user;
 			res.json({
@@ -117,11 +96,10 @@ exports.doAjax = function () {
 				});
 			});
 		},
-		"/admin/userinfo.do": function (req, res, next) {
-			var user_login = req.session.user.user_login;
-			userService.getUserInfo(user_login).then(function (result) {
-				req.user = result;
-				res.json(req.user);
+		"/admin/getUserInfo.do": function (req, res, next) {
+			var UserId = req.body.UserId;
+			userService.getUserInfo(UserId).then(function (user) {
+				res.json(user);
 			}).caught(function (err) {
 				res.json(err);
 			});
@@ -139,7 +117,7 @@ exports.doAjax = function () {
 			userService.addUser(newUser).then(function (user) {
 				res.json({
 					"success": "ok",
-					user:user
+					user: user
 				})
 			}).caught(function (error) {
 				res.json({
@@ -155,12 +133,36 @@ exports.doAjax = function () {
 				res.json({
 					success: "ok"
 				});
-			}).caught(function(error){
+			}).caught(function (error) {
 				res.json({
 					errorType: "fsf",
 					errorMsg: error.message
 				});
 			})
+		},
+		"/admin/update_user.do": function (req, res, next) {
+			var req_pargs = req.body;
+			var newUser = {
+				ID:req_pargs.user_id,
+				user_login: req_pargs.user_login,
+				oldpassword: req_pargs.oldpassword,
+				newpassword: req_pargs.newpassword,
+				user_email: req_pargs.user_email,
+				user_url: req_pargs.user_url,
+				display_name: req_pargs.display_name,
+				user_nicename: req_pargs.user_nicename
+			};
+			userService.updateUser(newUser).then(function (user) {
+				res.json({
+					"success": "ok",
+					user: user
+				})
+			}).caught(function (error) {
+				res.json({
+					errorType: "dfdsf",
+					errorMsg: error.message
+				});
+			});
 		},
 		"/setup/install.do": function (req, res, next) {
 			var req_pargs = req.body;

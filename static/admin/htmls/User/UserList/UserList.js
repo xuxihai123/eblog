@@ -17,7 +17,9 @@ function UserListCtrl($scope, $remote) {
 			};
 		})
 	};
-
+	$scope.editUser=function(row){
+		$scope.goto('/UserEdit/' + row.ID);
+	};
 	$scope.deleteUser = function (row) {
 		$scope.$confirm({
 			title: "警告!",

@@ -107,6 +107,7 @@ module.exports = {
 				}
 			}).then(function (user) {
 				if (user) {
+					delete user.user_pass;
 					resolve(user);
 				} else {
 					reject({
