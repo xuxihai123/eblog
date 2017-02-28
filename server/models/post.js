@@ -43,7 +43,13 @@ module.exports = function (sequelize, DataTypes) {
 		},
 		{
 			tableName: "posts",
-			timestamps:false
+			timestamps:false,
+			classMethods:{
+				associate:function(models) {
+					Post.hasMany(models.TermRelationShip,{as:"TermRelationShips"});
+					Post.hasOne(models.User,{as:"user"});
+				}
+			}
 		});
 
 	return Post;

@@ -10,7 +10,12 @@ module.exports = function (sequelize, DataTypes) {
 		},
 		{
 			tableName: 'terms',
-			timestamps:false
+			timestamps:false,
+			classMethods:{
+				associate:function(models) {
+					Term.hasOne(models.TermTaxonomy,{as:"termTaxonomy"});
+				}
+			}
 		});
 
 	return Term;
