@@ -23,7 +23,7 @@ module.exports = function (sequelize, DataTypes) {
 			timestamps:false,
 			classMethods:{
 				associate:function(models) {
-					TermTaxonomy.belongsTo(models.Term);
+					TermTaxonomy.belongsTo(models.Term,{foreignKey:"term_id"});
 					TermTaxonomy.hasMany(models.TermRelationShip,{as:"TermRelationShips"});
 				}
 			}

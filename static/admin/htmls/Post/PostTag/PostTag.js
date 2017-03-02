@@ -5,7 +5,7 @@ function PostTagCtrl($scope, $remote, $location) {
 	};
 
 	$scope.doQuery = function (offset, limit) {
-		$remote.post("admin/postTagList.do", {
+		$remote.post("admin/getTagList.do", {
 			offset: offset,
 			limit: limit
 		}, function (data) {
@@ -27,7 +27,7 @@ function PostTagCtrl($scope, $remote, $location) {
 				slug: $scope.slug,
 				description: $scope.description,
 			};
-			$remote.post("admin/post_tag.do", pargs, function (data) {
+			$remote.post("admin/addTag.do", pargs, function (data) {
 				if (data.success == "ok") {
 					$scope.$alert({
 						title: "success",
@@ -54,7 +54,7 @@ function PostTagCtrl($scope, $remote, $location) {
 			description: $scope.description,
 		};
 		pargs.term_id = $scope.term_id;
-		$remote.post("admin/edit_tag.do", pargs, function (data) {
+		$remote.post("admin/updateTag.do", pargs, function (data) {
 			if (data.success == "ok") {
 				$scope.$alert({
 					title: "success",
@@ -76,7 +76,7 @@ function PostTagCtrl($scope, $remote, $location) {
 			var pargs = {
 				term_id: row.term_id
 			};
-			$remote.post("admin/delete_tag.do", pargs, function (data) {
+			$remote.post("admin/deleteTag.do", pargs, function (data) {
 				if (data.success == "ok") {
 					$scope.routeRefresh();
 				}

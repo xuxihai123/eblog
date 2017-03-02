@@ -13,7 +13,7 @@ module.exports = function (sequelize, DataTypes) {
 			timestamps:false,
 			classMethods:{
 				associate:function(models) {
-					Term.hasOne(models.TermTaxonomy,{as:"termTaxonomy"});
+					Term.hasOne(models.TermTaxonomy,{foreignKey:"term_id"});
 				}
 			}
 		});

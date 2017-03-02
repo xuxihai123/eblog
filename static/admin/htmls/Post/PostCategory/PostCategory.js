@@ -2,13 +2,13 @@ PostCategoryCtrl.$inject = ["$scope", "$remote", "$location"];
 function PostCategoryCtrl($scope, $remote, $location) {
 	$scope.startup = function () {
 		$scope.doQuery(0, 10);
-		$remote.post("admin/postAllCategory.do", {}, function (data) {
+		$remote.post("admin/getAllCategory.do", {}, function (data) {
 			$scope.allCategory = data;
 		});
 	};
 
 	$scope.doQuery = function (offset, limit) {
-		$remote.post("admin/postCategoryList.do", {
+		$remote.post("admin/getCategoryList.do", {
 			offset: offset,
 			limit: limit
 		}, function (data) {
@@ -31,7 +31,7 @@ function PostCategoryCtrl($scope, $remote, $location) {
 				parent: $scope.parent,
 				description: $scope.description,
 			};
-			$remote.post("admin/post_category.do", pargs, function (data) {
+			$remote.post("admin/addCategory.do", pargs, function (data) {
 				$scope.$alert({
 					title: "success",
 					content: "success",
@@ -59,7 +59,7 @@ function PostCategoryCtrl($scope, $remote, $location) {
 			description: $scope.description,
 		};
 		pargs.term_id = $scope.term_id;
-		$remote.post("admin/edit_category.do", pargs, function (data) {
+		$remote.post("admin/updateCategory.do", pargs, function (data) {
 			$scope.$alert({
 				title: "success",
 				content: "success",
@@ -79,7 +79,7 @@ function PostCategoryCtrl($scope, $remote, $location) {
 			var pargs = {
 				term_id: row.term_id
 			};
-			$remote.post("admin/delete_category.do", pargs, function (data) {
+			$remote.post("admin/deleteCategory.do", pargs, function (data) {
 				if (data.success == "ok") {
 					$scope.routeRefresh();
 				}
