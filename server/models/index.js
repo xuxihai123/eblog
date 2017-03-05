@@ -51,4 +51,7 @@ db.isExistManager = function () {
 		}
 	});
 };
+db.sequelize.getModel=function(name) {
+	return db[name];
+};
 module.exports = db;

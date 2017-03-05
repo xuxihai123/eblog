@@ -30,7 +30,7 @@ function PageListCtrl($scope, $remote) {
 				var pargs = {
 					post_id: row.ID
 				};
-				$remote.post("admin/delete_page.do", pargs, function (data) {
+				$remote.post("admin/deletePage.do", pargs, function (data) {
 					if (data.success == "ok") {
 						$scope.routeRefresh();
 					}

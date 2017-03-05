@@ -11,18 +11,13 @@
 module.exports = function (sequelize, DataTypes) {
 	var TermRelationShip = sequelize.define("TermRelationShip",
 		{
-			object_id: {type: DataTypes.BIGINT(20), defaultValue: 0, primaryKey: true},
-			term_id: {type: DataTypes.BIGINT(20), defaultValue: 0, primaryKey: true},
+			object_id: {type: DataTypes.BIGINT(20),primaryKey:true, defaultValue: 0},
+			term_id: {type: DataTypes.BIGINT(20),primaryKey:true, defaultValue: 0},
 			term_order: {type: DataTypes.INTEGER(11), defaultValue: 0}
 		},
 		{
 			tableName: "term_relationship",
-			timestamps:false,
-			classMethods:{
-				associate:function(models) {
-					TermRelationShip.belongsTo(models.TermTaxonomy);
-				}
-			}
+			timestamps:false
 		});
 
 	return TermRelationShip;

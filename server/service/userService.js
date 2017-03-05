@@ -1,5 +1,5 @@
 "use strict";
-var User = require("../models").User;
+var userDao = require("../dao").UserDao;
 var pageHelper = require('../utils/pageHelper');
 var Promise = require('bluebird');
 var crypto = require('crypto');
@@ -9,11 +9,7 @@ module.exports = {
 		return new Promise(function (resolve, reject) {
 			var md5 = crypto.createHash('md5');
 			password = md5.update(password).digest('hex');
-			User.findOne({
-				where: {
-					user_login: username
-				}
-			}).then(function (user) {
+			userDao.findByName(username).then(function (user) {
 				if (user) {
 					if (user.user_pass !== password) {
 						reject({
@@ -34,17 +30,22 @@ module.exports = {
 	},
 	userRegister: function (user) {
 		return new Promise(function (resolve, reject) {
-			User.findOne({
-				where: {
-					user_login: username
-				}
-			}).then(function (result) {
+			userDao.findByName(user.user_login).then(function (result) {
 				if (result) {
 					reject({
+						errorCode:"600404",
 						errorMessage: "用户已存在！"
 					});
 				} else {
-					resolve(this.addUser(user));
+					userDao.create(user).then(function (result) {
+						resolve(result);
+					}, function (error) {
+						reject({
+							errorCode:"591000",
+							errorMessage:"注册用户失败",
+							error:error
+						});
+					});
 				}
 			});
 		});
@@ -52,23 +53,29 @@ module.exports = {
 	userResetPwd: function (user, key) {
 		return new Promise(function (resolve, reject) {
 			if (key) {
-				User.findOne({
-					where: {
-						user_login: username
-					}
-				}).then(function (result) {
+				userDao.findByName(user.user_login).then(function (result) {
 					if (result === null) {
 						reject({
 							errorMessage: "用户不已存在！"
 						});
 					} else {
-						resolve(this.updateUser(user));
+						user.ID = result.ID;
+						userDao.update(user).then(function(result){
+							resolve(result);
+						},function(error){
+							reject({
+								errorCode:"591000",
+								errorMessage:"重设置密码失败!",
+								error:error
+							});
+						});
 					}
 				});
 			} else {
 				reject({
+					errorCode: "123192",
 					errorMessage: "key...is need！"
-				})
+				});
 			}
 
 		});
@@ -79,7 +86,25 @@ module.exports = {
 		user.user_status = "0";
 		user.user_activation_key = dateutils.randomStr(16);
 		user.user_registered = dateutils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
-		return User.create.apply(User, arguments);
+		return new Promise(function(resolve,reject){
+			userDao.findByName(user.user_login).then(function (result) {
+				if (result) {
+					reject({
+						errorMessage: "用户已存在！"
+					});
+				} else {
+					userDao.create(user).then(function(result){
+						resolve(result);
+					},function(error){
+						reject({
+							errorCode:"591000",
+							errorMessage:"添加用户失败",
+							error:error
+						});
+					});
+				}
+			});
+		})
 	},
 	setupManager: function (user) {
 		user.user_level = 9;
@@ -87,14 +112,19 @@ module.exports = {
 	},
 	removeUser: function (user_id) {
 		return new Promise(function (resolve, reject) {
-			User.destroy({
-				where: {
-					ID: user_id
-				}
-			}).then(function (result) {
+			if(!user_id){
+				reject({
+					errorMessage: "user_id is need"
+				});
+			}
+			userDao.remove(user_id).then(function (result) {
 				resolve(result);
-			}).caught(function (error) {
-				reject(error);
+			}, function (error) {
+				reject({
+					errorCode:"591000",
+					errorMessage:"删除用户失败",
+					error:error
+				})
 			});
 		});
 	},
@@ -111,40 +141,51 @@ module.exports = {
 					errorMessage: "password必须！"
 				});
 			}else{
-				User.findOne({
-					where:{
-						ID:user.ID
-					}
-				}).then(function(selectUser){
-					var md5 = crypto.createHash('md5');
-					user.user_pass = md5.update(user.oldpassword).digest('hex');
-					if(user.user_pass===selectUser.user_pass){
-						resolve(selectUser.update({
-							user_login:user.user_login,
-							user_email:user.user_email,
-							user_nicename:user.user_nicename,
-							display_name:user.display_name,
-							user_url:user.user_url
-						}));
-					}else{
+				userDao.getById(user.ID).then(function(selectUser){
+					if(!selectUser){
 						reject({
 							errorCode: "600404",
-							errorMessage: "密码错误！"
+							errorMessage: "用户不存在！"
 						});
+					}else{
+						var md5 = crypto.createHash('md5');
+						user.user_pass = md5.update(user.oldpassword).digest('hex');
+						if(user.user_pass===selectUser.user_pass){
+							var newUser = {
+								user_login: user.user_login,
+								user_email: user.user_email,
+								user_nicename: user.user_nicename,
+								display_name: user.display_name,
+								user_url: user.user_url
+							};
+							newUser.ID = selectUser.ID;
+							userDao.update(newUser).then(function(result){
+								resolve(result);
+							},function(error){
+								reject({
+									errorCode: "591000",
+									errorMessage: "更新用户失败！"
+								});
+							});
+						}else{
+							reject({
+								errorCode: "600404",
+								errorMessage: "密码错误！"
+							});
+						}
 					}
-				})
+				},function(error){
+					reject({
+						errorCode: "591000",
+						errorMessage: "更新用户失败！"
+					});
+				});
 			}
-
-
 		});
 	},
 	getUserInfo: function (UserId) {
 		return new Promise(function (resolve, reject) {
-			User.findOne({
-				where: {
-					ID: UserId
-				}
-			}).then(function (user) {
+			userDao.getById(UserId).then(function (user) {
 				if (user) {
 					delete user.user_pass;
 					resolve(user);
@@ -154,22 +195,25 @@ module.exports = {
 						errorMessage: "用户不存在！"
 					});
 				}
+			}, function (error) {
+				reject({
+					errorCode: "591000",
+					errorMessage: "获取用户信息失败！",
+					errorSource:error
+				});
 			});
 		});
 	},
 	getUserPage: function (offset, limit) {
-		return new Promise(function (resove, reject) {
-			User.findAndCountAll({
-				offset: offset,
-				limit: limit,
-				attributes:{
-					exclude:['user_pass','user_activation_key']
-				}
-			}).then(function (result) {
-				var pageObj = new pageHelper.PageModel(offset, limit, result.rows, result.count);
-				resove(pageObj);
-			}).caught(function (e) {
-				reject(e);
+		return new Promise(function (resolve, reject) {
+			userDao.getPageModel(offset, limit).then(function (pageModel) {
+				resolve(pageModel);
+			}, function (error) {
+				reject({
+					errorCode: "591000",
+					errorMessage: "获取用户列表失败！",
+					errorSource: error
+				});
 			});
 		});
 	}

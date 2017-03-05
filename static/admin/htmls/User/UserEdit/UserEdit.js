@@ -6,7 +6,7 @@ function UserEditCtrl($scope, $remote,$routeParams) {
 			var pargs = {
 				UserId: $scope.UserId
 			};
-			$remote.post("admin/getUserInfo.do", pargs, function (data) {
+			$remote.post("admin/getUser.do", pargs, function (data) {
 				$scope.userinfo = data;
 				$scope.user_login=data.user_login;
 				$scope.display_name=data.display_name;
@@ -28,7 +28,7 @@ function UserEditCtrl($scope, $remote,$routeParams) {
 			user_url: $scope.user_url,
 			user_email: $scope.user_email
 		};
-		$remote.post("admin/update_user.do", pargs, function (data) {
+		$remote.post("admin/updateUser.do", pargs, function (data) {
 			if (data.success == "ok") {
 				$scope.$alert({
 					title: "success",

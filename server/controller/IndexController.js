@@ -1,48 +1,46 @@
-//var User = require("../bak/wp_users");
-//var Post = require("../bak/wp_posts");
-//var Term = require("../bak/wp_terms");
-//var comment = require("../bak/wp_comments");
-//var filters = require("../utils/filters");
-//var Promise = require('bluebird');
-///**
-// * 首页
-// * @returns {Function}
-// */
-//exports.index = function () {
-//	return {
-//		//url:/^\/(index|)\/?$/,
-//		url: "/",
-//		controller: function (req, res, next) {
-//			var offset = req.query.start || 0;
-//			var limit = req.query.limit || 5;
-//			Promise.all([Post.findNewestListPageModel(offset, limit),
-//					Term.getAllCategory(),
-//					Term.getAllTags(),
-//					Post.findArticleArchive(),
-//					Post.findNewestList(),
-//					Post.findNewestPage()])
-//				.spread(function (postPageModel, categoryList,tagsList, articleArchList, postNewestList, pageNewestList) {
-//					req.postNewestList = postNewestList;
-//					req.articleArchList = articleArchList;
-//					req.categoryList = categoryList;
-//					req.tagsList = tagsList;
-//					req.pageNewestList = pageNewestList;
-//					req.home = {
-//						type: "index",
-//						pageModel: postPageModel
-//					};
-//					return res.render("index");
-//				}).fail(function (err) {
-//				res.errorProxy("500", err);
-//			});
-//
-//		}
-//	}
-//};
-///**
-// * 关键字搜索
-// * @returns {{url: string, controller: controller}}
-// */
+var filters = require("../utils/filters");
+var Promise = require('bluebird');
+/**
+ * 首页
+ * @returns {Function}
+ */
+exports.index = function () {
+	return {
+		//url:/^\/(index|)\/?$/,
+		url: "/",
+		controller: function (req, res, next) {
+			var offset = req.query.start || 0;
+			var limit = req.query.limit || 5;
+			//Promise.all([Post.findNewestListPageModel(offset, limit),
+			//		Term.getAllCategory(),
+			//		Term.getAllTags(),
+			//		Post.findArticleArchive(),
+			//		Post.findNewestList(),
+			//		Post.findNewestPage()])
+			//	.spread(function (postPageModel, categoryList,tagsList, articleArchList, postNewestList, pageNewestList) {
+			//		req.postNewestList = postNewestList;
+			//		req.articleArchList = articleArchList;
+			//		req.categoryList = categoryList;
+			//		req.tagsList = tagsList;
+			//		req.pageNewestList = pageNewestList;
+			//		req.home = {
+			//			type: "index",
+			//			pageModel: postPageModel
+			//		};
+			//		return res.render("index");
+			//	}).fail(function (err) {
+			//	res.errorProxy("500", err);
+			//});
+			res.json({
+				success: "okok"
+			});
+		}
+	}
+};
+/**
+ * 关键字搜索
+ * @returns {{url: string, controller: controller}}
+ */
 //exports.search = function () {
 //	return {
 //		url: "/search",

@@ -13,7 +13,7 @@ function UserAddCtrl($scope, $remote) {
 			user_url: $scope.user_url,
 			user_email: $scope.user_email,
 		};
-		$remote.post("admin/useradd.do", pargs, function (data) {
+		$remote.post("admin/addUser.do", pargs, function (data) {
 			if (data.success == "ok") {
 				$scope.$alert({
 					title: "success",

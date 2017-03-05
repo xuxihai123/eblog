@@ -3,10 +3,10 @@ var transaction = require('../dao').transaction;
 var postDao = require("../dao").PostDao;
 var Promise = require('bluebird');
 module.exports = {
-	addPost: function (post) {
+	addPage: function (post) {
 		return new Promise(function (resolve, reject) {
 			transaction().then(function(trans){
-				post.post_type = 'post';
+				post.post_type = 'page';
 				post.post_status = 'publish';
 				return postDao.create2(post, trans).then(function (result) {
 					return trans.commit().then(function () {
@@ -28,7 +28,7 @@ module.exports = {
 			});
 		});
 	},
-	removePost: function (postID) {
+	removePage: function (postID) {
 		return new Promise(function (resolve, reject) {
 			postDao.remove({ID:postID}).then(function (result) {
 				resolve(result);
@@ -40,7 +40,7 @@ module.exports = {
 			});
 		});
 	},
-	updatePost: function (user, key) {
+	updatePage: function (user, key) {
 		return new Promise(function (resolve, reject) {
 			if (key) {
 				User.findOne({
@@ -64,7 +64,7 @@ module.exports = {
 
 		});
 	},
-	getPost: function (postId) {
+	getPage: function (postId) {
 		return new Promise(function (resolve, reject) {
 			postDao.getById(postId).then(function (post) {
 				resolve(post);
@@ -75,9 +75,9 @@ module.exports = {
 			});
 		});
 	},
-	getPostPageModel1: function (offset, limit) {
+	getPostPageModel2: function (offset, limit) {
 		return new Promise(function (resolve, reject) {
-			postDao.getPageModel1(offset, limit).then(function (pageModel) {
+			postDao.getPageModel2(offset, limit).then(function (pageModel) {
 				resolve(pageModel);
 			}, function (error) {
 				reject({

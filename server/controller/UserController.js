@@ -17,9 +17,7 @@ exports.doAjax = function () {
 					user: user
 				});
 			}).caught(function (error) {
-				res.json({
-					errorMessage: error.message
-				});
+				res.errorProxy(error);
 			});
 		},
 		"/user/register.do": function (req, res, next) {
@@ -70,10 +68,10 @@ exports.doAjax = function () {
 					user: user
 				});
 			}).caught(function (error) {
-				res.errorProxy("SqlException", err);
+				res.errorProxy(error);
 			});
 		},
-		"/admin/getInfo.do": function (req, res, next) {
+		"/admin/getLoginInfo.do": function (req, res, next) {
 			var user = req.session.user;
 			res.json({
 				user_login: user.user_login,
@@ -91,20 +89,18 @@ exports.doAjax = function () {
 			userService.getUserPage(offset, limit).then(function (pageModel) {
 				res.json(pageModel);
 			}).caught(function (error) {
-				res.json({
-					errorMsg: error.message
-				});
+				res.errorProxy(error);
 			});
 		},
-		"/admin/getUserInfo.do": function (req, res, next) {
+		"/admin/getUser.do": function (req, res, next) {
 			var UserId = req.body.UserId;
 			userService.getUserInfo(UserId).then(function (user) {
 				res.json(user);
-			}).caught(function (err) {
-				res.json(err);
+			}).caught(function (error) {
+				res.errorProxy(error);
 			});
 		},
-		"/admin/useradd.do": function (req, res, next) {
+		"/admin/addUser.do": function (req, res, next) {
 			var req_pargs = req.body;
 			var newUser = {
 				user_login: req_pargs.user_login,
@@ -120,13 +116,10 @@ exports.doAjax = function () {
 					user: user
 				})
 			}).caught(function (error) {
-				res.json({
-					errorType: "dfdsf",
-					errorMsg: error.message
-				});
+				res.errorProxy(error);
 			});
 		},
-		"/admin/delete_user.do": function (req, res, next) {
+		"/admin/deleteUser.do": function (req, res, next) {
 			var req_pargs = req.body;
 			var user_id = req_pargs.user_id;
 			userService.removeUser(user_id).then(function (result) {
@@ -134,13 +127,10 @@ exports.doAjax = function () {
 					success: "ok"
 				});
 			}).caught(function (error) {
-				res.json({
-					errorType: "fsf",
-					errorMsg: error.message
-				});
+				res.errorProxy(error);
 			})
 		},
-		"/admin/update_user.do": function (req, res, next) {
+		"/admin/updateUser.do": function (req, res, next) {
 			var req_pargs = req.body;
 			var newUser = {
 				ID:req_pargs.user_id,
@@ -158,10 +148,7 @@ exports.doAjax = function () {
 					user: user
 				})
 			}).caught(function (error) {
-				res.json({
-					errorType: "dfdsf",
-					errorMsg: error.message
-				});
+				res.errorProxy(error);
 			});
 		},
 		"/setup/install.do": function (req, res, next) {
@@ -177,11 +164,8 @@ exports.doAjax = function () {
 			userService.setupManager(newUser).then(function (user) {
 				req.app.set('setupFlag', false);
 				res.redirect('/');
-			}).caught(function (e) {
-				res.json({
-					errorType: "dfdsf",
-					errorMsg: e.message
-				});
+			}).caught(function (error) {
+				res.errorProxy(error);
 			});
 		}
 	};

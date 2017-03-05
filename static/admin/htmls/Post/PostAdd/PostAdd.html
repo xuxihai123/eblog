@@ -16,7 +16,7 @@
 							<div class="control-group">
 								<label for="term_id1">分类目录</label>
 								<select id="term_id1" name="term_id1" ng-model="term_id1"
-								        ng-options="row.term_taxonomy_id as row.slug for row in allCategory" required>
+								        ng-options="row.term_id as row.slug for row in allCategory" ng-change="test(row)" required>
 									<option value="">请选择分类</option>
 								</select>
 							</div>

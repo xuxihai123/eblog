@@ -51,7 +51,7 @@ function PageAddCtrl($scope, $remote) {
 			post_title: $scope.post_title,
 			post_content: post_content,
 		};
-		$remote.post("admin/page_new.do", pargs, function (data) {
+		$remote.post("admin/addPage.do", pargs, function (data) {
 			if (data.success == "ok") {
 				$scope.$alert({
 					title: "添加成功！",

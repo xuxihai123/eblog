@@ -7,17 +7,17 @@ function PostEditCtrl($scope, $remote, $routeParams) {
 			var pargs = {
 				post_id: $scope.PostId
 			};
-			$remote.post("admin/get_post.do", pargs, function (data) {
+			$remote.post("admin/getPost.do", pargs, function (data) {
 				$scope.post_title = data.post_title;
 				$scope.term_id1 = data.term_id1;
 				$scope.term_id2 = data.term_id2;
 				$("#post_content").val(data.post_content);
 			});
 		}
-		$remote.post("admin/postAllCategory.do", {}, function (data) {
+		$remote.post("admin/getAllCategory.do", {}, function (data) {
 			$scope.allCategory = data;
 		});
-		$remote.post("admin/postAllTag.do", {}, function (data) {
+		$remote.post("admin/getAllTag.do", {}, function (data) {
 			$scope.allTag = data;
 		});
 		var testEditor = editormd("editormd", {
@@ -56,7 +56,7 @@ function PostEditCtrl($scope, $remote, $routeParams) {
 			post_content: post_content,
 		};
 		pargs.post_id = $scope.PostId;
-		$remote.post("admin/edit_post.do", pargs, function (data) {
+		$remote.post("admin/updatePost.do", pargs, function (data) {
 			if (data.success == "ok") {
 				$scope.$alert({
 					title: "修改成功！",

@@ -50,7 +50,7 @@ app.config(configRemote);
 
 app.run(["$rootScope", "$location", "$remote", "$cookieService", function ($rootScope, $location, $remote, $cookieService) {
 
-	$remote.post("admin/getInfo.do", {}, function (data) {
+	$remote.post("admin/getLoginInfo.do", {}, function (data) {
 		if (data.errorCode == "999999") {
 			window.location.href = "login.html";
 		} else {

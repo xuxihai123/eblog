@@ -5,7 +5,7 @@ function PageEditCtrl($scope, $remote,$routeParams) {
 		var pargs = {
 			post_id: $scope.PostId
 		};
-		$remote.post("admin/get_page.do",pargs,function(data) {
+		$remote.post("admin/getPage.do",pargs,function(data) {
 			$scope.post_title = data.post_title;
 			$("#post_content").val(data.post_content);
 		});
@@ -62,7 +62,7 @@ function PageEditCtrl($scope, $remote,$routeParams) {
 			post_title: $scope.post_title,
 			post_content: post_content,
 		};
-		$remote.post("admin/edit_page.do", pargs, function (data) {
+		$remote.post("admin/updatePage.do", pargs, function (data) {
 			if (data.success == "ok") {
 				$scope.$alert({
 					title: "修改成功！",

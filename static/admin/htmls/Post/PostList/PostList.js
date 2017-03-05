@@ -32,7 +32,7 @@ function PostListCtrl($scope, $remote) {
 				var pargs = {
 					post_id: post.ID
 				};
-				$remote.post("admin/delete_post.do", pargs, function (data) {
+				$remote.post("admin/deletePost.do", pargs, function (data) {
 					if (data.success == "ok") {
 						if($scope.pageModel.List.length==1){
 							$scope.range.offset = $scope.range.offset - $scope.range.limit;

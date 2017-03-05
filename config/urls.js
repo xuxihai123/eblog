@@ -52,8 +52,11 @@ exports.configRoute = function (app) {
 //重写render方法，给所有的render view添加request,response,session
 function rewriteRender(app) {
 	var render = app.response.render;
-	app.response.errorProxy = function (exceptType, error) {
-		errorProxy.apply(this, [exceptType, error]);
+	app.response.errorProxy = function (error) {
+		var type = error.errorType;
+		var message = error.errorMessage;
+		console.log(error);
+		errorProxy.apply(this, [type, message]);
 	};
 	app.response.render = function (view, options, callback) {
 		var res, req, session, done;

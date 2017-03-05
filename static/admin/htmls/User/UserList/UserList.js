@@ -28,7 +28,7 @@ function UserListCtrl($scope, $remote) {
 				var pargs = {
 					user_login: row.user_login
 				};
-				$remote.post("admin/delete_user.do", pargs, function (data) {
+				$remote.post("admin/deleteUser.do", pargs, function (data) {
 					if (data.success == "ok") {
 						$scope.routeRefresh();
 					}

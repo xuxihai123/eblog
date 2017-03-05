@@ -1,10 +1,10 @@
 PostAddCtrl.$inject = ["$scope", "$remote"];
 function PostAddCtrl($scope, $remote) {
 	$scope.startup = function () {
-		$remote.post("admin/postAllCategory.do", {}, function (data) {
+		$remote.post("admin/getAllCategory.do", {}, function (data) {
 			$scope.allCategory = data;
 		});
-		$remote.post("admin/postAllTag.do", {}, function (data) {
+		$remote.post("admin/getAllTag.do", {}, function (data) {
 			$scope.allTag = data;
 		});
 		var testEditor = editormd("editormd", {
@@ -59,7 +59,7 @@ function PostAddCtrl($scope, $remote) {
 			term_id2: $scope.term_id2,
 			post_content: post_content,
 		};
-		$remote.post("admin/post_new.do", pargs, function (data) {
+		$remote.post("admin/addPost.do", pargs, function (data) {
 			if (data.success == "ok") {
 				$scope.$alert({
 					title: "添加成功！",
