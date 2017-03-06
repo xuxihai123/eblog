@@ -1,4 +1,4 @@
-var termService = require('../service/index').TermService;
+var termService = require('../service').TermService;
 //分类管理
 exports.doAjax = function () {
 	return {

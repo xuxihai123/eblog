@@ -39,6 +39,9 @@ module.exports = function (sequelize, DataTypes) {
 					return this.termTaxonomy && this.termTaxonomy.taxonomy;
 				}
 			},
+			defaultScope:{
+				order:"post_date DESC"
+			},
 			scopes:{
 				post: {
 					where: {

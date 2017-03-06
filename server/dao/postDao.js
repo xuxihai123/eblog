@@ -72,5 +72,54 @@ module.exports = {
 		}).then(function (result) {
 			return new pageHelper.PageModel(offset, limit, result.rows, result.count);
 		});
+	},
+	getArchive: function (offset, limit) {
+		return Post.scope("page").findAndCountAll({
+			offset: offset,
+			limit: limit,
+			include: [
+				{
+					model:models.User,
+					as: "user"
+				},{
+					model:models.TermTaxonomy,
+					as:"termTaxonomys"
+				}
+			]
+		}).then(function (result) {
+			return new pageHelper.PageModel(offset, limit, result.rows, result.count);
+		});
+	},
+	getLastestPost: function (count) {
+		return Post.scope("page").findAndCountAll({
+			limit: count,
+			include: [
+				{
+					model:models.User,
+					as: "user"
+				},{
+					model:models.TermTaxonomy,
+					as:"termTaxonomys"
+				}
+			]
+		}).then(function (result) {
+			return new pageHelper.PageModel(offset, limit, result.rows, result.count);
+		});
+	},
+	getLastestPage: function (count) {
+		return Post.scope("page").findAndCountAll({
+			limit: count,
+			include: [
+				{
+					model:models.User,
+					as: "user"
+				},{
+					model:models.TermTaxonomy,
+					as:"termTaxonomys"
+				}
+			]
+		}).then(function (result) {
+			return new pageHelper.PageModel(offset, limit, result.rows, result.count);
+		});
 	}
 };

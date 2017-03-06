@@ -75,7 +75,7 @@ module.exports = {
 			});
 		});
 	},
-	getPostPageModel2: function (offset, limit) {
+	pageModelOfPage: function (offset, limit) {
 		return new Promise(function (resolve, reject) {
 			postDao.getPageModel2(offset, limit).then(function (pageModel) {
 				resolve(pageModel);
@@ -85,5 +85,16 @@ module.exports = {
 				});
 			});
 		});
-	}
+	},
+	findLastestPage:function() {
+		return new Promise(function (resolve, reject) {
+			postDao.getLastestPage(6).then(function (pageModel) {
+				resolve(pageModel);
+			}, function (error) {
+				reject({
+					errorSorce: error
+				});
+			});
+		});
+	},
 };

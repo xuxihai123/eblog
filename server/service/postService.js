@@ -75,7 +75,7 @@ module.exports = {
 			});
 		});
 	},
-	getPostPageModel1: function (offset, limit) {
+	pageModelOfPost: function (offset, limit) {
 		return new Promise(function (resolve, reject) {
 			postDao.getPageModel1(offset, limit).then(function (pageModel) {
 				resolve(pageModel);
@@ -85,5 +85,40 @@ module.exports = {
 				});
 			});
 		});
+	},
+	/**前台服务**/
+	findPostPageModel:function(offset,limit){
+		return new Promise(function (resolve, reject) {
+			postDao.getPageModel1(offset, limit).then(function (pageModel) {
+				resolve(pageModel);
+			}, function (error) {
+				reject({
+					errorSorce: error
+				});
+			});
+		});
+	},
+	findArticleArchive:function() {
+		return new Promise(function (resolve, reject) {
+			postDao.getPageModel1(offset, limit).then(function (pageModel) {
+				resolve(pageModel);
+			}, function (error) {
+				reject({
+					errorSorce: error
+				});
+			});
+		});
+	},
+	findLastestPost:function() {
+		return new Promise(function (resolve, reject) {
+			postDao.getLastestPost(6).then(function (pageModel) {
+				resolve(pageModel);
+			}, function (error) {
+				reject({
+					errorSorce: error
+				});
+			});
+		});
 	}
+
 };

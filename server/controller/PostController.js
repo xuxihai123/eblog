@@ -84,7 +84,7 @@ exports.doAjax = function () {
 			var req_pargs = req.body;
 			var offset = req_pargs.offset || 0;
 			var limit = req_pargs.limit || 10;
-			postService.getPostPageModel1(offset, limit).then(function (pageModel) {
+			postService.pageModelOfPost(offset, limit).then(function (pageModel) {
 				res.json(pageModel);
 			}, function (error) {
 				res.errorProxy(error);

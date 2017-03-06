@@ -1,4 +1,4 @@
-var userService = require('../service/index').UserService;
+var userService = require('../service').UserService;
 /**
  * add user
  * @returns {Function}
