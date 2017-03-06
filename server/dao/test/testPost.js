@@ -2,17 +2,17 @@ var transaction = require('../index').transaction;
 var postDao = require('../postDao');
 function testCreate() {
 	var post;
-	for(var i=150;i<200;i++){
+	for(var i=1;i<100;i++){
 		var temp = Math.random() * 80;
 		var temp2 = i;
 		post = {
 			post_author: "author_" + temp2,
-			post_title: "title_page" + temp2,
-			post_content: "page_content....." + temp2,
+			post_title: "title_" + temp2,
+			post_content: "post_content....." + temp2,
 			post_date: new Date(),
 			post_date_gmt: new Date(),
 			post_status:"publish",
-			post_type:"page",
+			post_type:"post",
 			termRelations: [{
 				term_id: parseInt(temp),
 				term_order: parseInt(temp+ 1)
@@ -56,9 +56,17 @@ function updatePost() {
 
 function getPostPage() {
 
-	postDao.getPostPage(5,5).then(function (pageModel) {
+	postDao.getPageModel1(5,5).then(function (pageModel) {
 		console.log(JSON.stringify(pageModel,null,4));
 	}, function (error) {
+		console.log(error);
+	});
+}
+
+function testArchive() {
+	postDao.getArchive().then(function (result) {
+		console.log(JSON.stringify(result,null,4));
+	},function(error){
 		console.log(error);
 	});
 }
@@ -66,5 +74,6 @@ function getPostPage() {
 //testCreate();
 //testGetById();
 //updatePost();
-//getPostPage();
-testCreate();
+getPostPage();
+//testCreate();
+//testArchive();

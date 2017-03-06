@@ -66,7 +66,7 @@ module.exports = {
 	},
 	getPost: function (postId) {
 		return new Promise(function (resolve, reject) {
-			postDao.getById(postId).then(function (post) {
+			return postDao.getById(postId).then(function (post) {
 				resolve(post);
 			}, function (error) {
 				reject({
@@ -77,7 +77,7 @@ module.exports = {
 	},
 	pageModelOfPost: function (offset, limit) {
 		return new Promise(function (resolve, reject) {
-			postDao.getPageModel1(offset, limit).then(function (pageModel) {
+			return postDao.getPageModel1(offset, limit).then(function (pageModel) {
 				resolve(pageModel);
 			}, function (error) {
 				reject({
@@ -89,7 +89,7 @@ module.exports = {
 	/**前台服务**/
 	findPostPageModel:function(offset,limit){
 		return new Promise(function (resolve, reject) {
-			postDao.getPageModel1(offset, limit).then(function (pageModel) {
+			return postDao.getPageModel1(offset, limit).then(function (pageModel) {
 				resolve(pageModel);
 			}, function (error) {
 				reject({
@@ -100,8 +100,8 @@ module.exports = {
 	},
 	findArticleArchive:function() {
 		return new Promise(function (resolve, reject) {
-			postDao.getPageModel1(offset, limit).then(function (pageModel) {
-				resolve(pageModel);
+			return postDao.getArchive().then(function (result) {
+				resolve(result);
 			}, function (error) {
 				reject({
 					errorSorce: error
@@ -111,8 +111,8 @@ module.exports = {
 	},
 	findLastestPost:function() {
 		return new Promise(function (resolve, reject) {
-			postDao.getLastestPost(6).then(function (pageModel) {
-				resolve(pageModel);
+			return postDao.getLastestPost(6).then(function (result) {
+				resolve(result.rows);
 			}, function (error) {
 				reject({
 					errorSorce: error

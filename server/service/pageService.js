@@ -88,8 +88,8 @@ module.exports = {
 	},
 	findLastestPage:function() {
 		return new Promise(function (resolve, reject) {
-			postDao.getLastestPage(6).then(function (pageModel) {
-				resolve(pageModel);
+			postDao.getLastestPage(6).then(function (result) {
+				resolve(result.rows);
 			}, function (error) {
 				reject({
 					errorSorce: error
