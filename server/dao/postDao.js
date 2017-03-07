@@ -123,5 +123,27 @@ module.exports = {
 				}
 			]
 		});
+	},
+	findByWord:function(offset,limit,word){
+		return Post.scope("post", "date").findAndCountAll({
+			offset: offset,
+			limit: limit,
+			include: [
+				{
+					model: models.User,
+					as: "user"
+				}, {
+					model: models.TermTaxonomy,
+					as: "termTaxonomys"
+				}
+			],
+			where: {
+				post_title: {
+					$like: word
+				}
+			}
+		}).then(function (result) {
+			return new pageHelper.PageModel(offset, limit, result.rows, result.count);
+		});
 	}
 };

@@ -51,12 +51,12 @@ exports.search = function () {
 			if (!word) {
 				return res.redirect("/");
 			}
-			Promise.all([postService.findPostByWordPageModel(word, offset, limit),
-					postService.getAllCategory(),
-					postService.getAllTags(),
+			Promise.all([postService.findPostByWordPageModel(offset, limit,word),
+					termService.getAllCategory(),
+					termService.getAllTags(),
 					postService.findArticleArchive(),
-					postService.findNewestList(),
-					postService.findNewestPage()])
+					postService.findLastestPost(),
+					pageService.findLastestPage()])
 				.spread(function (pageModel, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
 					req.categoryList = categoryList;
 					req.tagsList = tagsList;
@@ -85,7 +85,6 @@ exports.indexArticle = function () {
 		url: /\d{4}\/\d{1,2}\/\d{1,2}\/post(\d+)\/?$/,
 		controller: function (req, res, next) {
 			var slug = req.params[0];
-
 			Promise.all([postService.get(slug),
 					postService.getPrev(slug),
 					postService.getNext(slug),
@@ -93,8 +92,8 @@ exports.indexArticle = function () {
 					postService.getAllCategory(),
 					postService.getAllTags(),
 					postService.findArticleArchive(),
-					postService.findNewestList(),
-					postService.findNewestPage()])
+					postService.findLastestPost(),
+					pageService.findLastestPage()])
 				.spread(function (posts, prevPosts, nextPosts, commentList, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
 					req.previewPost = posts[0];
 					req.previewPost.categoryList = filters.filterPostCategory(posts);
@@ -132,14 +131,14 @@ exports.indexPage = function () {
 		controller: function (req, res, next) {
 			var id = req.params[0];
 
-			Promise.all([postService.get(id),
+			Promise.all([postService.getPost(id),
 					termService.getAllCategory(),
 					termService.getAllTags(),
 					postService.findArticleArchive(),
-					postService.findNewestList(),
-					postService.findNewestPage()])
-				.spread(function (posts, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
-					req.previewPost = posts[0];
+					postService.findLastestPost(),
+					pageService.findLastestPage()])
+				.spread(function (post, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
+					req.previewPost = post;
 					req.categoryList = categoryList;
 					req.tagsList = tagsList;
 					req.articleArchList = articleArchList;
@@ -148,10 +147,9 @@ exports.indexPage = function () {
 					req.home = {
 						type: "article"
 					};
-					return res.render("index", {"title": posts[0].name});
-				})
-				.caught(function (err) {
-					res.errorProxy("500", err);
+					return res.render("index", {"title": post.name});
+				}).caught(function (error) {
+					res.errorProxy(error);
 				});
 		}
 	}
@@ -169,12 +167,12 @@ exports.indexArchive = function () {
 			var limit = req.query.limit || 5;
 			var year = req.params[0];
 			var month = req.params[1];
-			Promise.all([postService.findByYearMonthPageModel({year: year, month: month}, offset, limit),
+			Promise.all([postService.findByArchivePageModel({year: year, month: month}, offset, limit),
 					termService.getAllCategory(),
 					termService.getAllTags(),
 					postService.findArticleArchive(),
-					postService.findNewestList(),
-					postService.findNewestPage()])
+					postService.findLastestPost(),
+					pageService.findLastestPage()])
 				.spread(function (pageModel, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
 					req.home = {
 						type: "archive",
@@ -218,8 +216,8 @@ exports.indexCategory = function () {
 						termService.getAllCategory(),
 						termService.getAllTags(),
 						postService.findArticleArchive(),
-						postService.findNewestList(),
-						postService.findNewestPage()])
+						postService.findLastestPost(),
+						postService.findLastestPage()])
 					.spread(function (pageModel, term, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
 						req.home = {
 							type: "category",

@@ -120,6 +120,28 @@ module.exports = {
 				});
 			});
 		});
+	},
+	findPostByWordPageModel:function(offset,limit,word){
+		return new Promise(function (resolve, reject) {
+			return postDao.findByWord(offset, limit,word).then(function (pageModel) {
+				resolve(pageModel);
+			}, function (error) {
+				reject({
+					errorSorce: error
+				});
+			});
+		});
+	},
+	findByArchivePageModel:function(offset,limit,archive){
+		return new Promise(function (resolve, reject) {
+			return postDao.findByWord(offset, limit,word).then(function (pageModel) {
+				resolve(pageModel);
+			}, function (error) {
+				reject({
+					errorSorce: error
+				});
+			});
+		});
 	}
 
 };

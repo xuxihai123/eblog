@@ -35,7 +35,7 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
             </div>
         </div>
         <div class="post_taginfo">
-            <% postTags.forEach(function(temp,index){%>
+            <% postTags&&postTags.forEach(function(temp,index){%>
             <span class="label label-info"><a href="/category/<%= temp.slug %>"><%=temp.name%></a></span>
             <%})%>
         </div>
