@@ -97,7 +97,7 @@ module.exports = {
 		});
 	},
 	getLastestPost: function (count) {
-		return Post.scope("page", "date").findAndCountAll({
+		return Post.scope("post", "date").findAndCountAll({
 			limit: count,
 			include: [
 				{

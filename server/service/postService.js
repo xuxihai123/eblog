@@ -101,7 +101,8 @@ module.exports = {
 	findArticleArchive:function() {
 		return new Promise(function (resolve, reject) {
 			return postDao.getArchive().then(function (result) {
-				resolve(result);
+				var list = JSON.parse(JSON.stringify(result));
+				resolve(list);
 			}, function (error) {
 				reject({
 					errorSorce: error

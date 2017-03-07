@@ -12,8 +12,8 @@ exports.index = function () {
 		//url:/^\/(index|)\/?$/,
 		url: "/",
 		controller: function (req, res, next) {
-			var offset = req.query.start || 0;
-			var limit = req.query.limit || 5;
+			var offset = Number(req.query.start) || 0;
+			var limit = Number(req.query.limit) || 5;
 			Promise.all([postService.findPostPageModel(offset, limit),
 					termService.getAllCategory(),
 					termService.getAllTags(),

@@ -74,6 +74,6 @@ function testArchive() {
 //testCreate();
 //testGetById();
 //updatePost();
-getPostPage();
+testArchive();
 //testCreate();
 //testArchive();
