@@ -1,25 +1,25 @@
 var transaction = require('../index').transaction;
 var postDao = require('../postDao');
-function testCreate() {
+function testManyCreate() {
 	var post;
-	for(var i=1;i<100;i++){
-		var temp = Math.random() * 80;
-		var temp2 = i;
-		post = {
-			post_author: "author_" + temp2,
-			post_title: "title_" + temp2,
-			post_content: "post_content....." + temp2,
-			post_date: new Date(),
-			post_date_gmt: new Date(),
-			post_status:"publish",
-			post_type:"post",
-			termRelations: [{
-				term_id: parseInt(temp),
-				term_order: parseInt(temp+ 1)
-			}],
-			user_id:4
-		};
-		transaction().then(function(trans){
+	var count = 0;
+	for(var i=1;i<10;i++){
+		transaction().then(function (trans) {
+			count++;
+			post = {
+				post_author: "author_" + count,
+				post_title: "title_" + count,
+				post_content: "post_content....." + count,
+				post_date: new Date(),
+				post_date_gmt: new Date(),
+				post_status: "publish",
+				post_type: "page",
+				termRelations: [{
+					term_id: parseInt(Math.random() * 80),
+					term_order: 0
+				}],
+				user_id: 1
+			};
 			postDao.create2(post, trans).then(function (result) {
 				trans.commit().then(function () {
 					console.log('okok....');
@@ -71,9 +71,9 @@ function testArchive() {
 	});
 }
 
-//testCreate();
+testManyCreate();
 //testGetById();
 //updatePost();
-testArchive();
+//testArchive();
 //testCreate();
 //testArchive();

@@ -1,13 +1,14 @@
 var termDao = require('../termDao');
 var models = require('../../models');
 var taxonomyDao = require('../taxonomyDao');
-function createTerm() {
-	for (var i = 100; i < 133; i++) {
+function createManyTerm() {
+	for (var i = 1; i < 133; i++) {
+		var index = i;
 		var term = {
-			name: "term" + i,
-			slug: "slug" + i,
-			taxonomy: "post_tag",
-			description: "desc"
+			name: "category_" + index,
+			slug: "category_" + index,
+			taxonomy: "category",
+			description: "category_desc"
 		};
 		termDao.create(term).then(function (term2) {
 			return taxonomyDao.create({
@@ -15,7 +16,7 @@ function createTerm() {
 				taxonomy: term.taxonomy,
 				description: term.description
 			}).then(function (result) {
-				console.log(result);
+				console.log('okok----');
 			});
 		});
 	}
@@ -212,5 +213,5 @@ function testUpdate() {
 //testGetById();
 //testFindAllPM2();
 
-//testCreate();
-testUpdate();
+createManyTerm();
+//testUpdate();

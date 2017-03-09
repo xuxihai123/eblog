@@ -15,11 +15,8 @@ module.exports = function (sequelize, DataTypes) {
 				associate: function (models) {
 					Term.hasOne(models.TermTaxonomy, {
 						as: "termTaxonomy",
-						foreignKey: "term_id",
-						onUpdate: "CASCADE",
-						onDelete:"SET DEFAULT"
+						foreignKey: "term_id"
 					});
-
 				}
 			},
 			getterMethods:{
