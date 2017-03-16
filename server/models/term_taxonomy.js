@@ -12,6 +12,7 @@
 module.exports = function (sequelize, DataTypes) {
 	var TermTaxonomy = sequelize.define("TermTaxonomy",
 		{
+			term_taxonomy_id:{type: DataTypes.BIGINT(20),primaryKey:true, autoIncrement: true,},
 			term_id: {type: DataTypes.BIGINT(20), defaultValue: 0},
 			taxonomy: {type: DataTypes.STRING(32), allowNull: false},
 			description: {type: DataTypes.TEXT, defaultValue: ""},
@@ -25,14 +26,15 @@ module.exports = function (sequelize, DataTypes) {
 				associate:function(models) {
 					TermTaxonomy.belongsTo(models.Term,{foreignKey:"term_id"});
 					TermTaxonomy.belongsToMany(models.Post, {
+						as:"posts",
 						through: {
 							model: models.TermRelationShip,
 							unique: false
 						},
-						foreignKey: 'term_id',
+						foreignKey: 'term_taxonomy_id',
 						constraints: false
 					});
-					TermTaxonomy.hasMany(models.TermRelationShip, {foreignKey: "term_id"});
+					TermTaxonomy.hasMany(models.TermRelationShip, {foreignKey: "term_taxonomy_id"});
 				}
 			}
 		});

@@ -69,8 +69,8 @@ exports.search = function () {
 						pageModel: pageModel
 					};
 					return res.render("index");
-				}).caught(function (err) {
-				res.errorProxy("500", err);
+				}).caught(function (error) {
+				res.errorProxy(error);
 			});
 		}
 	}
@@ -187,8 +187,8 @@ exports.indexArchive = function () {
 					req.pageNewestList = pageNewestList;
 					res.render("index");
 				})
-				.caught(function (err) {
-					res.errorProxy("500", err);
+				.caught(function (error) {
+					res.errorProxy(error);
 				});
 		}
 	}
@@ -204,20 +204,15 @@ exports.indexCategory = function () {
 		controller: function (req, res, next) {
 
 			var pargs1 = req.params[0];
-			var pargs2 = req.params[1];
-			var pargs3 = req.params[2];
 			var offset = req.query.start || 0;
 			var limit = req.query.limit || 5;
-			if (pargs2) { //have children
-				console.log(pargs1 + "->" + pargs3);
-			} else {
-				Promise.all([postService.findByCategoryPageModel(pargs1, offset, limit),
+			Promise.all([postService.findByCategoryPageModel(offset, limit,pargs1),
 						termService.getBySlug(pargs1),
 						termService.getAllCategory(),
 						termService.getAllTags(),
 						postService.findArticleArchive(),
 						postService.findLastestPost(),
-						postService.findLastestPage()])
+						pageService.findLastestPage()])
 					.spread(function (pageModel, term, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
 						req.home = {
 							type: "category",
@@ -229,11 +224,10 @@ exports.indexCategory = function () {
 						req.articleArchList = articleArchList;
 						req.postNewestList = postNewestList;
 						req.pageNewestList = pageNewestList;
-						res.render("index", {"title": term[0].name});
-					}).caught(function (err) {
-					res.errorProxy("500", err);
-				});
-			}
+						res.render("index", {"title": term.name});
+					}).caught(function (error) {
+				res.errorProxy(error);
+			});
 		}
 	}
 };

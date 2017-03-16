@@ -48,6 +48,19 @@ module.exports = {
 			]
 		});
 	},
+	findBySlug:function(slug){
+		return Term.findOne({
+			where: {
+				slug: slug
+			},
+			include: [
+				{
+					model: TermTaxonomy,
+					as: "termTaxonomy",
+				}
+			]
+		});
+	},
 	findAllCategory: function () {
 		return Term.scope({method: ["incTable", TermTaxonomy, "category"]}).findAll();
 	},
@@ -71,5 +84,15 @@ module.exports = {
 			}).then(function (result) {
 				return new pageHelper.PageModel(offset, limit, result.rows, result.count);
 			});
+	},
+	termFindPost:function(offset,limit,slug){
+		return this.findBySlug(slug).then(function(term){
+			var taxonomy = term.termTaxonomy;
+			return taxonomy.getPosts().then(function(posts){
+				var count=posts.length;
+				var rows=posts.slice(offset, limit);
+				return new pageHelper.PageModel(offset, limit, rows, count)
+			});
+		});
 	}
 };

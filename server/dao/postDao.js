@@ -145,5 +145,49 @@ module.exports = {
 		}).then(function (result) {
 			return new pageHelper.PageModel(offset, limit, result.rows, result.count);
 		});
+	},
+	findByArchive:function(offset,limit,archive){
+		return Post.scope("post", "date").findAndCountAll({
+			offset: offset,
+			limit: limit,
+			include: [
+				{
+					model: models.User,
+					as: "user"
+				}, {
+					model: models.TermTaxonomy,
+					as: "termTaxonomys"
+				}
+			],
+			where: {
+				post_title: {
+					$like: word
+				}
+			}
+		}).then(function (result) {
+			return new pageHelper.PageModel(offset, limit, result.rows, result.count);
+		});
+	},
+	findByCategory:function(offset,limit,category){
+		return Post.scope("post", "date").findAndCountAll({
+			offset: offset,
+			limit: limit,
+			include: [
+				{
+					model: models.User,
+					as: "user"
+				}, {
+					model: models.TermRelationShip,
+					where:{
+						term_id:{
+							$eq:sequelize.col('term_relationship.term_id')
+						}
+					}
+				}
+			]
+		}).then(function (result) {
+			return new pageHelper.PageModel(offset, limit, result.rows, result.count);
+		});
 	}
+
 };

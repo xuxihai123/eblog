@@ -2,13 +2,13 @@ var termDao = require('../termDao');
 var models = require('../../models');
 var taxonomyDao = require('../taxonomyDao');
 function createManyTerm() {
-	for (var i = 1; i < 133; i++) {
+	for (var i = 1; i < 33; i++) {
 		var index = i;
 		var term = {
-			name: "category_" + index,
-			slug: "category_" + index,
-			taxonomy: "category",
-			description: "category_desc"
+			name: "tag_" + index,
+			slug: "tag_" + index,
+			taxonomy: "post_tag",
+			description: "tag_desc"
 		};
 		termDao.create(term).then(function (term2) {
 			return taxonomyDao.create({

@@ -12,7 +12,7 @@ module.exports = function (sequelize, DataTypes) {
 	var TermRelationShip = sequelize.define("TermRelationShip",
 		{
 			object_id: {type: DataTypes.BIGINT(20),primaryKey:true, defaultValue: 0},
-			term_id: {type: DataTypes.BIGINT(20),primaryKey:true, defaultValue: 0},
+			term_taxonomy_id: {type: DataTypes.BIGINT(20),primaryKey:true, defaultValue: 0},
 			term_order: {type: DataTypes.INTEGER(11), defaultValue: 0}
 		},
 		{

@@ -3,19 +3,19 @@ var postDao = require('../postDao');
 function testManyCreate() {
 	var post;
 	var count = 0;
-	for(var i=1;i<10;i++){
+	for(var i=1;i<33;i++){
 		transaction().then(function (trans) {
 			count++;
 			post = {
 				post_author: "author_" + count,
 				post_title: "title_" + count,
-				post_content: "post_content....." + count,
+				post_content: "page_content....." + count,
 				post_date: new Date(),
 				post_date_gmt: new Date(),
 				post_status: "publish",
 				post_type: "page",
 				termRelations: [{
-					term_id: parseInt(Math.random() * 80),
+					term_taxonomy_id: parseInt(Math.random() * 60),
 					term_order: 0
 				}],
 				user_id: 1
@@ -70,10 +70,14 @@ function testArchive() {
 		console.log(error);
 	});
 }
-
-testManyCreate();
+function testFindByCategory() {
+	postDao.findByCategory(0, 10);
+}
+//testManyCreate();
 //testGetById();
 //updatePost();
 //testArchive();
 //testCreate();
 //testArchive();
+
+testFindByCategory();

@@ -1,6 +1,7 @@
 "use strict";
 var transaction = require('../dao').transaction;
 var postDao = require("../dao").PostDao;
+var termDao = require("../dao").TermDao;
 var Promise = require('bluebird');
 module.exports = {
 	addPost: function (post) {
@@ -134,7 +135,18 @@ module.exports = {
 	},
 	findByArchivePageModel:function(offset,limit,archive){
 		return new Promise(function (resolve, reject) {
-			return postDao.findByWord(offset, limit,word).then(function (pageModel) {
+			return postDao.findByArchive(offset, limit,archive).then(function (pageModel) {
+				resolve(pageModel);
+			}, function (error) {
+				reject({
+					errorSorce: error
+				});
+			});
+		});
+	},
+	findByCategoryPageModel:function(offset,limit,category){
+		return new Promise(function (resolve, reject) {
+			return termDao.termFindPost(offset, limit,category).then(function (pageModel) {
 				resolve(pageModel);
 			}, function (error) {
 				reject({

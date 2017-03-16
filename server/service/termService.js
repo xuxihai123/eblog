@@ -199,6 +199,19 @@ module.exports = {
 			}
 		});
 	},
+	getBySlug:function(slug){
+		return new Promise(function (resolve, reject) {
+			termDao.findBySlug(slug).then(function (term) {
+				resolve(term);
+			}, function (error) {
+				reject({
+					errorCode: "591000",
+					errorMessage: "获取分类失败！",
+					errorSource: error
+				});
+			});
+		});
+	},
 	getCategoryPage: function (offset, limit) {
 		return new Promise(function (resolve, reject) {
 			offset = offset || 0;
