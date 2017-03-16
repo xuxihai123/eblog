@@ -3,7 +3,7 @@ var postDao = require('../postDao');
 function testManyCreate() {
 	var post;
 	var count = 0;
-	for(var i=1;i<33;i++){
+	for(var i=55;i<99;i++){
 		transaction().then(function (trans) {
 			count++;
 			post = {
@@ -13,9 +13,9 @@ function testManyCreate() {
 				post_date: new Date(),
 				post_date_gmt: new Date(),
 				post_status: "publish",
-				post_type: "page",
+				post_type: "post",
 				termRelations: [{
-					term_taxonomy_id: parseInt(Math.random() * 60),
+					term_taxonomy_id: 20,
 					term_order: 0
 				}],
 				user_id: 1
@@ -80,4 +80,4 @@ function testFindByCategory() {
 //testCreate();
 //testArchive();
 
-testFindByCategory();
+testManyCreate();

@@ -204,8 +204,8 @@ exports.indexCategory = function () {
 		controller: function (req, res, next) {
 
 			var pargs1 = req.params[0];
-			var offset = req.query.start || 0;
-			var limit = req.query.limit || 5;
+			var offset = Number(req.query.start) || 0;
+			var limit = Number(req.query.limit) || 5;
 			Promise.all([postService.findByCategoryPageModel(offset, limit,pargs1),
 						termService.getBySlug(pargs1),
 						termService.getAllCategory(),
@@ -219,6 +219,7 @@ exports.indexCategory = function () {
 							category: pargs1,
 							pageModel: pageModel
 						};
+						console.log(JSON.stringify(pageModel, null, 4));
 						req.categoryList = categoryList;
 						req.tagsList = tagsList;
 						req.articleArchList = articleArchList;

@@ -2,7 +2,7 @@
 var Term = require("../models").Term;
 var TermTaxonomy = require("../models").TermTaxonomy;
 var pageHelper = require('../utils/pageHelper');
-
+var Promise = require('bluebird');
 
 module.exports = {
 	create: function (term, options) {
@@ -88,10 +88,11 @@ module.exports = {
 	termFindPost:function(offset,limit,slug){
 		return this.findBySlug(slug).then(function(term){
 			var taxonomy = term.termTaxonomy;
-			return taxonomy.getPosts().then(function(posts){
-				var count=posts.length;
-				var rows=posts.slice(offset, limit);
-				return new pageHelper.PageModel(offset, limit, rows, count)
+			return Promise.all([taxonomy.countPosts(), taxonomy.getPosts({
+				offset: offset,
+				limit: limit
+			})]).spread(function (count, posts) {
+				return new pageHelper.PageModel(offset, limit, posts, count)
 			});
 		});
 	}
