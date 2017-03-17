@@ -72,7 +72,7 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
                     </a>
                 </small>
             </h3>
-            <form  name="post-new" action="/comment/post_comment.do" method="post">
+            <form  name="post-new" action="/comment/postComment.do" method="post">
                 <div class="form-group" style="display: none">
                     <label for="post">post</label>
                     <input id="post" class="form-control" name="post_id" type="text" value="<%= post.ID %>">

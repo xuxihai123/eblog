@@ -3,7 +3,12 @@ var transaction = require('../dao').transaction;
 var termDao = require('../dao').TermDao;
 var taxonomyDao = require('../dao').TaxonomyDao;
 var Promise = require('bluebird');
+var cache = {
+	getAllCategory: {},
+	getAllTags: {}
+};
 module.exports = {
+	//添加分类
 	addCategory: function (term) {
 		return new Promise(function (resolve, reject) {
 			if (term.name && term.slug) {
@@ -17,25 +22,18 @@ module.exports = {
 						return termDao.create2(term, trans).then(
 							function (result) {
 								return trans.commit().then(function () {
+									cache.getAllCategory.dirty = true;
 									resolve(result);
 								});
 							},
 							function (error) {
 								return trans.rollback(function () {
-									reject({
-										errorCode: "591000",
-										errorMessage: "创建分类失败！",
-										errorSource: error
-									});
+									reject(error);
 								});
 							});
 					},
 					function (error) {
-						reject({
-							errorCode: "591000",
-							errorMessage: "创建事务失败！",
-							errorSource: error
-						});
+						reject(error);
 					});
 			} else {
 				reject({
@@ -44,38 +42,32 @@ module.exports = {
 			}
 		});
 	},
+	//添加标签
 	addTag: function (term) {
 		return new Promise(function (resolve, reject) {
 			if (term.name && term.slug) {
 				transaction().then(
-						function (trans) {
-							term.termTaxonomy = {
-								taxonomy: "post_tag",
-								description: term.description
-							};
-							return termDao.create2(term, trans).then(
-									function (result) {
-										return trans.commit().then(function () {
-											resolve(result);
-										});
-									},
-									function (error) {
-										return trans.rollback(function () {
-											reject({
-												errorCode: "591000",
-												errorMessage: "创建标签失败！",
-												errorSource: error
-											});
-										});
-									});
-						},
-						function (error) {
-							reject({
-								errorCode: "591000",
-								errorMessage: "创建事务失败！",
-								errorSource: error
+					function (trans) {
+						term.termTaxonomy = {
+							taxonomy: "post_tag",
+							description: term.description
+						};
+						return termDao.create2(term, trans).then(
+							function (result) {
+								return trans.commit().then(function () {
+									cache.getAllTags.dirty = true;
+									resolve(result);
+								});
+							},
+							function (error) {
+								return trans.rollback(function () {
+									reject(error);
+								});
 							});
-						});
+					},
+					function (error) {
+						reject(error);
+					});
 			} else {
 				reject({
 					errorMessage: "标签名和别名不能为空!"
@@ -83,6 +75,7 @@ module.exports = {
 			}
 		});
 	},
+	//删除分类标签
 	removeTerm: function (termId) {
 		return new Promise(function (resolve, reject) {
 			if (!termId) {
@@ -98,14 +91,12 @@ module.exports = {
 						});
 					} else {
 						return termDao.remove(term).then(function (result) {
+								cache.getAllCategory.dirty = true;
+								cache.getAllTags.dirty = true;
 								resolve(result);
 							},
 							function (error) {
-								reject({
-									errorCode: "591000",
-									errorMessage: "删除分类标签失败！",
-									errorSource: error
-								});
+								reject(error);
 							});
 					}
 				} else {
@@ -118,9 +109,10 @@ module.exports = {
 			});
 		});
 	},
+	//更新分类
 	updateCategory: function (term) {
 		return new Promise(function (resolve, reject) {
-			if (term.term_id&&term.name && term.slug) {
+			if (term.term_id && term.name && term.slug) {
 				transaction().then(
 					function (t) {
 						termDao.update(term, t).then(function (result) {
@@ -129,28 +121,21 @@ module.exports = {
 								parent: term.parent || 0,
 								description: term.description
 							};
-							return taxonomyDao.update(termTaxonomy,t);
+							return taxonomyDao.update(termTaxonomy, t);
 						}).then(function (result) {
 							t.commit().then(function () {
+								cache.getAllCategory.dirty = true;
 								resolve(result);
 							});
 						}, function (error) {
 							t.rollback(function () {
-								reject({
-									errorCode: "591000",
-									errorMessage: "更新分类失败！",
-									errorSource: error
-								});
+								reject(error);
 							});
 						});
 
 					},
 					function (error) {
-						reject({
-							errorCode: "591000",
-							errorMessage: "创建事务失败！",
-							errorSource: error
-						});
+						reject(error);
 					});
 			} else {
 				reject({
@@ -159,39 +144,33 @@ module.exports = {
 			}
 		});
 	},
+	//更新标签
 	updateTag: function (term) {
 		return new Promise(function (resolve, reject) {
-			if (term.term_id&&term.name && term.slug) {
+			if (term.term_id && term.name && term.slug) {
 				transaction().then(
-						function (t) {
-							termDao.update(term, t).then(function (result) {
-								var termTaxonomy = {
-									term_id: term.term_id,
-									description: term.description
-								};
-								return taxonomyDao.update(termTaxonomy,t);
-							}).then(function (result) {
-								t.commit().then(function () {
-									resolve(result);
-								});
-							}, function (error) {
-								t.rollback(function () {
-									reject({
-										errorCode: "591000",
-										errorMessage: "更新标签失败！",
-										errorSource: error
-									});
-								});
+					function (t) {
+						termDao.update(term, t).then(function (result) {
+							var termTaxonomy = {
+								term_id: term.term_id,
+								description: term.description
+							};
+							return taxonomyDao.update(termTaxonomy, t);
+						}).then(function (result) {
+							t.commit().then(function () {
+								cache.getAllCategory.dirty = true;
+								resolve(result);
 							});
-
-						},
-						function (error) {
-							reject({
-								errorCode: "591000",
-								errorMessage: "创建事务失败！",
-								errorSource: error
+						}, function (error) {
+							t.rollback(function () {
+								reject(error);
 							});
 						});
+
+					},
+					function (error) {
+						reject(error);
+					});
 			} else {
 				reject({
 					errorMessage: "标签ID,标签名和别名不能为空!"
@@ -199,19 +178,17 @@ module.exports = {
 			}
 		});
 	},
-	getBySlug:function(slug){
+	//通过别名获取分类
+	getBySlug: function (slug) {
 		return new Promise(function (resolve, reject) {
 			termDao.findBySlug(slug).then(function (term) {
 				resolve(term);
 			}, function (error) {
-				reject({
-					errorCode: "591000",
-					errorMessage: "获取分类失败！",
-					errorSource: error
-				});
+				reject(error);
 			});
 		});
 	},
+	//获取分类列表
 	getCategoryPage: function (offset, limit) {
 		return new Promise(function (resolve, reject) {
 			offset = offset || 0;
@@ -219,15 +196,11 @@ module.exports = {
 			termDao.getCategoryPage(offset, limit).then(function (pageModel) {
 				resolve(pageModel);
 			}, function (error) {
-				reject({
-					errorCode: "591000",
-					errorMessage: "获取分类失败！",
-					errorSource: error
-				});
+				reject(error);
 			});
 		});
 	},
-
+	//获取标签列表
 	getTagPage: function (offset, limit) {
 		return new Promise(function (resolve, reject) {
 			offset = offset || 0;
@@ -235,37 +208,37 @@ module.exports = {
 			termDao.getTagPage(offset, limit).then(function (pageModel) {
 				resolve(pageModel);
 			}, function (error) {
-				reject({
-					errorCode: "591000",
-					errorMessage: "获取标签失败！",
-					errorSource: error
-				});
+				reject(error);
 			});
 		});
 	},
+	//获取所有分类
 	getAllCategory: function () {
 		return new Promise(function (resolve, reject) {
+			if (cache.getAllCategory.dirty == false) {
+				return resolve(cache.getAllCategory.pageModel);
+			}
 			termDao.findAllCategory().then(function (pageModel) {
+				cache.getAllCategory.pageModel = pageModel;
+				cache.getAllCategory.dirty = false;
 				resolve(pageModel);
 			}, function (error) {
-				reject({
-					errorCode: "591000",
-					errorMessage: "获取分类失败！",
-					errorSource: error
-				});
+				reject(error);
 			});
 		});
 	},
+	//获取所有标签
 	getAllTags: function () {
 		return new Promise(function (resolve, reject) {
+			if (cache.getAllTags.dirty == false) {
+				return resolve(cache.getAllTags.pageModel);
+			}
 			termDao.findAllTag().then(function (pageModel) {
+				cache.getAllTags.pageModel = pageModel;
+				cache.getAllTags.dirty = false;
 				resolve(pageModel);
 			}, function (error) {
-				reject({
-					errorCode: "591000",
-					errorMessage: "获取标签失败！",
-					errorSource: error
-				});
+				reject(error);
 			});
 		});
 	}

@@ -37,6 +37,9 @@ module.exports = function (sequelize, DataTypes) {
 			getterMethods:{
 				taxonomy:function() {
 					return this.termTaxonomy && this.termTaxonomy.taxonomy;
+				},
+				user_login:function() {
+					return this.user&&this.user.user_login
 				}
 			},
 			scopes:{

@@ -32,7 +32,7 @@ function CommentListCtrl($scope, $remote) {
 				var pargs = {
 					comment_ID: row.comment_ID
 				};
-				$remote.post("admin/delete_comment.do", pargs, function (data) {
+				$remote.post("admin/deleteComment.do", pargs, function (data) {
 					if (data.success == "ok") {
 						if ($scope.pageModel.List.length == 1) {
 							$scope.range.offset = $scope.range.offset - $scope.range.limit;

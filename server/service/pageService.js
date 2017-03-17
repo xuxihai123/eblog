@@ -20,11 +20,7 @@ module.exports = {
 			},function(error){
 				reject(error);
 			},function(error){
-				reject({
-					errorCode: "591000",
-					errorMessage: "创建事务失败！",
-					errorSource: error
-				});
+				reject(error);
 			});
 		});
 	},
@@ -33,10 +29,7 @@ module.exports = {
 			postDao.remove({ID:postID}).then(function (result) {
 				resolve(result);
 			},function(error){
-				reject({
-					errorMessage: "key...is need！",
-					error:error
-				})
+				reject(error);
 			});
 		});
 	},
@@ -69,9 +62,7 @@ module.exports = {
 			postDao.getById(postId).then(function (post) {
 				resolve(post);
 			}, function (error) {
-				reject({
-					errorSorce: error
-				});
+				reject(error);
 			});
 		});
 	},
@@ -80,9 +71,7 @@ module.exports = {
 			postDao.getPageModel2(offset, limit).then(function (pageModel) {
 				resolve(pageModel);
 			}, function (error) {
-				reject({
-					errorSorce: error
-				});
+				reject(error);
 			});
 		});
 	},
@@ -91,10 +80,8 @@ module.exports = {
 			postDao.getLastestPage(6).then(function (result) {
 				resolve(result.rows);
 			}, function (error) {
-				reject({
-					errorSorce: error
-				});
+				reject(error);
 			});
 		});
-	},
+	}
 };

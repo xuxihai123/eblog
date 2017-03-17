@@ -1,32 +1,44 @@
 "use strict";
-var User = require("../models").User;
+var Comment = require("../models").Comment;
 var pageHelper = require('../utils/pageHelper');
 module.exports = {
-	create:function(user){
-		return User.create(user);
+	create:function(comment){
+		return Comment.create(comment);
 	},
-	remove:function(user){
-		return User.destroy({
+	remove:function(comment){
+		return Comment.destroy({
 			where:{
-				ID:user.ID
+				comment_ID:comment.comment_ID
 			}
 		});
 	},
-	update:function(user){
-		return User.update(user,{
+	update:function(comment){
+		return Comment.update(comment,{
 			where:{
-				ID:user.ID
+				comment_ID:comment.comment_ID
 			}
 		});
 	},
 	getById:function(id){
-		return User.findOne({
+		return Comment.findOne({
 			where: {
-				ID: id
+				comment_ID:id
 			}
 		});
 	},
-	findAll:function(){
-		return User.findAll();
+	getPageModel:function(offset,limit){
+		return Comment.findAndCountAll({
+			offset:offset,
+			limit:limit
+		}).then(function (result) {
+			return new pageHelper.PageModel(offset, limit, result.rows, result.count);
+		});
+	},
+	findAllByPostId:function(postId){
+		return Comment.findAll({
+			where:{
+				comment_post_ID:postId
+			}
+		});
 	}
 };

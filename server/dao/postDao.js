@@ -37,6 +37,24 @@ module.exports = {
 			}
 		});
 	},
+	getPrev:function(id){
+		return Post.findOne({
+			where: {
+				ID: {
+					$lt:id
+				}
+			}
+		});
+	},
+	getNext:function(id){
+		return Post.findOne({
+			where: {
+				ID: {
+					$gt:id
+				}
+			}
+		});
+	},
 	findAll: function () {
 		return Post.findAll();
 	},
@@ -86,11 +104,11 @@ module.exports = {
 				[sequelize.fn('month', sequelize.col('post_date')), "month"],
 				[sequelize.fn('count', sequelize.col('ID')), "archive_count"]
 			],
-			group:[
+			group: [
 				[sequelize.fn('year', sequelize.col('post_date'))],
 				[sequelize.fn('month', sequelize.col('post_date'))]
 			],
-			order:[
+			order: [
 				[sequelize.fn('year', sequelize.col('post_date')), 'DESC'],
 				[sequelize.fn('month', sequelize.col('post_date')), 'DESC']
 			]
@@ -124,7 +142,7 @@ module.exports = {
 			]
 		});
 	},
-	findByWord:function(offset,limit,word){
+	findByWord: function (offset, limit, word) {
 		return Post.scope("post", "date").findAndCountAll({
 			offset: offset,
 			limit: limit,
@@ -139,14 +157,18 @@ module.exports = {
 			],
 			where: {
 				post_title: {
-					$like: word
+					$like: '%' + word + '%'
 				}
 			}
 		}).then(function (result) {
 			return new pageHelper.PageModel(offset, limit, result.rows, result.count);
 		});
 	},
-	findByArchive:function(offset,limit,archive){
+	//获取所有文章的归档，即年月集合
+	//findByYearMonthPageModel: 'select *  from wp_posts ' +
+	//'where year(post_date)=? and month(post_date)=? and post_type=\'post\' and post_status=\'publish\' ' +
+	//'order by post_date desc',
+	findByArchive: function (offset, limit, archive) {
 		return Post.scope("post", "date").findAndCountAll({
 			offset: offset,
 			limit: limit,
@@ -159,16 +181,16 @@ module.exports = {
 					as: "termTaxonomys"
 				}
 			],
-			where: {
-				post_title: {
-					$like: word
-				}
-			}
+			where: sequelize.and(
+				sequelize.where(sequelize.fn('year', sequelize.col('post_date')), archive.year),
+				sequelize.where(sequelize.fn('month', sequelize.col('post_date')), archive.month)
+			)
 		}).then(function (result) {
 			return new pageHelper.PageModel(offset, limit, result.rows, result.count);
 		});
 	},
-	findByCategory:function(offset,limit,category){
+
+	findByCategory: function (offset, limit, category) {
 		return Post.scope("post", "date").findAndCountAll({
 			offset: offset,
 			limit: limit,
@@ -178,9 +200,9 @@ module.exports = {
 					as: "user"
 				}, {
 					model: models.TermRelationShip,
-					where:{
-						term_id:{
-							$eq:sequelize.col('term_relationship.term_id')
+					where: {
+						term_id: {
+							$eq: sequelize.col('term_relationship.term_id')
 						}
 					}
 				}

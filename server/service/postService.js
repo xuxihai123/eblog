@@ -3,14 +3,16 @@ var transaction = require('../dao').transaction;
 var postDao = require("../dao").PostDao;
 var termDao = require("../dao").TermDao;
 var Promise = require('bluebird');
+var cache = {findArticleArchive: {}};
 module.exports = {
 	addPost: function (post) {
 		return new Promise(function (resolve, reject) {
-			transaction().then(function(trans){
+			transaction().then(function (trans) {
 				post.post_type = 'post';
 				post.post_status = 'publish';
 				return postDao.create2(post, trans).then(function (result) {
 					return trans.commit().then(function () {
+						cache.findArticleArchive.dirty = true;
 						resolve(result);
 					});
 				}, function (error) {
@@ -18,26 +20,20 @@ module.exports = {
 						reject(error);
 					});
 				});
-			},function(error){
+			}, function (error) {
 				reject(error);
-			},function(error){
-				reject({
-					errorCode: "591000",
-					errorMessage: "创建事务失败！",
-					errorSource: error
-				});
+			}, function (error) {
+				reject(error);
 			});
 		});
 	},
 	removePost: function (postID) {
 		return new Promise(function (resolve, reject) {
-			postDao.remove({ID:postID}).then(function (result) {
+			postDao.remove({ID: postID}).then(function (result) {
+				cache.findArticleArchive.dirty = true;
 				resolve(result);
-			},function(error){
-				reject({
-					errorMessage: "key...is need！",
-					error:error
-				})
+			}, function (error) {
+				reject(error);
 			});
 		});
 	},
@@ -70,9 +66,25 @@ module.exports = {
 			return postDao.getById(postId).then(function (post) {
 				resolve(post);
 			}, function (error) {
-				reject({
-					errorSorce: error
-				});
+				reject(error);
+			});
+		});
+	},
+	findPrev: function (postId) {
+		return new Promise(function (resolve, reject) {
+			return postDao.getPrev(postId).then(function (post) {
+				resolve(post);
+			}, function (error) {
+				reject(error);
+			});
+		});
+	},
+	findNext: function (postId) {
+		return new Promise(function (resolve, reject) {
+			return postDao.getNext(postId).then(function (post) {
+				resolve(post);
+			}, function (error) {
+				reject(error);
 			});
 		});
 	},
@@ -81,77 +93,68 @@ module.exports = {
 			return postDao.getPageModel1(offset, limit).then(function (pageModel) {
 				resolve(pageModel);
 			}, function (error) {
-				reject({
-					errorSorce: error
-				});
+				reject(error);
 			});
 		});
 	},
 	/**前台服务**/
-	findPostPageModel:function(offset,limit){
+	findPostPageModel: function (offset, limit) {
 		return new Promise(function (resolve, reject) {
 			return postDao.getPageModel1(offset, limit).then(function (pageModel) {
 				resolve(pageModel);
 			}, function (error) {
-				reject({
-					errorSorce: error
-				});
+				reject(error);
 			});
 		});
 	},
-	findArticleArchive:function() {
+	findArticleArchive: function () {
 		return new Promise(function (resolve, reject) {
+			if(cache.findArticleArchive.dirty==false){
+				return resolve(cache.findArticleArchive.result);
+			}
 			return postDao.getArchive().then(function (result) {
 				var list = JSON.parse(JSON.stringify(result));
+				cache.findArticleArchive.result = result;
+				cache.findArticleArchive.dirty = false;
 				resolve(list);
 			}, function (error) {
-				reject({
-					errorSorce: error
-				});
+				reject(error);
 			});
 		});
 	},
-	findLastestPost:function() {
+	findLastestPost: function () {
 		return new Promise(function (resolve, reject) {
 			return postDao.getLastestPost(6).then(function (result) {
 				resolve(result.rows);
 			}, function (error) {
-				reject({
-					errorSorce: error
-				});
+				reject(error);
 			});
 		});
 	},
-	findPostByWordPageModel:function(offset,limit,word){
+	findPostByWordPageModel: function (offset, limit, word) {
 		return new Promise(function (resolve, reject) {
-			return postDao.findByWord(offset, limit,word).then(function (pageModel) {
+			return postDao.findByWord(offset, limit, word).then(function (pageModel) {
 				resolve(pageModel);
 			}, function (error) {
-				reject({
-					errorSorce: error
-				});
+				reject(error);
 			});
 		});
 	},
-	findByArchivePageModel:function(offset,limit,archive){
+	findByArchivePageModel: function (offset, limit, archive) {
 		return new Promise(function (resolve, reject) {
-			return postDao.findByArchive(offset, limit,archive).then(function (pageModel) {
+			return postDao.findByArchive(offset, limit, archive).then(function (pageModel) {
 				resolve(pageModel);
 			}, function (error) {
-				reject({
-					errorSorce: error
-				});
+				reject(error);
 			});
 		});
 	},
-	findByCategoryPageModel:function(offset,limit,category){
+	findByCategoryPageModel: function (offset, limit, category) {
 		return new Promise(function (resolve, reject) {
-			return termDao.termFindPost(offset, limit,category).then(function (pageModel) {
+			return termDao.termFindPost(offset, limit, category).then(function (pageModel) {
 				resolve(pageModel);
 			}, function (error) {
-				reject({
-					errorSorce: error
-				});
+				reject(error);
 			});
 		});
 	}

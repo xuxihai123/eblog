@@ -1,5 +1,8 @@
 'use strict';
-
+/**
+ * 业务层
+ * @type {*|exports|module.exports}
+ */
 var UserService = require('./userService');
 var PostService = require('./postService');
 var PageService = require('./pageService');

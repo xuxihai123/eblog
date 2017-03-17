@@ -5,6 +5,7 @@ var Promise = require('bluebird');
 var crypto = require('crypto');
 var dateutils = require('../utils/dateutils');
 module.exports = {
+	//用户登录
 	userLogin: function (username, password) {
 		return new Promise(function (resolve, reject) {
 			var md5 = crypto.createHash('md5');
@@ -28,6 +29,7 @@ module.exports = {
 			});
 		});
 	},
+	//用户注册
 	userRegister: function (user) {
 		return new Promise(function (resolve, reject) {
 			userDao.findByName(user.user_login).then(function (result) {
@@ -40,16 +42,13 @@ module.exports = {
 					userDao.create(user).then(function (result) {
 						resolve(result);
 					}, function (error) {
-						reject({
-							errorCode:"591000",
-							errorMessage:"注册用户失败",
-							error:error
-						});
+						reject(error);
 					});
 				}
 			});
 		});
 	},
+	//重置密码
 	userResetPwd: function (user, key) {
 		return new Promise(function (resolve, reject) {
 			if (key) {
@@ -63,11 +62,7 @@ module.exports = {
 						userDao.update(user).then(function(result){
 							resolve(result);
 						},function(error){
-							reject({
-								errorCode:"591000",
-								errorMessage:"重设置密码失败!",
-								error:error
-							});
+							reject(error);
 						});
 					}
 				});
@@ -80,6 +75,7 @@ module.exports = {
 
 		});
 	},
+	//管理员添加用户
 	addUser: function (user) {
 		var md5 = crypto.createHash('md5');
 		user.user_pass = md5.update(user.user_pass).digest('hex');
@@ -96,20 +92,18 @@ module.exports = {
 					userDao.create(user).then(function(result){
 						resolve(result);
 					},function(error){
-						reject({
-							errorCode:"591000",
-							errorMessage:"添加用户失败",
-							error:error
-						});
+						reject(error);
 					});
 				}
 			});
 		})
 	},
+	//系统初始化
 	setupManager: function (user) {
 		user.user_level = 9;
 		return this.addUser(user);
 	},
+	//删除用户
 	removeUser: function (user_id) {
 		return new Promise(function (resolve, reject) {
 			if(!user_id){
@@ -120,14 +114,11 @@ module.exports = {
 			userDao.remove(user_id).then(function (result) {
 				resolve(result);
 			}, function (error) {
-				reject({
-					errorCode:"591000",
-					errorMessage:"删除用户失败",
-					error:error
-				})
+				reject(error);
 			});
 		});
 	},
+	//更新用户信息
 	updateUser: function (user) {
 		return new Promise(function(resolve,reject){
 			if(!user.ID){
@@ -162,10 +153,7 @@ module.exports = {
 							userDao.update(newUser).then(function(result){
 								resolve(result);
 							},function(error){
-								reject({
-									errorCode: "591000",
-									errorMessage: "更新用户失败！"
-								});
+								reject(error);
 							});
 						}else{
 							reject({
@@ -175,14 +163,12 @@ module.exports = {
 						}
 					}
 				},function(error){
-					reject({
-						errorCode: "591000",
-						errorMessage: "更新用户失败！"
-					});
+					reject(error);
 				});
 			}
 		});
 	},
+	//获取用户信息
 	getUserInfo: function (UserId) {
 		return new Promise(function (resolve, reject) {
 			userDao.getById(UserId).then(function (user) {
@@ -196,24 +182,17 @@ module.exports = {
 					});
 				}
 			}, function (error) {
-				reject({
-					errorCode: "591000",
-					errorMessage: "获取用户信息失败！",
-					errorSource:error
-				});
+				reject(error);
 			});
 		});
 	},
+	//获取用户列表
 	getUserPage: function (offset, limit) {
 		return new Promise(function (resolve, reject) {
 			userDao.getPageModel(offset, limit).then(function (pageModel) {
 				resolve(pageModel);
 			}, function (error) {
-				reject({
-					errorCode: "591000",
-					errorMessage: "获取用户列表失败！",
-					errorSource: error
-				});
+				reject(error);
 			});
 		});
 	}

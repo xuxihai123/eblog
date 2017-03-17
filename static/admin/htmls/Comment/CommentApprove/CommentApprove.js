@@ -7,7 +7,7 @@ function CommentApproveCtrl($scope, $remote, $routeParams) {
 			var pargs = {
 				comment_ID: $scope.CommentId
 			};
-			$remote.post("admin/get_comment.do", pargs, function (data) {
+			$remote.post("admin/getComment.do", pargs, function (data) {
 				$scope.comment = data;
 				console.log(data);
 			});

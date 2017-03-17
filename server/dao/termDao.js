@@ -2,6 +2,7 @@
 var Term = require("../models").Term;
 var TermTaxonomy = require("../models").TermTaxonomy;
 var pageHelper = require('../utils/pageHelper');
+var cache = require('../utils/rediscache');
 var Promise = require('bluebird');
 
 module.exports = {

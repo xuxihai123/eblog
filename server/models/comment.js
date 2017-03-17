@@ -33,7 +33,7 @@ module.exports = function (sequelize, DataTypes) {
 			comment_content: {type: DataTypes.TEXT, allowNull: false},
 			comment_approved: {type: DataTypes.STRING(20), defaultValue: '1'},
 			comment_agent: {type: DataTypes.STRING(255), allowNull: false},
-			comment_type: {type: DataTypes.STRING(20), allowNull: false},
+			comment_type: {type: DataTypes.STRING(20), allowNull: false,defaultValue:''},
 			user_id: {type: DataTypes.BIGINT(20), defaultValue: 0}
 		},
 		{
