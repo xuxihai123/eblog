@@ -37,7 +37,7 @@ module.exports = function (sequelize, DataTypes) {
 			user_id: {type: DataTypes.BIGINT(20), defaultValue: 0}
 		},
 		{
-			tableName: "comments",
+			tableName: "wp_comments",
 			timestamps:false
 		});
 	return Comment;

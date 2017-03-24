@@ -15,7 +15,7 @@ module.exports = function (sequelize, DataTypes) {
 			user_status: {type: DataTypes.INTEGER, allowNull: false, defaultValue: 0}
 		},
 		{
-			tableName: "users",
+			tableName: "wp_users",
 			timestamps:false
 		});
 

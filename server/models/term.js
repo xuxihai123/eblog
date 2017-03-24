@@ -9,7 +9,7 @@ module.exports = function (sequelize, DataTypes) {
 			term_group: {type: DataTypes.BIGINT(10), defaultValue: 0}
 		},
 		{
-			tableName: 'terms',
+			tableName: 'wp_terms',
 			timestamps: false,
 			classMethods: {
 				associate: function (models) {

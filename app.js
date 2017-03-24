@@ -5,8 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var settings = require("./config/settings");
-var urls = require("./config/urls");
+
+var config = require('./config');
 
 var app = express();
 
@@ -32,17 +32,8 @@ app.use(session({
 	saveUninitialized: true,
 	cookie: {secure: false, maxAge: 1000 * 60 * 30}
 }));
-//auth user
-var setup_interceptor = require('./server/interceptor/setupFilter');
-app.use(setup_interceptor());
-var auth_interceptor = require('./server/interceptor/authIntercept');
-app.use(auth_interceptor());
-//config of app
-settings.config(app);
-//all controllers
-urls.configRoute(app);
-//auto resolve view
-urls.autoproxyView(app);
+
+config(app);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

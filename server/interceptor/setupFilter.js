@@ -5,9 +5,7 @@ module.exports = function () {
 		firstSetup = req.app.set('setupFlag');
 		if (firstSetup===true) {
 			setupApplication(req, res, next);
-		} else if(firstSetup===false){
-			setupPrevent(req, res, next);
-		}else{
+		} else{
 			next();
 		}
 	};
@@ -20,11 +18,4 @@ module.exports = function () {
 		}
 	}
 
-	function setupPrevent(req, res, next) {
-		if (SETUP_REG.test(req.url)) {
-			res.redirect('/');
-		} else {
-			next();
-		}
-	}
 };

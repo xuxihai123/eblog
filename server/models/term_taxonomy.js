@@ -20,7 +20,7 @@ module.exports = function (sequelize, DataTypes) {
 			count: {type: DataTypes.BIGINT(20), defaultValue: 0}
 		},
 		{
-			tableName: "term_taxonomy",
+			tableName: "wp_term_taxonomy",
 			timestamps:false,
 			classMethods:{
 				associate:function(models) {

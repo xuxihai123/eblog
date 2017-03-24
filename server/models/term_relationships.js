@@ -16,7 +16,7 @@ module.exports = function (sequelize, DataTypes) {
 			term_order: {type: DataTypes.INTEGER(11), defaultValue: 0}
 		},
 		{
-			tableName: "term_relationship",
+			tableName: "wp_term_relationships",
 			timestamps:false
 		});
 

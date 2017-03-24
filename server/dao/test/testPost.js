@@ -3,13 +3,13 @@ var postDao = require('../postDao');
 function testManyCreate() {
 	var post;
 	var count = 0;
-	for(var i=55;i<99;i++){
+	for(var i=0;i<55;i++){
 		transaction().then(function (trans) {
 			count++;
 			post = {
 				post_author: "author_" + count,
 				post_title: "title_" + count,
-				post_content: "page_content....." + count,
+				post_content: "post_content....." + count,
 				post_date: new Date(),
 				post_date_gmt: new Date(),
 				post_status: "publish",

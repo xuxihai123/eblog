@@ -17,7 +17,7 @@ module.exports = function (sequelize, DataTypes) {
 			comment_count: {type: DataTypes.INTEGER(20), defaultValue: 0}
 		},
 		{
-			tableName: "posts",
+			tableName: "wp_posts",
 			timestamps: false,
 			classMethods: {
 				associate: function (models) {
