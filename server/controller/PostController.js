@@ -25,12 +25,11 @@ exports.doAjax = function () {
 			}
 			var user = req.session.user;
 			postService.addPost({
-				post_author: req.session.user.ID,
+				post_author: user.ID,
 				post_title: post_title,
 				post_content: post_content,
 				post_date: new Date(),
 				post_date_gmt: new Date(),
-				user_id:user.ID,
 				termRelations: relation
 			}).then(function (result) {
 				res.json({

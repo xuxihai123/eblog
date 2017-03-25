@@ -114,7 +114,7 @@ module.exports = {
 			}
 			return postDao.getArchive().then(function (result) {
 				var list = JSON.parse(JSON.stringify(result));
-				cache.findArticleArchive.result = result;
+				cache.findArticleArchive.result = list;
 				cache.findArticleArchive.dirty = false;
 				resolve(list);
 			}, function (error) {

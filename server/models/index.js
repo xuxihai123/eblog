@@ -45,9 +45,10 @@ Promise.config({
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 db.isExistManager = function () {
-	return db.User.findOne({
+	return db.Option.findOne({
 		where: {
-			user_level: 9
+			option_name: "setupFlag",
+			option_value:'true'
 		}
 	});
 };

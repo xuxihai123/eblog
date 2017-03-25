@@ -96,12 +96,12 @@
             user_email: $("#user_email").val(),
             user_url: $("#user_url").val(),
             display_name: $("#display_name").val(),
-            user_nicename: $('#user_nicename').val(),
+            user_nicename: $('#user_nicename').val()
         }, function (data) {
-            if (data.user_login) {
-                window.location.href = "index.html";
-            } else {
-                $("#error").text(data.errorMessage);
+        	if(data.errorMessage){
+		        $("#error").text(data.errorMessage);
+            }else{
+		        window.location.href = "/";
             }
         });
     }

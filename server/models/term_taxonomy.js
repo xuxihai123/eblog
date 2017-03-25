@@ -12,15 +12,27 @@
 module.exports = function (sequelize, DataTypes) {
 	var TermTaxonomy = sequelize.define("TermTaxonomy",
 		{
-			term_taxonomy_id:{type: DataTypes.BIGINT(20),primaryKey:true, autoIncrement: true,},
-			term_id: {type: DataTypes.BIGINT(20), defaultValue: 0},
-			taxonomy: {type: DataTypes.STRING(32), allowNull: false},
-			description: {type: DataTypes.TEXT, defaultValue: ""},
-			parent: {type: DataTypes.BIGINT(20), defaultValue: 0},
-			count: {type: DataTypes.BIGINT(20), defaultValue: 0}
+			term_taxonomy_id:{type: DataTypes.BIGINT(20).UNSIGNED,primaryKey:true, autoIncrement: true},
+			term_id: {type: DataTypes.BIGINT(20).UNSIGNED,allowNull: false, defaultValue: 0},
+			taxonomy: {type: DataTypes.STRING(32), allowNull: false,defaultValue:''},
+			description: {type: DataTypes.TEXT('long'),allowNull: false},
+			parent: {type: DataTypes.BIGINT(20).UNSIGNED, allowNull: false,defaultValue: 0},
+			count: {type: DataTypes.BIGINT(20), allowNull: false,defaultValue: 0}
 		},
 		{
 			tableName: "wp_term_taxonomy",
+			indexes:[
+				{
+					unique: true,
+					name:'term_id_taxonomy',
+					fields: ['term_id','taxonomy']
+				},
+				{
+					unique:false,
+					name:'taxonomy',
+					fields:['taxonomy']
+				}
+			],
 			timestamps:false,
 			classMethods:{
 				associate:function(models) {

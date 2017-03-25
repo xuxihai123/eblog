@@ -11,12 +11,19 @@
 module.exports = function (sequelize, DataTypes) {
 	var TermRelationShip = sequelize.define("TermRelationShip",
 		{
-			object_id: {type: DataTypes.BIGINT(20),primaryKey:true, defaultValue: 0},
+			object_id: {type: DataTypes.BIGINT(20).UNSIGNED,primaryKey:true, defaultValue: 0},
 			term_taxonomy_id: {type: DataTypes.BIGINT(20),primaryKey:true, defaultValue: 0},
-			term_order: {type: DataTypes.INTEGER(11), defaultValue: 0}
+			term_order: {type: DataTypes.INTEGER(11),allowNull:false, defaultValue: 0}
 		},
 		{
 			tableName: "wp_term_relationships",
+			indexes:[
+				{
+					unique:true,
+					name:"term_taxonomy_id",
+					fields:['term_taxonomy_id']
+				}
+			],
 			timestamps:false
 		});
 

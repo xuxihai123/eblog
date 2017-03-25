@@ -7,7 +7,7 @@ function testManyCreate() {
 		transaction().then(function (trans) {
 			count++;
 			post = {
-				post_author: "author_" + count,
+				post_author: 1,
 				post_title: "title_" + count,
 				post_content: "post_content....." + count,
 				post_date: new Date(),
@@ -17,8 +17,7 @@ function testManyCreate() {
 				termRelations: [{
 					term_taxonomy_id: 20,
 					term_order: 0
-				}],
-				user_id: 1
+				}]
 			};
 			postDao.create2(post, trans).then(function (result) {
 				trans.commit().then(function () {

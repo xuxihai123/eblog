@@ -5,3 +5,7 @@
 
 ### 优化
 ### 使用sql模板
+
+### 备份:mysqldump -u root -p  wp_blogx >/tmp/wp_blogx.sql
+### 恢复:mysql -u root -p wp_blogx </tmp/xuxihai.sql
+### 权限:grant all privileges on wp_blogx.* to xxhblog@'localhost'
