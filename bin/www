@@ -23,17 +23,7 @@ app.set('port', port);
 
 var server = http.createServer(app);
 models.sequelize.sync().then(function() {
-
-  models.isExistManager().then(function(firstManager){
-    if(firstManager){
-      app.set('setupFlag', false);
-    }else{
-      app.set('setupFlag', true);
-    }
-	  console.log('setup------------------'+app.set('setupFlag'));
-    startApplication();
-  });
-
+	startApplication();
 });
 
 function startApplication(){

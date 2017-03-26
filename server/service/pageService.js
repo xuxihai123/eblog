@@ -78,7 +78,7 @@ module.exports = {
 	findLastestPage:function() {
 		return new Promise(function (resolve, reject) {
 			postDao.getLastestPage(6).then(function (result) {
-				resolve(result.rows);
+				resolve(result);
 			}, function (error) {
 				reject(error);
 			});

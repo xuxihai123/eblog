@@ -125,7 +125,7 @@ module.exports = {
 	findLastestPost: function () {
 		return new Promise(function (resolve, reject) {
 			return postDao.getLastestPost(6).then(function (result) {
-				resolve(result.rows);
+				resolve(result);
 			}, function (error) {
 				reject(error);
 			});

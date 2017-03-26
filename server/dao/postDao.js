@@ -115,7 +115,7 @@ module.exports = {
 		});
 	},
 	getLastestPost: function (count) {
-		return Post.scope("post", "date").findAndCountAll({
+		return Post.scope("post", "date").findAll({
 			limit: count,
 			include: [
 				{
@@ -129,7 +129,7 @@ module.exports = {
 		});
 	},
 	getLastestPage: function (count) {
-		return Post.scope("page", "date").findAndCountAll({
+		return Post.scope("page", "date").findAll({
 			limit: count,
 			include: [
 				{
