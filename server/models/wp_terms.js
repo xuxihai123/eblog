@@ -11,6 +11,6 @@ function Term(term) {
 	//this.term_id = term.term_id; //auto_increment
 	this.name = term.name;
 	this.slug = term.slug;
-	this.term_group = term.term_group;
+	this.term_group = term.term_group||0;
 }
 module.exports = Term;

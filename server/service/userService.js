@@ -10,7 +10,6 @@ module.exports = {
 		return new Promise(function (resolve, reject) {
 			var md5 = crypto.createHash('md5');
 			password = md5.update(password).digest('hex');
-			console.log(password);
 			userDao.findByName(username).then(function (user) {
 				if (user) {
 					if (user.user_pass !== password) {
@@ -52,14 +51,16 @@ module.exports = {
 	//重置密码
 	userResetPwd: function (user, key) {
 		return new Promise(function (resolve, reject) {
-			if (key) {
+			if (key&&key==='227754') {
 				userDao.findByName(user.user_login).then(function (result) {
-					if (result === null) {
+					if (!result) {
 						reject({
 							errorMessage: "用户不已存在！"
 						});
 					} else {
 						user.ID = result.ID;
+						var md5 = crypto.createHash('md5');
+						user.user_pass = md5.update(user.user_pass).digest('hex');
 						userDao.update(user).then(function(result){
 							resolve(result);
 						},function(error){
@@ -142,6 +143,7 @@ module.exports = {
 					}else{
 						var md5 = crypto.createHash('md5');
 						user.user_pass = md5.update(user.oldpassword).digest('hex');
+
 						if(user.user_pass===selectUser.user_pass){
 							var newUser = {
 								user_login: user.user_login,
@@ -151,6 +153,8 @@ module.exports = {
 								user_url: user.user_url
 							};
 							newUser.ID = selectUser.ID;
+							var md52 = crypto.createHash('md5');
+							newUser.user_pass = md52.update(user.newpassword).digest('hex');
 							userDao.update(newUser).then(function(result){
 								resolve(result);
 							},function(error){

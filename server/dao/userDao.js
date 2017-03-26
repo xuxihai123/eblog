@@ -16,7 +16,7 @@ module.exports = {
 	},
 	getById: function (id) {
 		var sql = 'select * from wp_users where ID=?';
-		return sqlhelp.query(sql, [id]);
+		return sqlhelp.queryOne(sql, [id]);
 	},
 	findAll: function () {
 		var sql = "select * from wp_users";
@@ -24,9 +24,7 @@ module.exports = {
 	},
 	findByName: function (username) {
 		var sql = 'select * from wp_users where user_login=?';
-		return sqlhelp.query(sql, [username]).then(function (result) {
-			return result&&result[0];
-		});
+		return sqlhelp.queryOne(sql, [username]);
 	},
 	getPageModel: function (offset, limit) {
 		var sql = "select * from wp_users";

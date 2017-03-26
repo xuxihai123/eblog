@@ -1,7 +1,8 @@
 "use strict";
+var Term = require('../models').Term;
 var sqlhelp = require('../utils/sqlHelper');
 var termsqls = require('./SQLTemplate').termSql;
-var pageHelper = require('../utils/pageHelper');
+var pagehelp = require('./pageSqlHelper');
 var Promise = require('bluebird');
 
 module.exports = {
@@ -9,55 +10,51 @@ module.exports = {
 		var sql = "insert into wp_terms set ?";
 		return sqlhelp.query(sql, term);
 	},
-	saveWithTrans: function (term, transaction) {
-		var defered = Q.defer(), defered2 = Q.defer(), conn;
-
-		function reject(err, connection) {
-			connection.rollback(function () {
-				console.log('rollback.........');
-				defered.reject(err);
-				connection && connection.release();
-			});
-		}
-
-		sqlhelp.getConnection(function (err, connection) {
-			conn = connection;
-			if (err) {
-				return reject(err, conn);
+	create2: function (term) {
+		var conn;
+		return new Promise(function (resolve, reject) {
+			function reject2(err, connection) {
+				return connection.rollback(function () {
+					console.log('rollback.........');
+					reject(err);
+					connection && connection.release();
+				});
 			}
-			connection.beginTransaction(function (err) {
+			sqlhelp.getConnection(function (err, connection) {
+				conn = connection;
 				if (err) {
-					return reject(err, conn);
+					return reject2(err, conn);
 				}
-				connection.query("insert into wp_terms set ?", term, function (err, okPacket) {
+				connection.beginTransaction(function (err) {
 					if (err) {
-						return reject(err, conn);
+						return reject2(err, conn);
 					}
-					taxonomy.term_id = okPacket.insertId;
-					connection.query("insert into wp_term_taxonomy set ?", taxonomy, function (err, okPacket) {
+					var term2 = new Term(term);
+					connection.query("insert into wp_terms set ?", term2, function (err, okPacket) {
 						if (err) {
-							reject(err, conn);
-						} else {
-							connection.commit(function (err) {
-								if (err) {
-									reject(err, conn);
-								} else {
-									defered.resolve(okPacket);
-								}
-							});
-
+							return reject2(err, conn);
 						}
+						var taxonomy = term.termTaxonomy;
+						taxonomy.term_id = okPacket.insertId;
+						connection.query("insert into wp_term_taxonomy set ?", taxonomy, function (err, okPacket) {
+							if (err) {
+								reject(err, conn);
+							} else {
+								connection.commit(function (err) {
+									if (err) {
+										reject2(err, conn);
+									} else {
+										resolve(okPacket);
+									}
+								});
+
+							}
+						});
 					});
 				});
 			});
 		});
-		defered.promise.then(function (okPacket) {
-			defered2.resolve(okPacket);
-		}).fail(function (err) {
-			console.log(err.stack);
-			defered2.reject(err);
-		});
-		return defered2.promise;
+
 	},
 	remove: function (term) {
 		var sql = "delete  from wp_terms where term_id=?";
@@ -69,11 +66,11 @@ module.exports = {
 	},
 	getById: function (term_id) {
 		var sql = 'select * from wp_terms where term_id=' + sqlhelp.escape(term_id);
-		return sqlhelp.query(sql);
+		return sqlhelp.queryOne(sql);
 	},
 	findBySlug:function(slug){
 		var sql = 'select * from wp_terms where slug=' + sqlhelp.escape(slug);
-		return sqlhelp.query(sql);
+		return sqlhelp.queryOne(sql);
 	},
 	findAllCategory: function () {
 		return sqlhelp.query(termsqls.getAllCategory);
@@ -88,14 +85,6 @@ module.exports = {
 		return pagehelp.getPageModel(offset, limit, termsqls.getTagPage);
 	},
 	termFindPost:function(offset,limit,slug){
-		return this.findBySlug(slug).then(function(term){
-			var taxonomy = term.termTaxonomy;
-			return Promise.all([taxonomy.countPosts(), taxonomy.getPosts({
-				offset: offset,
-				limit: limit
-			})]).spread(function (count, posts) {
-				return new pageHelper.PageModel(offset, limit, posts, count)
-			});
-		});
+		return pagehelp.getPageModel(offset, limit, termsqls.findByTermPageModel,[slug]);
 	}
 };

@@ -1,10 +1,76 @@
 "use strict";
+var Post = require('../models').Post;
 var pagehelp = require('./pageSqlHelper');
+var Promise = require('bluebird');
 var sqlhelp = require('../utils/sqlHelper');
 var postSqls = require("./SQLTemplate").postSql;
+var termRelationshipSql = require("./SQLTemplate").termRelationshipSql;
 module.exports = {
-	create: function (post) {
-		return sqlhelp.query(postSqls.save, post);
+	create: function (obj) {
+		var conn;
+		return new Promise(function (resolve, reject) {
+			function reject2(err, connection) {
+				connection.rollback(function () {
+					console.log('rollback.........');
+					reject(err);
+					connection && connection.release();
+				});
+			}
+			sqlhelp.getConnection(function (err, connection) {
+				conn = connection;
+				if (err) {
+					return reject2(err, conn);
+				}
+				connection.beginTransaction(function (err) {
+					if (err) {
+						return reject2(err, conn);
+					}
+					var post = new Post(obj);
+					connection.query(postSqls.save, post, function (err, okPacket) {
+						if (err) {
+							return reject2(err, conn);
+						}
+						var termRelations =obj.termRelations,values=[];
+						termRelations.forEach(function (temp) {
+							temp.object_id=okPacket.insertId;
+							values.push([okPacket.insertId, temp.term_taxonomy_id,0]);
+						});
+						connection.query(termRelationshipSql.saveMulti, [values], function (err, okPacket) {
+							if (err) {
+								reject2(err, conn);
+							} else {
+								connection.commit(function (err) {
+									if (err) {
+										reject2(err, conn);
+									} else {
+										resolve(okPacket);
+									}
+								});
+
+							}
+						});
+					});
+				});
+			});
+		});
+
+	},
+	createPage: function (obj) {
+		return new Promise(function (resolve, reject) {
+			sqlhelp.getConnection(function (err, connection) {
+				if (err) {
+					return reject(err);
+				}
+				var post = new Post(obj);
+				connection.query(postSqls.save, post, function (err, okPacket) {
+					if (err) {
+						return reject(err);
+					}
+					resolve(okPacket);
+				});
+			});
+		});
+
 	},
 	remove: function (post) {
 		return sqlhelp.query(postSqls.delete, post.ID);
@@ -13,19 +79,16 @@ module.exports = {
 		return sqlhelp.query(postSqls.update, [post.post_title, post.post_content, post.ID]);
 	},
 	getById: function (id) {
-		return sqlhelp.query(postSqls.get, [id]).then(function (result) {
-			return result[0];
-		});
+		return sqlhelp.queryOne(postSqls.getById, [id]);
 	},
-	getPrev:function(id){
-		return sqlhelp.query(postSqls.getPrev, [id]).then(function (result) {
-			return result[0];
-		});
+	getPageById: function (id) {
+		return sqlhelp.queryOne(postSqls.getPageById, [id]);
 	},
-	getNext:function(id){
-		return sqlhelp.query(postSqls.getNext, [id]).then(function (result) {
-			return result[0];
-		});
+	getPrev: function (id) {
+		return sqlhelp.queryOne(postSqls.getPrev, [id]);
+	},
+	getNext: function (id) {
+		return sqlhelp.queryOne(postSqls.getNext, [id]);
 	},
 	getPageModel1: function (offset, limit) {
 		return pagehelp.getPageModel(offset, limit, postSqls.getPostPageModel);

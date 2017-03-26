@@ -20,7 +20,7 @@ module.exports = {
 	},
 	getById:function(id){
 		var sql = 'select * from wp_term_taxonomy where term_taxonomy_id=' + sqlhelp.escape(id);
-		return sqlhelp.query(sql);
+		return sqlhelp.queryOne(sql);
 	},
 	findAll:function(){
 		var sql = "select * from wp_term_taxonomy";

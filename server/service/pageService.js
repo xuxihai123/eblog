@@ -1,26 +1,15 @@
 "use strict";
-var transaction = require('../dao').transaction;
 var postDao = require("../dao").PostDao;
 var Promise = require('bluebird');
 module.exports = {
 	addPage: function (post) {
 		return new Promise(function (resolve, reject) {
-			transaction().then(function(trans){
-				post.post_type = 'page';
-				post.post_status = 'publish';
-				return postDao.create2(post, trans).then(function (result) {
-					return trans.commit().then(function () {
-						resolve(result);
-					});
-				}, function (error) {
-					return trans.rollback().then(function () {
-						reject(error);
-					});
-				});
-			},function(error){
-				reject(error);
-			},function(error){
-				reject(error);
+			post.post_type = 'page';
+			post.post_status = 'publish';
+			return postDao.createPage(post).then(function (result) {
+				return resolve(result);
+			}, function (error) {
+				return reject(error);
 			});
 		});
 	},
@@ -59,7 +48,7 @@ module.exports = {
 	},
 	getPage: function (postId) {
 		return new Promise(function (resolve, reject) {
-			postDao.getById(postId).then(function (post) {
+			postDao.getPageById(postId).then(function (post) {
 				resolve(post);
 			}, function (error) {
 				reject(error);

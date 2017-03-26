@@ -61,6 +61,9 @@
 			function proxy(method, url, data, okFn, errorFn, config) {
 				config = angular.extend(config || {}, {
 					method: method,
+					headers:{
+						"x-requested-with":"XMLHttpRequest"
+					},
 					url: url,
 					data: data
 				});

@@ -1,5 +1,4 @@
 "use strict";
-var transaction = require('../dao').transaction;
 var termDao = require('../dao').TermDao;
 var taxonomyDao = require('../dao').TaxonomyDao;
 var Promise = require('bluebird');
@@ -12,28 +11,18 @@ module.exports = {
 	addCategory: function (term) {
 		return new Promise(function (resolve, reject) {
 			if (term.name && term.slug) {
-				transaction().then(
-					function (trans) {
-						term.termTaxonomy = {
-							taxonomy: "category",
-							parent: term.parent || 0,
-							description: term.description
-						};
-						return termDao.create2(term, trans).then(
-							function (result) {
-								return trans.commit().then(function () {
-									cache.getAllCategory.dirty = true;
-									resolve(result);
-								});
-							},
-							function (error) {
-								return trans.rollback(function () {
-									reject(error);
-								});
-							});
+				term.termTaxonomy = {
+					taxonomy: "category",
+					parent: term.parent || 0,
+					description: term.description
+				};
+				return termDao.create2(term).then(
+					function (result) {
+						cache.getAllCategory.dirty = true;
+						return resolve(result);
 					},
 					function (error) {
-						reject(error);
+						return 	reject(error);
 					});
 			} else {
 				reject({
@@ -46,27 +35,17 @@ module.exports = {
 	addTag: function (term) {
 		return new Promise(function (resolve, reject) {
 			if (term.name && term.slug) {
-				transaction().then(
-					function (trans) {
-						term.termTaxonomy = {
-							taxonomy: "post_tag",
-							description: term.description
-						};
-						return termDao.create2(term, trans).then(
-							function (result) {
-								return trans.commit().then(function () {
-									cache.getAllTags.dirty = true;
-									resolve(result);
-								});
-							},
-							function (error) {
-								return trans.rollback(function () {
-									reject(error);
-								});
-							});
+				term.termTaxonomy = {
+					taxonomy: "post_tag",
+					description: term.description
+				};
+				return termDao.create2(term).then(
+					function (result) {
+						cache.getAllTags.dirty = true;
+						return resolve(result);
 					},
 					function (error) {
-						reject(error);
+						return reject(error);
 					});
 			} else {
 				reject({

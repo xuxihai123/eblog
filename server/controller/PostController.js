@@ -15,12 +15,12 @@ exports.doAjax = function () {
 			var relation = [];
 			if (term_taxonomy_id1) {
 				relation.push({
-					term_id: term_taxonomy_id1
+					term_taxonomy_id: term_taxonomy_id1
 				});
 			}
 			if (term_taxonomy_id2) {
 				relation.push({
-					term_id: term_taxonomy_id2
+					term_taxonomy_id: term_taxonomy_id2
 				});
 			}
 			var user = req.session.user;

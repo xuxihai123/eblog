@@ -1,5 +1,4 @@
 "use strict";
-var transaction = require('../dao').transaction;
 var postDao = require("../dao").PostDao;
 var termDao = require("../dao").TermDao;
 var Promise = require('bluebird');
@@ -7,23 +6,13 @@ var cache = {findArticleArchive: {}};
 module.exports = {
 	addPost: function (post) {
 		return new Promise(function (resolve, reject) {
-			transaction().then(function (trans) {
-				post.post_type = 'post';
-				post.post_status = 'publish';
-				return postDao.create2(post, trans).then(function (result) {
-					return trans.commit().then(function () {
-						cache.findArticleArchive.dirty = true;
-						resolve(result);
-					});
-				}, function (error) {
-					return trans.rollback().then(function () {
-						reject(error);
-					});
-				});
+			post.post_type = 'post';
+			post.post_status = 'publish';
+			return postDao.create(post).then(function (result) {
+				cache.findArticleArchive.dirty = true;
+				return resolve(result);
 			}, function (error) {
-				reject(error);
-			}, function (error) {
-				reject(error);
+				return reject(error);
 			});
 		});
 	},
@@ -63,6 +52,7 @@ module.exports = {
 	},
 	getPost: function (postId) {
 		return new Promise(function (resolve, reject) {
+			console.log('------'+postId);
 			return postDao.getById(postId).then(function (post) {
 				resolve(post);
 			}, function (error) {

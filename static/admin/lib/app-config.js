@@ -31,7 +31,7 @@ function configRemote($remoteProvider) {
 	$remoteProvider.setErrorCallback(function (data, status, headers, config) {
 		var $rootScope = angular.element("body").scope();
 		if (data.errorCode == "999999") { //会话超时或未登录
-			window.location.href = "login.html";
+			window.location.href = "index.html";
 		} else if (data.errorCode == "591000") {
 			$rootScope.$alert({
 				title: "数据库操作异常！",
@@ -52,7 +52,7 @@ app.run(["$rootScope", "$location", "$remote", "$cookieService", function ($root
 
 	$remote.post("admin/getLoginInfo.do", {}, function (data) {
 		if (data.errorCode == "999999") {
-			window.location.href = "login.html";
+			window.location.href = "index.html";
 		} else {
 			$rootScope.$userinfo = data;
 		}
@@ -141,7 +141,7 @@ app.run(["$rootScope", "$location", "$remote", "$modal", "$route", function ($ro
 	$rootScope.logout = function () {
 		$remote.post("user/logout.do", {}, function (data) {
 			if (data && data.success == "ok") {
-				window.location.href = "login.html";
+				window.location.href = "index.html";
 			}
 		});
 	};

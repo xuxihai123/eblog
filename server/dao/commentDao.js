@@ -1,8 +1,10 @@
 "use strict";
+var Comment = require('../models').Comment;
 var sqlhelp = require('../utils/sqlHelper');
 var pagehelp = require('./pageSqlHelper');
 module.exports = {
-	create:function(comment){
+	create:function(obj){
+		var comment = new Comment(obj);
 		var sql = "insert into wp_comments set ?";
 		return sqlhelp.query(sql, comment);
 	},

@@ -127,7 +127,7 @@ exports.indexPage = function () {
 		controller: function (req, res, next) {
 			var id = req.params[0];
 
-			Promise.all([postService.getPost(id),
+			Promise.all([pageService.getPage(id),
 				termService.getAllCategory(),
 				termService.getAllTags(),
 				postService.findArticleArchive(),
