@@ -36,7 +36,7 @@ module.exports = function (sequelize, DataTypes) {
 			timestamps:false,
 			classMethods:{
 				associate:function(models) {
-					TermTaxonomy.belongsTo(models.Term,{foreignKey:"term_id"});
+					TermTaxonomy.belongsTo(models.Term,{foreignKey:"term_id",constraints:false});
 					TermTaxonomy.belongsToMany(models.Post, {
 						as:"posts",
 						through: {
@@ -46,7 +46,7 @@ module.exports = function (sequelize, DataTypes) {
 						foreignKey: 'term_taxonomy_id',
 						constraints: false
 					});
-					TermTaxonomy.hasMany(models.TermRelationShip, {foreignKey: "term_taxonomy_id"});
+					TermTaxonomy.hasMany(models.TermRelationShip, {foreignKey: "term_taxonomy_id",constraints: false});
 				}
 			}
 		});

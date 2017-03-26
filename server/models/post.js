@@ -54,10 +54,32 @@ module.exports = function (sequelize, DataTypes) {
 		},
 		{
 			tableName: "wp_posts",
+			indexes:[
+				{
+					unique:false,
+					name:"post_name",
+					fields:["post_name"]
+				},
+				{
+					unique:false,
+					name:"type_status_date",
+					fields:["post_type","post_status","post_date","ID"]
+				},
+				{
+					unique:false,
+					name:"post_parent",
+					fields:["post_parent"]
+				},
+				{
+					unique:false,
+					name:"post_author",
+					fields:["post_author"]
+				}
+			],
 			timestamps: false,
 			classMethods: {
 				associate: function (models) {
-					Post.belongsTo(models.User, {as:"user",foreignKey: "post_author"});
+					Post.belongsTo(models.User, {as:"user",foreignKey: "post_author",constraints: false});
 					Post.belongsToMany(models.TermTaxonomy, {
 						as:"termTaxonomys",
 						through: {
@@ -67,7 +89,7 @@ module.exports = function (sequelize, DataTypes) {
 						foreignKey: 'object_id',
 						constraints: false
 					});
-					Post.hasMany(models.TermRelationShip, {as:"termRelations",foreignKey: "object_id"});
+					Post.hasMany(models.TermRelationShip, {as:"termRelations",foreignKey: "object_id",constraints: false});
 				}
 			},
 			getterMethods:{

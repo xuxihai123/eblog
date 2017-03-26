@@ -27,7 +27,8 @@ module.exports = function (sequelize, DataTypes) {
 				associate: function (models) {
 					Term.hasOne(models.TermTaxonomy, {
 						as: "termTaxonomy",
-						foreignKey: "term_id"
+						foreignKey: "term_id",
+						constraints:false
 					});
 				}
 			},

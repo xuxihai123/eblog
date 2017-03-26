@@ -19,7 +19,7 @@ module.exports = function (sequelize, DataTypes) {
 			tableName: "wp_term_relationships",
 			indexes:[
 				{
-					unique:true,
+					unique:false,
 					name:"term_taxonomy_id",
 					fields:['term_taxonomy_id']
 				}
