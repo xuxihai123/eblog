@@ -1,89 +1,91 @@
 "use strict";
-var Term = require("../models").Term;
-var TermTaxonomy = require("../models").TermTaxonomy;
+var sqlhelp = require('../utils/sqlHelper');
+var termsqls = require('./SQLTemplate').termSql;
 var pageHelper = require('../utils/pageHelper');
 var Promise = require('bluebird');
 
 module.exports = {
 	create: function (term, options) {
-		return Term.create(term, options);
+		var sql = "insert into wp_terms set ?";
+		return sqlhelp.query(sql, term);
 	},
-	create2: function (term, transaction) {
-		return Term.create(term, {
-			include: [
-				{
-					model: TermTaxonomy,
-					as: "termTaxonomy",
-					transaction: transaction
+	saveWithTrans: function (term, transaction) {
+		var defered = Q.defer(), defered2 = Q.defer(), conn;
+
+		function reject(err, connection) {
+			connection.rollback(function () {
+				console.log('rollback.........');
+				defered.reject(err);
+				connection && connection.release();
+			});
+		}
+
+		sqlhelp.getConnection(function (err, connection) {
+			conn = connection;
+			if (err) {
+				return reject(err, conn);
+			}
+			connection.beginTransaction(function (err) {
+				if (err) {
+					return reject(err, conn);
 				}
-			],
-			transaction: transaction
+				connection.query("insert into wp_terms set ?", term, function (err, okPacket) {
+					if (err) {
+						return reject(err, conn);
+					}
+					taxonomy.term_id = okPacket.insertId;
+					connection.query("insert into wp_term_taxonomy set ?", taxonomy, function (err, okPacket) {
+						if (err) {
+							reject(err, conn);
+						} else {
+							connection.commit(function (err) {
+								if (err) {
+									reject(err, conn);
+								} else {
+									defered.resolve(okPacket);
+								}
+							});
+
+						}
+					});
+				});
+			});
 		});
+		defered.promise.then(function (okPacket) {
+			defered2.resolve(okPacket);
+		}).fail(function (err) {
+			console.log(err.stack);
+			defered2.reject(err);
+		});
+		return defered2.promise;
 	},
 	remove: function (term) {
-		return Term.destroy({
-			where: {
-				term_id: term.term_id
-			}
-		});
+		var sql = "delete  from wp_terms where term_id=?";
+		return sqlhelp.query(sql, term.term_id);
 	},
-	update: function (term, transaction) {
-		return Term.update(term, {
-			where: {
-				term_id: term.term_id
-			},
-			transaction: transaction
-		});
+	update: function (term) {
+		var sql = "update wp_terms set name = ?, slug = ? where term_id=?";
+		return sqlhelp.query(sql, [term.name, term.slug, term.term_id]);
 	},
 	getById: function (term_id) {
-		return Term.findOne({
-			where: {
-				term_id: term_id
-			},
-			include: [
-				{
-					model: TermTaxonomy,
-					as: "termTaxonomy",
-				}
-			]
-		});
+		var sql = 'select * from wp_terms where term_id=' + sqlhelp.escape(term_id);
+		return sqlhelp.query(sql);
 	},
 	findBySlug:function(slug){
-		return Term.findOne({
-			where: {
-				slug: slug
-			},
-			include: [
-				{
-					model: TermTaxonomy,
-					as: "termTaxonomy",
-				}
-			]
-		});
+		var sql = 'select * from wp_terms where slug=' + sqlhelp.escape(slug);
+		return sqlhelp.query(sql);
 	},
 	findAllCategory: function () {
-		return Term.scope({method: ["incTable", TermTaxonomy, "category"]}).findAll();
+		return sqlhelp.query(termsqls.getAllCategory);
 	},
 	findAllTag: function () {
-		return Term.scope({method: ["incTable", TermTaxonomy, "post_tag"]}).findAll();
+		return sqlhelp.query(termsqls.getAllTags);
 	},
 	getCategoryPage: function (offset, limit) {
-		return Term.scope({method: ["incTable", TermTaxonomy, "category"]})
-			.findAndCountAll({
-				offset: offset,
-				limit: limit,
-			}).then(function (result) {
-				return new pageHelper.PageModel(offset, limit, result.rows, result.count);
-			});
+		return pagehelp.getPageModel(offset, limit, termsqls.getCategoryPage);
 	},
 	getTagPage: function (offset, limit) {
-		return Term.scope({method: ["incTable", TermTaxonomy, "post_tag"]})
-			.findAndCountAll({
-				offset: offset,
-				limit: limit,
-			}).then(function (result) {
-				return new pageHelper.PageModel(offset, limit, result.rows, result.count);
-			});
+		return pagehelp.getPageModel(offset, limit, termsqls.getTagPage);
 	},
 	termFindPost:function(offset,limit,slug){
 		return this.findBySlug(slug).then(function(term){

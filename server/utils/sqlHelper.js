@@ -4,18 +4,17 @@ exports.query = function () {
 	console.info("sql query " + arguments[0]);
 	var params = Array.prototype.slice.call(arguments, 0);
 
-	var deferred = Promise.defer();
-	params.push(function (err) {
-		var args = Array.prototype.slice.call(arguments, 1);
-		if (err) {
-			console.log(err.stack);
-			deferred.reject(err);
-		}
-		deferred.resolve.apply(this, args);
+	return new Promise(function (resolve, reject) {
+		params.push(function (err) {
+			var args = Array.prototype.slice.call(arguments, 1);
+			if (err) {
+				console.log(err.stack);
+				reject(err);
+			}
+			resolve.apply(this, args);
+		});
+		process.dbpool.query.apply(process.dbpool, params);
 	});
-	process.dbpool.query.apply(process.dbpool, params);
-
-	return deferred.promise;
 };
 exports.getConnection = function () {
 	return process.dbpool.getConnection.apply(process.dbpool, arguments);

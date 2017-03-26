@@ -10,6 +10,7 @@ module.exports = {
 		return new Promise(function (resolve, reject) {
 			var md5 = crypto.createHash('md5');
 			password = md5.update(password).digest('hex');
+			console.log(password);
 			userDao.findByName(username).then(function (user) {
 				if (user) {
 					if (user.user_pass !== password) {

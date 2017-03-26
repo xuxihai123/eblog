@@ -1,58 +1,41 @@
 'use strict';
-
-var fs = require('fs');
-var path = require('path');
-var Sequelize = require('sequelize');
+var mysql = require('mysql');
 var Promise = require('bluebird');
-var basename = path.basename(module.filename);
 var env = process.env.NODE_ENV || 'development';
 var config = require(__dirname + '/../../config/config.json')[env];
 
-var db = {};
+var pool  = mysql.createPool({
+	host     : config.host,
+	user     : config.username,
+	password : config.password,
+	database : config.database
+});
 
-if (config.use_env_variable) {
-	var sequelize = new Sequelize(process.env[config.use_env_variable]);
-} else {
-	var sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
+var User=require('./wp_users');
+var Term=require('./wp_terms');
+var TermTaxonomy=require('./wp_term_taxonomy');
+var Post=require('./wp_posts');
+var Comment=require('./wp_comments');
+var TermRelationship=require('./wp_term_relationships');
 
-fs.readdirSync(__dirname)
-	.filter(function (file) {
-		return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
-	})
-	.forEach(function (file) {
-		var model = sequelize['import'](path.join(__dirname, file));
-		db[model.name] = model;
-	});
-
-Object.keys(db).forEach(function (modelName) {
-	if (db[modelName].associate) {
-		db[modelName].associate(db);
+module.exports = {
+	User:User,
+	Term:Term,
+	TermTaxonomy:TermTaxonomy,
+	Post:Post,
+	TermRelationship:TermRelationship,
+	Comment:Comment,
+	testOk:function () {
+		return new Promise(function (resolve,reject) {
+			pool.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
+				if (error) {
+					reject(error);
+				}else{
+					console.log('The solution is: ', results[0].solution);
+					process.dbpool = pool;
+					resolve(results[0].solution);
+				}
+			});
+		});
 	}
-});
-
-Promise.config({
-	// Enable warnings
-	warnings: true,
-	// Enable long stack traces
-	longStackTraces: true,
-	// Enable cancellation
-	cancellation: true,
-	// Enable monitoring
-	monitoring: true
-});
-
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
-db.isExistManager = function () {
-	return db.Option.findOne({
-		where: {
-			option_name: "setupFlag",
-			option_value:'true'
-		}
-	});
 };
-db.sequelize.getModel=function(name) {
-	return db[name];
-};
-module.exports = db;

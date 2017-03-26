@@ -1,50 +1,35 @@
 "use strict";
-var User = require("../models").User;
-var pageHelper = require('../utils/pageHelper');
+var sqlhelp = require("../utils/sqlHelper");
+var pagehelp = require("./pageSqlHelper");
 module.exports = {
 	create: function (user) {
-		return User.create(user);
+		var sql = "insert into wp_users set ?";
+		return sqlhelp.query(sql, user);
 	},
 	remove: function (user) {
-		return User.destroy({
-			where: {
-				ID: user.ID
-			}
-		});
+		var sql = "delete  from wp_users where ID=?";
+		return sqlhelp.query(sql, [user.ID]);
 	},
 	update: function (user) {
-		return User.update(user, {
-			where: {
-				ID: user.ID
-			}
-		});
+		var sql = "update wp_users set user_pass=? where user_login=?";
+		return sqlhelp.query(sql, [user.user_pass,user.user_login]);
 	},
 	getById: function (id) {
-		return User.findOne({
-			where: {
-				ID: id
-			}
-		});
+		var sql = 'select * from wp_users where ID=?';
+		return sqlhelp.query(sql, [id]);
 	},
 	findAll: function () {
-		return User.findAll();
+		var sql = "select * from wp_users";
+		return sqlhelp.query(sql);
 	},
 	findByName: function (username) {
-		return User.findOne({
-			where: {
-				user_login: username
-			}
+		var sql = 'select * from wp_users where user_login=?';
+		return sqlhelp.query(sql, [username]).then(function (result) {
+			return result&&result[0];
 		});
 	},
 	getPageModel: function (offset, limit) {
-		return User.findAndCountAll({
-			offset: offset,
-			limit: limit,
-			attributes: {
-				exclude: ['user_pass', 'user_activation_key']
-			}
-		}).then(function (result) {
-			return new pageHelper.PageModel(offset, limit, result.rows, result.count);
-		});
+		var sql = "select * from wp_users";
+		return pagehelp.getPageModel(offset, limit, sql);
 	}
 };

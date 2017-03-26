@@ -52,7 +52,7 @@ exports.doAjax = function () {
 			var limit = Number(req_pargs.limit) || 10;
 			commentService.getPageModel(offset, limit).then(function (pageModel) {
 				res.json(pageModel);
-			}, function (error) {
+			}).caught(function (error) {
 				res.errorProxy(error);
 			});
 		},
@@ -67,7 +67,7 @@ exports.doAjax = function () {
 						errorMessage: "没有找到该条评论"
 					});
 				}
-			}, function (error) {
+			}).caught(function (error) {
 				res.errorProxy(error);
 			});
 		},
@@ -83,7 +83,7 @@ exports.doAjax = function () {
 					success: "ok",
 					loginStatus: "1"
 				});
-			}, function (error) {
+			}).caught(function (error) {
 				res.errorProxy(error);
 			});
 		},
@@ -95,7 +95,7 @@ exports.doAjax = function () {
 					success: "ok",
 					loginStatus: "1"
 				});
-			},function (error) {
+			}).caught(function (error) {
 				res.errorProxy(error);
 			});
 		}

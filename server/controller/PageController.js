@@ -17,7 +17,7 @@ exports.doAjax=function() {
 					success: "ok",
 					loginStatus: "1"
 				});
-			}, function (error) {
+			}).caught(function (error) {
 				res.errorProxy(error);
 			});
 		},
@@ -29,7 +29,7 @@ exports.doAjax=function() {
 					success: "ok",
 					loginStatus: "1"
 				});
-			}, function (error) {
+			}).caught(function (error) {
 				res.errorProxy(error);
 			});
 		},
@@ -38,7 +38,7 @@ exports.doAjax=function() {
 			var post_id = req_pargs.post_id;
 			PageService.getPage(post_id).then(function (page) {
 				res.json(page);
-			}, function (error) {
+			}).caught(function (error) {
 				res.errorProxy(error);
 			});
 		},
@@ -56,7 +56,7 @@ exports.doAjax=function() {
 					success: "ok",
 					loginStatus: "1"
 				});
-			}, function (error) {
+			}).caught(function (error) {
 				res.errorProxy(error);
 			});
 		},
@@ -66,7 +66,7 @@ exports.doAjax=function() {
 			var limit = req_pargs.limit || 10;
 			PageService.pageModelOfPage(offset, limit).then(function (pageModel) {
 				res.json(pageModel);
-			}, function (error) {
+			}).caught(function (error) {
 				res.errorProxy(error);
 			});
 		}

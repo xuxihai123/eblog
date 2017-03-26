@@ -109,7 +109,7 @@ exports.doAjax = function () {
 			var limit = req_pargs.limit || 10;
 			termService.getTagPage(offset, limit).then(function (pageModel) {
 				res.json(pageModel);
-			}, function (error) {
+			}).caught(function (error) {
 				res.errorProxy(error);
 			});
 		},
@@ -119,7 +119,7 @@ exports.doAjax = function () {
 			var limit = req_pargs.limit || 10;
 			termService.getCategoryPage(offset, limit).then(function (pageModel) {
 				res.json(pageModel);
-			}, function (error) {
+			}).caught(function (error) {
 				res.errorProxy(error);
 			});
 		},
@@ -129,21 +129,21 @@ exports.doAjax = function () {
 			var limit = req_pargs.limit || 10;
 			termService.getTagPage(offset, limit).then(function (pageModel) {
 				res.json(pageModel);
-			}, function (error) {
+			}).caught(function (error) {
 				res.errorProxy(error);
 			});
 		},
 		"/admin/getAllCategory.do": function (req, res, next) {
 			termService.getAllCategory().then(function (allTag) {
 				res.json(allTag);
-			}, function (error) {
+			}).caught(function (error) {
 				res.errorProxy(error);
 			});
 		},
 		"/admin/getAllTag.do": function (req, res, next) {
 			termService.getAllTags().then(function (allTag) {
 				res.json(allTag);
-			}, function (error) {
+			}).caught(function (error) {
 				res.errorProxy(error);
 			});
 		}

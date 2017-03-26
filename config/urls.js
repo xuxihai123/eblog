@@ -73,12 +73,9 @@ module.exports = function (app, settings) {
 	function rewriteRender() {
 		var render = app.response.render;
 		app.response.errorProxy = function (error) {
-			var type = error.errorType;
-			var message = error.errorMessage;
 			console.log(error);
-			errorProxy.apply(this, [type, message]);
+			errorProxy.apply(this, [error]);
 		};
-		console.log(123);
 		app.response.render = function (view, options, callback) {
 			var res, req, session, done;
 			res = this;

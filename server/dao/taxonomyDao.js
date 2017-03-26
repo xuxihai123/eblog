@@ -3,31 +3,27 @@ var TermTaxonomy = require("../models").TermTaxonomy;
 var pageHelper = require('../utils/pageHelper');
 module.exports = {
 	create:function(taxonomy,options){
-		return TermTaxonomy.create(taxonomy,options);
+		var sql = "insert into wp_term_taxonomy set ?";
+		return sqlhelp.query(sql, termTaxonomy);
 	},
 	remove:function(taxonomy){
-		return TermTaxonomy.destroy({
-			where:{
-				term_id:taxonomy.term_id
-			}
-		});
+		var sql = "delete  from wp_term_taxonomy where term_id=?";
+		return sqlhelp.query(sql,taxonomy.term_id);
 	},
-	update:function(taxonomy,transaction){
-		return TermTaxonomy.update(taxonomy,{
-			where:{
-				term_id:taxonomy.term_id
-			},
-			transaction:transaction
-		});
+	updateCategory:function(taxonomy){
+		var sql = "update wp_term_taxonomy set description = ?, parent = ? where term_id=?";
+		return sqlhelp.query(sql, [taxonomy.description,taxonomy.parent,taxonomy.term_id]);
+	},
+	updateTag:function(taxonomy){
+		var sql = "update wp_term_taxonomy set description = ? where term_id=?";
+		return sqlhelp.query(sql, [taxonomy.description,taxonomy.term_id]);
 	},
 	getById:function(id){
-		return TermTaxonomy.findOne({
-			where: {
-				term_id: id
-			}
-		});
+		var sql = 'select * from wp_term_taxonomy where term_taxonomy_id=' + sqlhelp.escape(id);
+		return sqlhelp.query(sql);
 	},
 	findAll:function(){
-		return TermTaxonomy.findAll();
+		var sql = "select * from wp_term_taxonomy";
+		return sqlhelp.query(sql);
 	}
 };

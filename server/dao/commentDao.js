@@ -1,44 +1,26 @@
 "use strict";
-var Comment = require("../models").Comment;
-var pageHelper = require('../utils/pageHelper');
+var sqlhelp = require('../utils/sqlHelper');
+var pagehelp = require('./pageSqlHelper');
 module.exports = {
 	create:function(comment){
-		return Comment.create(comment);
+		var sql = "insert into wp_comments set ?";
+		return sqlhelp.query(sql, comment);
 	},
 	remove:function(comment){
-		return Comment.destroy({
-			where:{
-				comment_ID:comment.comment_ID
-			}
-		});
-	},
-	update:function(comment){
-		return Comment.update(comment,{
-			where:{
-				comment_ID:comment.comment_ID
-			}
-		});
+		var sql = "delete  from wp_comments where comment_ID=?";
+		return sqlhelp.query(sql, [comment.comment_ID]);
 	},
 	getById:function(id){
-		return Comment.findOne({
-			where: {
-				comment_ID:id
-			}
-		});
+		var sql = 'select * from wp_comments where comment_ID=?';
+		return sqlhelp.query(sql, [id]);
 	},
 	getPageModel:function(offset,limit){
-		return Comment.findAndCountAll({
-			offset:offset,
-			limit:limit
-		}).then(function (result) {
-			return new pageHelper.PageModel(offset, limit, result.rows, result.count);
-		});
+		var sql = "select * from wp_comments";
+		return pagehelp.getPageModel(offset, limit, sql);
 	},
 	findAllByPostId:function(postId){
-		return Comment.findAll({
-			where:{
-				comment_post_ID:postId
-			}
-		});
+		var sql = "select * from wp_comments where comment_post_ID=?";
+		sql = sqlhelp.format(sql, [postId]);
+		return sqlhelp.query(sql);
 	}
 };

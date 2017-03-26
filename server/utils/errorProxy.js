@@ -8,18 +8,19 @@ var exceptMap = {
 };
 
 
-function Proxy(type, errorObj) { //foreground 前台标志
+function Proxy(errorObj) { //foreground 前台标志
 	var response = this;
 	if(errorObj=="sqlInject"){
 		return response.render("404");
 	}
-	if(/^\d+$/.test(type)){ //前台响应错误页面
-		response.render(type,errorObj);
-	}else{
+	var req = response.req;
+	if(req.xhr){
 		errorObj = errorObj || {};
-		errorObj.errorType = type;
-		errorObj.errorCode = exceptMap[type || "DefaultExcept"];
+		errorObj.errorCode = exceptMap["DefaultExcept"];
 		response.json(errorObj);
+	}else{
+		return response.render("500");
 	}
+
 }
 module.exports = Proxy;
