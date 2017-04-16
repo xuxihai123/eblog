@@ -1,0 +1,29 @@
+<%
+var post = request.previewPost;
+var prev = request.prevPost;
+var next = request.nextPost;
+var url = utils.dateFormat(post.post_date, "yyyy/MM/");
+var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
+%>
+<h1 class="page-title">页面:<%= post.name %></h1>
+<div id="content" class="site-content" role="main">
+    <div class="post-item">
+        <div class="entry-header">
+            <h1 class="entry-title" itemprop="name"><%= post.post_title %></h1>
+
+            <div class="entry-meta">
+                <span class="entry-date">
+                    <a href="<%= "/" + url %>" rel="bookmark">
+                        <time class="entry-date published"><%= date %></time>
+                    </a>
+                </span>
+            </div>
+        </div>
+
+        <div class="entry-content" itemprop="articleBody">
+            <div id="article_content" class="article_content">
+                <%- utils.marked(post.post_content) %>
+            </div>
+        </div>
+    </div>
+</div>

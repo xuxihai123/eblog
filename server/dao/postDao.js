@@ -78,9 +78,15 @@ module.exports = {
 	update: function (post) {
 		return sqlhelp.query(postSqls.update, [post.post_title, post.post_content, post.ID]);
 	},
+	updateCategory:function (post) {
+		return sqlhelp.query(postSqls.updateCategory, [post.term_taxonomy_id,post.ID]);
+	},
 	getById: function (id) {
 		return sqlhelp.queryOne(postSqls.getById, [id]);
 	},
+	getPostTerms:function (id) {
+        return sqlhelp.query(postSqls.getPostTerms, [id]);
+    },
 	getPageById: function (id) {
 		return sqlhelp.queryOne(postSqls.getPageById, [id]);
 	},

@@ -28,7 +28,8 @@ exports.index = function () {
 					req.tagsList = tagsList;
 					req.pageNewestList = pageNewestList;
 					req.home = {
-						type: "index",
+						type: "list",
+						listType:"index",
 						pageModel: postPageModel
 					};
 					return res.render("index");
@@ -65,7 +66,8 @@ exports.search = function () {
 					req.postNewestList = postNewestList;
 					req.pageNewestList = pageNewestList;
 					req.home = {
-						type: "search",
+						type: "list",
+						listType:"search",
 						word: word,
 						pageModel: pageModel
 					};
@@ -97,8 +99,6 @@ exports.indexPost = function () {
 				pageService.findLastestPage()])
 				.spread(function (post, prevPost, nextPost, commentList, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
 					req.previewPost = post;
-					req.previewPost.categoryList = post.termTaxonomys;
-					req.previewPost.tagList = post.termTaxonomys;
 					req.prevPost = prevPost;
 					req.nextPost = nextPost;
 					req.commentList = commentList;
@@ -141,7 +141,7 @@ exports.indexPage = function () {
 					req.postNewestList = postNewestList;
 					req.pageNewestList = pageNewestList;
 					req.home = {
-						type: "article"
+						type: "page"
 					};
 					return res.render("index", {"title": post.name});
 				}).caught(function (error) {
@@ -171,7 +171,8 @@ exports.indexArchive = function () {
 				pageService.findLastestPage()])
 				.spread(function (pageModel, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
 					req.home = {
-						type: "archive",
+						type: "list",
+						listType:"archive",
 						year: year,
 						month: month,
 						pageModel: pageModel
@@ -210,7 +211,47 @@ exports.indexCategory = function () {
 				pageService.findLastestPage()])
 				.spread(function (pageModel, term, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
 					req.home = {
-						type: "category",
+						type:"list",
+						listType: "category",
+						category: pargs1,
+						pageModel: pageModel
+					};
+					req.categoryList = categoryList;
+					req.tagsList = tagsList;
+					req.articleArchList = articleArchList;
+					req.postNewestList = postNewestList;
+					req.pageNewestList = pageNewestList;
+					res.render("index", {"title": term.name});
+				}).caught(function (error) {
+				res.errorProxy(error);
+			});
+		}
+	}
+};
+/**
+ * 标签分类
+ * @returns {{url: RegExp, controller: controller}}
+ */
+exports.indexTag = function () {
+	return {
+		//url:/^\/(index|)\/?$/,
+		url: /\/tag\/([^\s\/]+)\/?$/,
+		controller: function (req, res, next) {
+
+			var pargs1 = req.params[0];
+			var offset = Number(req.query.start) || 0;
+			var limit = Number(req.query.limit) || 5;
+			Promise.all([postService.findByCategoryPageModel(offset, limit, pargs1),
+				termService.getBySlug(pargs1),
+				termService.getAllCategory(),
+				termService.getAllTags(),
+				postService.findArticleArchive(),
+				postService.findLastestPost(),
+				pageService.findLastestPage()])
+				.spread(function (pageModel, term, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
+					req.home = {
+						type:"list",
+						listType: "tag",
 						category: pargs1,
 						pageModel: pageModel
 					};

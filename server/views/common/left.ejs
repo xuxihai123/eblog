@@ -79,7 +79,7 @@
                 <h3 class="widget-title">分类标签</h3>
                 <ul>
                     <% request.tagsList.forEach(function(temp){ %>
-                    <li class="cat-item cat-item-13"><a href="/category/<%= temp.slug %>"><%= temp.name %></a></li>
+                    <li class="cat-item cat-item-13"><a href="/tag/<%= temp.slug %>"><%= temp.name %></a></li>
                     <% }); %>
 
                 </ul>

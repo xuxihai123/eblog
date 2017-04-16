@@ -56,11 +56,21 @@ exports.doAjax = function () {
 			var req_pargs = req.body;
 			var post_id = req_pargs.post_id;
 			var post_title = req_pargs.post_title;
+			var term_taxonomy_id1 = req_pargs.term_id1;
+			var term_taxonomy_id2 = req_pargs.term_id2;
 			var post_content = req_pargs.post_content;
+			var relation = [];
+			if (term_taxonomy_id2) {
+				relation.push({
+					term_taxonomy_id: term_taxonomy_id2
+				});
+			}
 			postService.updatePost({
 				ID: post_id,
 				post_title: post_title,
-				post_content: post_content
+				post_content: post_content,
+				Cttid: term_taxonomy_id1,
+				tagsUpdate:relation
 			}).then(function (result) {
 				res.json({
 					success: "ok",

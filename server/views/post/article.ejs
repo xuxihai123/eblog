@@ -2,11 +2,17 @@
 var post = request.previewPost;
 var prev = request.prevPost;
 var next = request.nextPost;
-var postTags = post.tagList;
+var categoryList = post.categoryList;
+var tagList = post.tagList;
 var commentList=request.commentList;
 var url = utils.dateFormat(post.post_date, "yyyy/MM/");
 var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
 %>
+<h1 class="page-title">文章分类:
+    <%categoryList.forEach(function(temp,index){%>
+        &nbsp;&nbsp;<a href="/category/<%= temp.slug %>"><%=temp.name%></a>
+    <%})%>
+</h1>
 <div id="content" class="site-content" role="main">
     <div class="post-item">
         <div class="entry-header">
@@ -34,11 +40,14 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
                 <%- utils.marked(post.post_content) %>
             </div>
         </div>
-        <div class="post_taginfo">
-            <% postTags&&postTags.forEach(function(temp,index){%>
-            <span class="label label-info"><a href="/category/<%= temp.slug %>"><%=temp.name%></a></span>
-            <%})%>
-        </div>
+        <%if(tagList.length>0){%>
+            <div class="post_taginfo">
+                <span class="label label-default">标签:</span>
+                <%tagList.forEach(function(temp,index){%>
+                <span class="label label-info"><a href="/tag/<%= temp.slug %>"><%=temp.name%></a></span>
+                <%})%>
+            </div>
+        <%}%>
     </div>
 
     <% if(post.post_type == "post"){ %>

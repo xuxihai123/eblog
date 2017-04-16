@@ -9,7 +9,7 @@ function PostEditCtrl($scope, $remote, $routeParams) {
 			};
 			$remote.post("admin/getPost.do", pargs, function (data) {
 				$scope.post_title = data.post_title;
-				$scope.term_id1 = data.term_id1;
+				$scope.term_id1 = data.term_taxonomy_id;
 				$scope.term_id2 = data.term_id2;
 				$("#post_content").val(data.post_content);
 			});
@@ -53,7 +53,7 @@ function PostEditCtrl($scope, $remote, $routeParams) {
 			post_title: $scope.post_title,
 			term_id1: $scope.term_id1,
 			term_id2: $scope.term_id2,
-			post_content: post_content,
+			post_content: post_content
 		};
 		pargs.post_id = $scope.PostId;
 		$remote.post("admin/updatePost.do", pargs, function (data) {

@@ -14,6 +14,14 @@
 								       placeholder="标题">
 							</div>
 							<div class="control-group">
+								<label for="post_content">内容*</label>
+
+								<div id="editormd">
+									<textarea id="post_content" name="post_content"></textarea>
+								</div>
+
+							</div>
+							<div class="control-group">
 								<label for="term_id1">分类目录</label>
 								<select id="term_id1" name="term_id1" ng-model="term_id1"
 								        ng-options="row.term_taxonomy_id as row.slug for row in allCategory" ng-change="test(row)" required>
@@ -27,14 +35,6 @@
 								        ng-options="row.term_taxonomy_id as row.slug for row in allTag">
 									<option value="">请选择标签</option>
 								</select>
-
-							</div>
-							<div class="control-group">
-								<label for="post_content">内容*</label>
-
-								<div id="editormd">
-									<textarea id="post_content" name="post_content"></textarea>
-								</div>
 
 							</div>
 							<div class="text-center" id="subbtn">

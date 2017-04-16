@@ -9,17 +9,17 @@ var postSql = {
 	delete: "delete  from wp_posts where ID=?",
 	//更新文章
 	update: "update wp_posts set post_title = ?, post_content = ? where ID=?",
+	//update category
+	updateCategory: "update wp_term_relationships set term_taxonomy_id=? where object_id=?",
 	//获取文章
-	getById: "select * " +
-	"from wp_posts as T1 " +
-	"inner join wp_term_relationships as T2 on T1.ID=T2.object_id " +
-	"inner join wp_term_taxonomy as T3 on T2.term_taxonomy_id=T3.term_taxonomy_id " +
-	"inner join wp_terms as T4 on T3.term_id=T4.term_id " +
-	"where ID=?",
+	getById: "select * from wp_posts where ID=? and post_type='post'",
+	//get tags and category
+	getPostTerms: "select * from wp_term_relationships as T1 " +
+	"inner join wp_term_taxonomy as T2 on T1.term_taxonomy_id=T2.term_taxonomy_id " +
+	"inner join wp_terms as T3 on T2.term_id=T3.term_id " +
+	"where T1.object_id=?",
 	//获取页面
-	getPageById: "select * " +
-	"from wp_posts as T1 " +
-	"where ID=?",
+	getPageById: "select * from wp_posts where ID=? and post_type='page'",
 	//获取前一篇文章
 	getPrev: "select * from wp_posts where ID<? and post_type=\'post\' and post_status=\'publish\' order by ID desc limit 1",
 	//下一篇文章
@@ -82,12 +82,12 @@ var termSql = {
 	getCategoryPage: "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id and T2.taxonomy='category'",
 	getTagPage: "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id and T2.taxonomy=\'post_tag\'"
 };
-var termRelationshipSql={
+var termRelationshipSql = {
 	saveMulti: "insert into wp_term_relationships(object_id,term_taxonomy_id,term_order) VALUES ?"
 };
 module.exports = {
 	userSql: userSql,
 	postSql: postSql,
 	termSql: termSql,
-	termRelationshipSql:termRelationshipSql
+	termRelationshipSql: termRelationshipSql
 };

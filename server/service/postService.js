@@ -2,6 +2,7 @@
 var postDao = require("../dao").PostDao;
 var termDao = require("../dao").TermDao;
 var Promise = require('bluebird');
+var filterTerm = require('../utils/filters');
 var cache = {findArticleArchive: {}};
 module.exports = {
 	addPost: function (post) {
@@ -26,38 +27,35 @@ module.exports = {
 			});
 		});
 	},
-	updatePost: function (user, key) {
+	updatePost: function (post2) {
 		return new Promise(function (resolve, reject) {
-			if (key) {
-				User.findOne({
-					where: {
-						user_login: username
+			postDao.getById(post2.ID).then(function (post) {
+				if (post === null) {
+					reject({
+						errorMessage: "post不存在！"
+					});
+				} else {
+					if(post.term_taxonomy_id!=post2.Cttid){
+						resolve(Promise.all([postDao.updateCategory(post2),resolve(postDao.update(post2))]))
+					}else{
+						resolve(postDao.update(post2));
 					}
-				}).then(function (result) {
-					if (result === null) {
-						reject({
-							errorMessage: "用户不已存在！"
-						});
-					} else {
-						resolve(this.updateUser(user));
-					}
-				});
-			} else {
-				reject({
-					errorMessage: "key...is need！"
-				})
-			}
+				}
+			});
 
 		});
 	},
 	getPost: function (postId) {
 		return new Promise(function (resolve, reject) {
-			console.log('------'+postId);
-			return postDao.getById(postId).then(function (post) {
-				resolve(post);
-			}, function (error) {
-				reject(error);
-			});
+			Promise.all([postDao.getById(postId), postDao.getPostTerms(postId)])
+				.spread(function (post, terms) {
+					post.categoryList = filterTerm.filterCategory(terms);
+					post.tagList = filterTerm.filterTags(terms);
+					resolve(post);
+				})
+				.caught(function (error) {
+					reject(error);
+				});
 		});
 	},
 	findPrev: function (postId) {
@@ -99,7 +97,7 @@ module.exports = {
 	},
 	findArticleArchive: function () {
 		return new Promise(function (resolve, reject) {
-			if(cache.findArticleArchive.dirty==false){
+			if (cache.findArticleArchive.dirty == false) {
 				return resolve(cache.findArticleArchive.result);
 			}
 			return postDao.getArchive().then(function (result) {
