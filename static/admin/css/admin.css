@@ -14,21 +14,19 @@ body {
 #header {
     direction: ltr;
     font: 400 13px/32px "Open Sans", sans-serif;
-    height: 32px;
+    height: 50px;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     min-width: 600px;
-    z-index: 99999;
+    z-index: 200;
     background-color: #23282d;
 }
 
 #toolbar a {
     display: block;
-    line-height: 32px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 15px 20px;
     text-decoration: none;
     color: #fff;
 }
@@ -104,13 +102,13 @@ body {
     padding-left: 160px;
     min-height: 700px;
     background-color: #fff;
-    margin-top: 32px;
-    padding-bottom: 32px;
+    margin-top: 50px;
+    padding-bottom: 42px;
 }
 
 #footer {
     margin-left: 160px;
-    line-height: 32px;
+    line-height: 42px;
     text-align: center;
     position: fixed;
     bottom: 0px;

@@ -1,52 +1,152 @@
-<div id="toolbar">
-	<div id="sub-wrapper">
-		<ul class="toolbar-left">
-			<li>
-				<a class="user level1" href="/">
-					<i class="icon-home icon-large"></i>
-					<span>x373241884y</span>
-				</a>
-			</li>
-			<li>
-				<a class="email level1" href="">
-					<i class="icon-folder-open-alt icon-large "></i>
-					<span>快捷通道</span>
-				</a>
-				<ul class="toolbar-sub" style="display: none">
-					<li><a class="level2" ng-click="goto('/PostAdd')">写文章</a></li>
-					<li><a class="level2" ng-click="goto('/PostCategory')">添加分类</a></li>
-					<li><a class="level2" ng-click="goto('/PostTag')">添加书签</a></li>
-					<li><a class="level2" ng-click="goto('/UserList')">所有用户</a></li>
-					<li><a class="level2" ng-click="goto('/UserInfo')">个人资料</a></li>
-				</ul>
+<div class="app-header navbar">
+	<!-- navbar header -->
+	<div class="navbar-header {{app.settings.navbarHeaderColor}}">
+		<button class="pull-right visible-xs dk" ui-toggle-class="show" data-target=".navbar-collapse">
+			<i class="glyphicon glyphicon-user"></i>
+		</button>
+		<button class="pull-right visible-xs" ui-toggle-class="off-screen" data-target=".app-aside" ui-scroll-to="app">
+			<i class="glyphicon glyphicon-align-justify"></i>
+		</button>
+		<!-- brand -->
+		<a href="#/" class="navbar-brand text-lt">
+			<i class="fa"></i>
+			<img src="images/logo.png" alt=".">
+			<span class="hidden-folded m-l-xs">{{app.name}}</span>
+		</a>
+		<!-- / brand -->
+	</div>
+	<!-- / navbar header -->
 
-			</li>
-		</ul>
-		<ul class="toolbar-right">
-			<li>
-				<a class="user level1" href="">
-					<i class="  icon-user icon-large"></i>
-					<span>{{$userinfo.user_login}}</span>
+	<!-- navbar collapse -->
+	<div class="collapse pos-rlt navbar-collapse box-shadow {{app.settings.navbarCollapseColor}}">
+		<!-- buttons -->
+		<div class="nav navbar-nav hidden-xs">
+			<a href class="btn no-shadow navbar-btn" v-click="app.settings.asideFolded = !app.settings.asideFolded">
+				<i class="fa {{app.settings.asideFolded ? 'fa-angle-double-right' : 'fa-angle-double-left'}} fa-fw"></i>
+			</a>
+			<a href class="btn no-shadow navbar-btn" ui-toggle-class="show" target="#aside-user">
+				<i class="fa fa-male fa-fw"></i>
+			</a>
+		</div>
+		<!-- / buttons -->
+
+		<!-- / link and dropdown -->
+
+		<!-- search form -->
+
+		<!-- / search form -->
+
+		<!-- nabar right -->
+		<ul class="nav navbar-nav navbar-right">
+			<form class="navbar-form navbar-form-sm navbar-left shift" ui-shift="prependTo" target=".navbar-collapse"
+			      role="search">
+				<div class="form-group">
+					<div class="input-group">
+						<input type="text" v-model="selected"
+						       typeahead="item.ActionName for item in $functions | filterPinyin:'ActionName':$viewValue"
+						       typeahead-on-select="selectItem($item)" v-model="searchApi"
+						       class="form-control input-sm bg-light no-border rounded padder" placeholder="搜索...">
+						<span class="input-group-btn">
+                <button type="submit" class="btn btn-sm bg-light rounded"><i class="fa fa-search"></i></button>
+              </span>
+					</div>
+				</div>
+			</form>
+			<li class="dropdown hidden-sm" is-open="lang.isopen" dropdown>
+				<a href class="dropdown-toggle" dropdown-toggle>
+					<span>{{selectLang}}</span>
+					<span class="caret"></span>
 				</a>
-				<ul class="toolbar-sub" style="display: none">
-					<li><a class="level2" ng-click="goto('/UserInfo')">编辑个人</a></li>
-					<li><a class="level2" ng-click="logout()">登出</a></li>
+				<!-- dropdown -->
+				<ul class="dropdown-menu animated fadeInRight w">
+					<li v-repeat="(langKey, label) in langs">
+						<a v-click="setLang(langKey, $event)" href>{{label}}</a>
+					</li>
 				</ul>
+				<!-- / dropdown -->
 			</li>
-			<li>
-				<a class="logout level1" ng-click="logout()" href="">
-					<i class="icon-off icon-large"></i>
-					<span>退出</span>
+			<li class="hidden-xs">
+				<a ui-fullscreen></a>
+			</li>
+			<li class="dropdown" dropdown>
+				<a href class="dropdown-toggle" dropdown-toggle>
+					<i class="icon-bell fa-fw"></i>
+					<span class="visible-xs-inline"> <span
+							translate="header.navbar.NOTIFICATIONS">Notifications</span><b
+							class="caret"></b></span>
+					<span class="badge badge-sm up bg-danger pull-right-xs">2</span>
 				</a>
+				<!-- dropdown -->
+				<div class="dropdown-menu w-xl animated fadeInUp">
+					<div class="panel bg-white">
+						<div class="panel-heading b-light bg-light">
+							<strong>你有 <span>2</span> 个通知</strong>
+						</div>
+						<div class="list-group">
+							<a href class="media list-group-item">
+                    <span class="pull-left thumb-sm">
+                      <img src="images/a0.jpg" alt="..." class="img-circle">
+                    </span>
+								<span class="media-body block m-b-none">
+                    	                      预约转账任务<br>
+                      <small class="text-muted">10 minutes ago</small>
+                    </span>
+							</a>
+							<a href class="media list-group-item">
+                    <span class="media-body block m-b-none">
+                      定期转活期<br>
+                      <small class="text-muted">1 hour ago</small>
+                    </span>
+							</a>
+						</div>
+						<div class="panel-footer text-sm">
+							<a href class="pull-right"><i class="fa fa-cog"></i></a>
+							<a href="#notes" data-toggle="class:show animated fadeInRight">查看全部</a>
+						</div>
+					</div>
+				</div>
+				<!-- / dropdown -->
+			</li>
+			<li class="dropdown" dropdown>
+				<a href class="dropdown-toggle clear" dropdown-toggle>
+              <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
+                <img src="images/a0.jpg" alt="...">
+                <i class="on md b-white bottom"></i>
+              </span>
+					<span class="hidden-sm hidden-md" v-bind="$userinfo.user"><b class="caret"></b></span>
+				</a>
+				<!-- dropdown -->
+				<ul class="dropdown-menu animated fadeInRight w">
+					<li class="wrapper b-b m-b-sm bg-light m-t-n-xs">
+						<div>
+							<p>流量消耗30mb/套餐500mb</p>
+						</div>
+						<progressbar value="60" class="progress-xs m-b-none bg-white"></progressbar>
+					</li>
+					<li>
+						<a href>
+							<span class="badge bg-danger pull-right">30%</span>
+							<span>流量套餐设置</span>
+						</a>
+					</li>
+					<li>
+						<a ui-sref="app.page.profile">个人简介</a>
+					</li>
+					<li>
+						<a ui-sref="app.docs">
+							<span class="label bg-info pull-right">new</span>
+							帮助文档
+						</a>
+					</li>
+					<li class="divider"></li>
+					<li>
+						<a href="" ng-click="logout()">退出登录</a>
+					</li>
+				</ul>
+				<!-- / dropdown -->
 			</li>
 		</ul>
+		<!-- / navbar right -->
+
 	</div>
 </div>
-<script type="text/javascript">
-	$("#sub-wrapper>ul>li").hover(function () {
-				$(this).find("ul").show();
-			},
-			function () {
-				$(this).find("ul").hide();
-			});
-</script>

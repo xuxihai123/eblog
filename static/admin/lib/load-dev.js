@@ -1,9 +1,13 @@
 (function () {
 	var cssFiles = [
-		"css/admin.css",
+		"css/app.css",
+		"css/app.css",
+		// "css/admin.css",
 		"css/admin-menu.css",
 		"css/editormd.min.css",
 		"css/editormd.preview.min.css",
+		"lib/plugins/nprogress/nprogress.css",
+		"lib/plugins/font-awesome/css/font-awesome.css",
 		"css/extra.css"
 	];
 	var jsFiles = [
@@ -12,11 +16,15 @@
 		"lib/min/extend.js",
 		"lib/plugins/editor/editormd.min.js",
 		"lib/plugins/ui-bootstrap-0.13.0.js",
+		"lib/plugins/nprogress/nprogress.js",
+		"lib/plugins/pinyin.js",
 		"lib/app-config.js",
 		"lib/app-router.js",
 		"lib/directive.js",
 		"lib/service.js",
-		"lib/filter.js"
+		"lib/filter.js",
+
+		"lib/main.js"
 	];
 
 	if (typeof (exports) != "undefined") {

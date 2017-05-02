@@ -69,7 +69,6 @@ app.run(["$rootScope", "$location", "$remote", "$modal", "$route", function ($ro
 			$rootScope.$Bread = getBread($rootScope.$currentRoute.originalPath);
 		}
 	});
-
 	$rootScope.$confirm = function (message) {
 		if (!$rootScope.$confirm.isOpen) {
 			$rootScope.$confirm.isOpen = true;
@@ -145,6 +144,32 @@ app.run(["$rootScope", "$location", "$remote", "$modal", "$route", function ($ro
 			}
 		});
 	};
+}]);
+
+app.run(['$rootScope', '$log', '$window', function ($rootScope, $log, $window) {
+	$rootScope.$on('$routeChangeStart', function (event) {
+		NProgress.start();  //第一个进度节点
+		$log.debug("1.$routeChangeStart");
+	});
+	$rootScope.$on('$viewContentLoading', function (event) {
+		$log.debug('2.$viewContentLoading');
+		NProgress.inc();  //第二个进度节点
+	});
+
+	$rootScope.$on('$routeChangeSuccess', function (event, toroute, toParams, fromroute) {
+		NProgress.inc(0.5);//第三个进度节点
+		var listener = event.targetScope.$watch('$viewContentLoaded', function () {
+			listener();
+			$log.debug('4.$viewContentLoaded');
+			NProgress.done();  //第四个进度节点
+			$window.scrollTo(0, 0);
+		});
+		$log.debug("3.$routeChangeSuccess");
+	});
+	$rootScope.$on("$routeChangeError", function () {
+		NProgress.done(); //last进度节点
+		$window.scrollTo(0, 0);
+	});
 }]);
 
 

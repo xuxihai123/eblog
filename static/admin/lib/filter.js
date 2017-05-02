@@ -1,5 +1,5 @@
-(function (window, vx) {
-	vx.module('app').filter('filterPinyin', function () {
+(function (window, angular) {
+	angular.module('app').filter('filterPinyin', function () {
 		return function (inputArray, key, value) {
 			var array = []; //定义返回的新数组；
 			if (value == undefined || value == null) {
@@ -23,13 +23,13 @@
 			return array;
 		}
 	});
-})(window, vx);
+})(window, angular);
 
-(function (window, vx) {
-	vx.module('app').filter('cut', function () {
+(function (window, angular) {
+	angular.module('app').filter('cut', function () {
 		return function (input, length) {
 			return cutMaxTitle(input, length);
-		}
+		};
 
 		function cutMaxTitle(str, length) {
 			if (typeof str == "string") {
@@ -43,4 +43,4 @@
 			}
 		}
 	});
-})(window, vx);
+})(window, angular);

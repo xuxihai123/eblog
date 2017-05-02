@@ -1,0 +1,54 @@
+<div class="app-aside hidden-xs {{app.settings.asideColor}}">
+	<div class="aside-wrap">
+		<div class="navi-wrap">
+			<div class="clearfix hidden-xs text-center hide" id="aside-user">
+				<div class="dropdown wrapper" dropdown>
+					<a ui-sref="app.page.profile">
+          <span class="thumb-lg w-auto-folded avatar m-t-sm">
+            <img src="images/a0.jpg" class="img-full" alt="...">
+          </span>
+					</a>
+					<a href class="dropdown-toggle hidden-folded" dropdown-toggle>
+          <span class="clear">
+            <span class="block m-t-sm">
+              <strong class="font-bold text-lt">正太先生</strong>
+              <b class="caret"></b>
+            </span>
+            <span class="text-muted text-xs block">前端攻城狮</span>
+          </span>
+					</a>
+					<!-- dropdown -->
+					<ul class="dropdown-menu animated fadeInRight w hidden-folded">
+						<li class="wrapper b-b m-b-sm bg-info m-t-n-xs">
+							<span class="arrow top hidden-folded arrow-info"></span>
+							<div>
+								<p>流量消耗30mb/套餐500mb</p>
+							</div>
+							<progressbar value="60" type="white" class="progress-xs m-b-none dker"></progressbar>
+						</li>
+						<li>
+							<a href>流量套餐设置</a>
+						</li>
+						<li>
+							<a ui-sref="app.page.profile">个人简介</a>
+						</li>
+						<li>
+							<a href>
+								<span class="badge bg-danger pull-right">3</span>
+								帮助文档
+							</a>
+						</li>
+						<li class="divider"></li>
+						<li>
+							<a ui-sref="access.signin">退出登录</a>
+						</li>
+					</ul>
+					<!-- / dropdown -->
+				</div>
+				<div class="line dk hidden-folded"></div>
+			</div>
+			<!-- nav -->
+			<div class="navi clearfix" ui-menuadmin="$menuList" item-select="selectItem($item)"></div>
+		</div>
+	</div>
+</div>

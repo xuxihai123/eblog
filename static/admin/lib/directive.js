@@ -34,7 +34,149 @@
 			}
 		}
 	});
+	app.directive('uiToggleClass', ['$timeout', '$document', function ($timeout, $document) {
+		return {
+			restrict: 'AC',
+			link: function (scope, el, attr) {
+				el.on('click', function (e) {
+					e.preventDefault();
+					var classes = attr.uiToggleClass.split(','),
+						targets = (attr.target && attr.target.split(',')) || Array(el),
+						key = 0;
+					vx.forEach(classes, function (_class) {
+						var target = targets[(targets.length && key)];
+						( _class.indexOf('*') !== -1 ) && magic(_class, target);
+						$(target).toggleClass(_class);
+						key++;
+					});
+					$(el).toggleClass('active');
+
+					function magic(_class, target) {
+						var patt = new RegExp('\\s' +
+							_class.replace(/\*/g, '[A-Za-z0-9-_]+').split(' ').join('\\s|\\s') +
+							'\\s', 'g');
+						var cn = ' ' + $(target)[0].className + ' ';
+						while (patt.test(cn)) {
+							cn = cn.replace(patt, ' ');
+						}
+						$(target)[0].className = $.trim(cn);
+					}
+				});
+			}
+		};
+	}]);
 })(window, angular);
+(function (window, vx, undefined) {
+	'use strict';
+	var mod = vx.module('app');
+	var directive = {};
+	directive.uiMenuadmin = ['$parse', '$compile',
+		function ($parse, $compile) {
+			return {
+				restrict: 'A',
+				scope: true,
+				link: function ($scope, element, attrs, ctrl) {
+					// 获得参数
+					var menuSource = attrs.uiMenuadmin || "menu", template, itemSelectExp = attrs.itemSelect, fn;
+					fn = $parse(itemSelectExp, null, true);
+					template = $('<ul class="nav" ui-nav></ul>');
+					$scope.$watch(function () {
+						return $scope.$eval(menuSource);
+					}, function (newValue, oldValue) {
+						if (newValue) {
+							createMenu(newValue);
+							bindEvent(template);
+						}
+					});
+					function createMenu(menus) {
+						var firstNode = '<li class="line dk"></li>' +
+							'<li class="level1 active">' +
+							'   <a class="home"><i class="fa fa-home icon"></i><span>首页</span></a>' +
+							'</li>';
+						var spaceLine = '<li class="line dk"></li>';
+						var nav_ul2, nav_ul3;
+						template.append(firstNode);
+						vx.forEach(menus, function (temp1, index) {
+							var temp_level1, temp_level2, level1_link, level2_link, level3_link, menuList2, menuList3;
+
+							temp_level1 = $(spaceLine + "<li class='level1'></li>");
+							level1_link = $(
+								'<a class="auto"> ' +
+								'   <span class="pull-right text-muted"> ' +
+								'       <i class="fa fa-fw fa-angle-right text"></i> ' +
+								'       <i class="fa fa-fw fa-angle-down text-active"></i> ' +
+								'   </span> ' +
+								'   <i class="fa fa-' + temp1.icon + ' icon"></i> ' +
+								'   <span>' + temp1.ActionName + '</span> ' +
+								'</a>');
+							temp_level1.append(level1_link);
+
+							menuList2 = temp1.MenuList;
+							if (menuList2 && menuList2.length > 0) {
+								nav_ul2 = $("<ul style='display: none;' class='nav nav-list2 nav-sub dk'></ul>");
+								vx.forEach(menuList2, function (temp2, index) {
+									temp_level2 = $(spaceLine + "<li class='level2'></li>");
+									var hasChild = false;
+									menuList3 = temp2.MenuList;
+									if (menuList3 && menuList3.length > 0) {
+										hasChild = true;
+									}
+									if (hasChild) {
+										level2_link = $(
+											'<a class="auto"> ' +
+											'   <span class="pull-right text-muted"> ' +
+											'       <i class="fa fa-fw fa-angle-down text-active"></i> ' +
+											'       <i class="fa fa-fw fa-angle-right text"></i> ' +
+											'   </span> ' +
+											'   <span>' + temp2.ActionName + '</span> ' +
+											'</a>');
+									} else {
+										level2_link = $('<a class="leaf"><span>' + temp2.ActionName + '</span></a>');
+										level2_link.data("$item", temp2);
+									}
+									temp_level2.append(level2_link);
+									nav_ul2.append(temp_level2);
+								});
+								temp_level1.append(nav_ul2);
+							}
+							template.append(temp_level1);
+						});
+						element.append(template);
+					}
+
+					function bindEvent(template) {
+						var last;
+						template.on("click", function (event) {
+							var target = event.target, link, ul, item;
+							if(target===last){
+								return;
+							}
+							link = $(target).closest("a");
+							ul = link.next();
+							if (ul.is(":hidden")) {
+								ul.show();
+								ul.parent().addClass("active");
+							} else {
+								ul.hide();
+								ul.parent().removeClass("active");
+							}
+							if (link.hasClass("leaf") || link.hasClass("home")) {
+								item = link.data("$item") || {"ActionName": "Home"};
+								var callback = function () {
+									fn($scope, {$item: item});
+								};
+								$scope.$apply(callback);
+							}
+							element.find("li.level2").removeClass("active");
+							link.parent().addClass("active");
+							last = target;
+						});
+					}
+				}
+			};
+		}];
+	mod.directive(directive);
+})(window, window.vx);
 
 (function (window, angular, undefined) {
 	'use strict';
@@ -88,17 +230,17 @@
 						if (pageOffset < 0) {
 							pageOffset = 0;
 						}
-						var ul = $("<ul></ul>");
+						var ul = $("<ul class='pagination'></ul>");
 						var first;
 						if (curPage == 1) {
-							first = $("<li ><a class='disable' href='javascript:void(0);'>首页</a></li>");
+							first = $("<li class='disabled'><a class='disable' href='javascript:void(0);'>首页</a></li>");
 						} else {
 							first = $("<li><a href='javascript:void(0);' v-click='" + callback + "(" + 0 * pager.limit + ", " + pager.limit + ")'>首页</a></li>");
 						}
 						ul.append(first);
 						var prev;
 						if (curPage == 1) {
-							prev = $("<li ><a class='disable' href='javascript:void(0);'>上一页</a></li>");
+							prev = $("<li class='disabled'><a class='disable' href='javascript:void(0);'>上一页</a></li>");
 						} else {
 							prev = $("<li><a href='javascript:void(0);' v-click='" + callback + "(" + (curPage - 2) * pager.limit + ", " + pager.limit + ")'>上一页</a></li>");
 						}
@@ -114,15 +256,15 @@
 						}
 						var next;
 						if (curPage == pageOffset + pageLimit) {
-							next = $("<li ><a class='disable' href='javascript:void(0);'>下一页</a></li>");
+							next = $("<li class='disabled'><a class='disable' href='javascript:void(0);'>下一页</a></li>");
 						} else {
 							next = $("<li><a href='javascript:void(0);' v-click='" + callback + "(" + curPage * pager.limit + ", " + pager.limit + ")'>下一页</a></li>");
 						}
 						var last;
 						if (curPage == pageCapacity) {
-							last = $("<li ><a class='disable' href='javascript:void(0);'>尾页</a></li>");
+							last = $("<li class='disabled'><a class='disable' href='javascript:void(0);'>尾页</a></li>");
 						} else {
-							last = $("<li><a href='javascript:void(0);' v-click='" + callback + "(" + (pageCapacity-1) * pager.limit + ", " + pager.limit + ")'>尾页</a></li>");
+							last = $("<li><a href='javascript:void(0);' v-click='" + callback + "(" + (pageCapacity - 1) * pager.limit + ", " + pager.limit + ")'>尾页</a></li>");
 						}
 						ul.append(next);
 						ul.append(last);

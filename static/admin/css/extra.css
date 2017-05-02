@@ -1,3 +1,27 @@
+/**layout **/
+/*body {
+    background: #FFF;
+    font: 14px "Helvetica Neue", Helvetica, STheiti, 微软雅黑, 黑体, Arial, Tahoma, sans-serif, serif;
+}*/
+
+a {
+    color: #3a3a3a;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #eb6100;
+}
+
+a:active, a:focus {
+    outline: none
+}
+
+.level2.active a {
+    color: #eb6100;
+}
+
 .pagination > ul > li > a.disable {
     color: #999;
     cursor: default;
@@ -7,6 +31,6 @@
     border: 1px solid red;
 }
 
-.editormd{
+.editormd {
     margin: 0px;
 }
