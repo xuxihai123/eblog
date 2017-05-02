@@ -146,30 +146,38 @@
 
 					function bindEvent(template) {
 						var last;
-						template.on("click", function (event) {
-							var target = event.target, link, ul, item;
-							if(target===last){
-								return;
-							}
-							link = $(target).closest("a");
-							ul = link.next();
-							if (ul.is(":hidden")) {
-								ul.show();
-								ul.parent().addClass("active");
-							} else {
-								ul.hide();
-								ul.parent().removeClass("active");
-							}
-							if (link.hasClass("leaf") || link.hasClass("home")) {
-								item = link.data("$item") || {"ActionName": "Home"};
+						//branch
+						template.delegate(".level1 >a", "click", function () {
+							if ($(this).hasClass("home")) {
+								var item = {"ActionName": "Home"};
 								var callback = function () {
 									fn($scope, {$item: item});
 								};
 								$scope.$apply(callback);
+							} else {
+								var ul = $(this).next();
+								if (ul.is(":hidden")) {
+									ul.show();
+									ul.parent().addClass("active");
+								} else {
+									ul.hide();
+									ul.parent().removeClass("active");
+								}
 							}
-							element.find("li.level2").removeClass("active");
-							link.parent().addClass("active");
-							last = target;
+						});
+						//leaf
+						template.delegate(".level2 >a", "click", function () {
+							if (this === last) {
+								return false;
+							}
+							var item = $(this).data("$item");
+							var callback = function () {
+								fn($scope, {$item: item});
+							};
+							$scope.$apply(callback);
+							template.find(".level2").removeClass("active");
+							$(this).parent().addClass("active");
+							last = this;
 						});
 					}
 				}
