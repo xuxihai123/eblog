@@ -1,51 +1,52 @@
 <div oc-lazy-load="htmls/Post/PostAdd/PostAdd.js">
-	<div class="mainContent" ng-controller="PostAddCtrl" ng-init="startup()">
-		<div class="content_title">
-			<h3>撰写新文章</h3>
-		</div>
-		<div class="post">
-			<div class="container-fluid">
-				<div class="row-fluid">
-					<div class="span10">
-						<form class="form-horizontal" name="postnewForm" novalidate>
-							<div class="control-group">
-								<label for="post_title">标题*</label>
-								<input type="text" id="post_title" name="post_title" ng-model="post_title" required
-								       placeholder="标题">
-							</div>
-							<div class="control-group">
-								<label for="post_content">内容*</label>
-
-								<div id="editormd">
-									<textarea id="post_content" name="post_content"></textarea>
-								</div>
-
-							</div>
-							<div class="control-group">
-								<label for="term_id1">分类目录</label>
-								<select id="term_id1" name="term_id1" ng-model="term_id1"
-								        ng-options="row.term_taxonomy_id as row.slug for row in allCategory" ng-change="test(row)" required>
-									<option value="">请选择分类</option>
-								</select>
-							</div>
-							<div class="control-group">
-								<label for="term_id2">添加标签</label>
-
-								<select id="term_id2" name="term_id2" ng-model="term_id2"
-								        ng-options="row.term_taxonomy_id as row.slug for row in allTag">
-									<option value="">请选择标签</option>
-								</select>
-
-							</div>
-							<div class="text-center" id="subbtn">
-								<button class="btn btn-primary" type="button" ng-click="postAdd()"
-								        ng-disabled="postnewForm.$invalid">submit
-								</button>
-							</div>
-							<div class="text-center"></div>
-						</form>
+	<div ng-controller="PostAddCtrl" ng-init="startup()">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<span class="h4">撰写新文章</span>
+			</div>
+			<div class="panel-body">
+				<form name="postnewForm" novalidate>
+					<div class="form-group  pull-in clearfix">
+						<div class="col-sm-6">
+							<label for="post_title">标题*</label>
+							<input type="text" class="form-control" id="post_title" name="post_title"
+							       ng-model="post_title" required placeholder="标题">
+						</div>
 					</div>
-				</div>
+					<div class="form-group">
+						<label for="post_content">内容*</label>
+
+						<div id="editormd">
+							<textarea class="form-control" id="post_content" name="post_content"></textarea>
+						</div>
+					</div>
+					<div class="form-group  pull-in clearfix">
+						<div class="col-sm-6">
+							<label>分类目录</label>
+							<ui-select multiple v-model="multipleCategory.selectedCategoryWithGroupBy" theme="bootstrap" v-disabled="disabled">
+								<ui-select-match placeholder="选择分类">{{$item.name}}</ui-select-match>
+								<ui-select-choices group-by="someGroupFn" repeat="$category in allCategory">
+									<div v-bind="$category.slug"></div>
+								</ui-select-choices>
+							</ui-select>
+						</div>
+						<div class="col-sm-6">
+							<label>标签列表</label>
+							<ui-select multiple v-model="multipleTag.selectedTagWithGroupBy" theme="bootstrap" v-disabled="disabled">
+								<ui-select-match placeholder="添加标签">{{$item.name}}</ui-select-match>
+								<ui-select-choices group-by="someGroupFn" repeat="$tag in allTag">
+									<div v-bind="$tag.slug"></div>
+								</ui-select-choices>
+							</ui-select>
+						</div>
+					</div>
+					<div class="text-center" id="subbtn">
+						<button class="btn btn-info" type="button" ng-click="postAdd()"
+						        ng-disabled="postnewForm.$invalid">submit
+						</button>
+					</div>
+					<div class="text-center"></div>
+				</form>
 			</div>
 		</div>
 	</div>

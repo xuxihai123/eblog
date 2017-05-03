@@ -8,7 +8,7 @@ function PostAddCtrl($scope, $remote) {
 			$scope.allTag = data;
 		});
 		var testEditor = editormd("editormd", {
-			width: "90%",
+			width: "auto",
 			height: 640,
 			syncScrolling: "single",
 			path: "lib/plugins/editor/",
@@ -44,6 +44,12 @@ function PostAddCtrl($scope, $remote) {
 			}
 		});
 	};
+	$scope.$category = {};
+	$scope.$tag = {};
+	$scope.multipleCategory = {};
+	$scope.multipleTag = {};
+	$scope.multipleCategory.selectedCategoryWithGroupBy = [];
+	$scope.multipleTag.selectedTagWithGroupBy = [];
 
 	$scope.postAdd = function () {
 		var post_content = $("#post_content").val();

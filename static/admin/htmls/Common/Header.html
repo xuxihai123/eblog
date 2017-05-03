@@ -24,9 +24,6 @@
 			<a href class="btn no-shadow navbar-btn" v-click="app.settings.asideFolded = !app.settings.asideFolded">
 				<i class="fa {{app.settings.asideFolded ? 'fa-angle-double-right' : 'fa-angle-double-left'}} fa-fw"></i>
 			</a>
-			<a href class="btn no-shadow navbar-btn" ui-toggle-class="show" target="#aside-user">
-				<i class="fa fa-male fa-fw"></i>
-			</a>
 		</div>
 		<!-- / buttons -->
 
@@ -52,25 +49,12 @@
 					</div>
 				</div>
 			</form>
-			<li class="dropdown hidden-sm" is-open="lang.isopen" dropdown>
-				<a href class="dropdown-toggle" dropdown-toggle>
-					<span>{{selectLang}}</span>
-					<span class="caret"></span>
-				</a>
-				<!-- dropdown -->
-				<ul class="dropdown-menu animated fadeInRight w">
-					<li v-repeat="(langKey, label) in langs">
-						<a v-click="setLang(langKey, $event)" href>{{label}}</a>
-					</li>
-				</ul>
-				<!-- / dropdown -->
-			</li>
 			<li class="hidden-xs">
 				<a ui-fullscreen></a>
 			</li>
 			<li class="dropdown" dropdown>
 				<a href class="dropdown-toggle" dropdown-toggle>
-					<i class="icon-bell fa-fw"></i>
+					<i class="fa fa-bell fa-fw text"></i>
 					<span class="visible-xs-inline"> <span
 							translate="header.navbar.NOTIFICATIONS">Notifications</span><b
 							class="caret"></b></span>
@@ -84,10 +68,7 @@
 						</div>
 						<div class="list-group">
 							<a href class="media list-group-item">
-                    <span class="pull-left thumb-sm">
-                      <img src="images/a0.jpg" alt="..." class="img-circle">
-                    </span>
-								<span class="media-body block m-b-none">
+					<span class="media-body block m-b-none">
                     	                      预约转账任务<br>
                       <small class="text-muted">10 minutes ago</small>
                     </span>
@@ -109,26 +90,14 @@
 			</li>
 			<li class="dropdown" dropdown>
 				<a href class="dropdown-toggle clear" dropdown-toggle>
-              <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
-                <img src="images/a0.jpg" alt="...">
+              <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm ">
+                <img src="images/touxiang.png" alt="..." class="img-touxiang">
                 <i class="on md b-white bottom"></i>
               </span>
 					<span class="hidden-sm hidden-md" v-bind="$userinfo.user"><b class="caret"></b></span>
 				</a>
 				<!-- dropdown -->
 				<ul class="dropdown-menu animated fadeInRight w">
-					<li class="wrapper b-b m-b-sm bg-light m-t-n-xs">
-						<div>
-							<p>流量消耗30mb/套餐500mb</p>
-						</div>
-						<progressbar value="60" class="progress-xs m-b-none bg-white"></progressbar>
-					</li>
-					<li>
-						<a href>
-							<span class="badge bg-danger pull-right">30%</span>
-							<span>流量套餐设置</span>
-						</a>
-					</li>
 					<li>
 						<a ui-sref="app.page.profile">个人简介</a>
 					</li>

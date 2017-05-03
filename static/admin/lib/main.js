@@ -1,5 +1,5 @@
 'use strict';
-app.controller('AppCtrl', ['$scope', function ($scope) {
+app.controller('AppCtrl', ['$scope', '$localStorage', function ($scope, $localStorage) {
 	$scope.$menuList = Menu;
 	$scope.$functions = angular.getFunctions();
 	// config
@@ -31,11 +31,26 @@ app.controller('AppCtrl', ['$scope', function ($scope) {
 	};
 	$scope.selectItem = function (item) {
 		console.log(item);
-		if( item.ActionId){
+		if (item.ActionId) {
 			$scope.goto('/' + item.ActionId);
 		}
-		if(item.ActionName==="Home"){
+		if (item.ActionName === "Home") {
 			$scope.goto('/Welcome');
 		}
 	};
+
+	// save settings to local storage
+	if (vx.isDefined($localStorage.settings)) {
+		$scope.app.settings = $localStorage.settings;
+	} else {
+		$localStorage.settings = $scope.app.settings;
+	}
+	$scope.$watch('app.settings', function () {
+		if ($scope.app.settings.asideDock && $scope.app.settings.asideFixed) {
+			// aside dock and fixed must set the header fixed.
+			$scope.app.settings.headerFixed = true;
+		}
+		// save to local storage
+		$localStorage.settings = $scope.app.settings;
+	}, true);
 }]);

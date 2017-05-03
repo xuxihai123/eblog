@@ -1,48 +1,50 @@
 <div oc-lazy-load="htmls/Post/PostEdit/PostEdit.js">
-	<div class="mainContent" ng-controller="PostEditCtrl" ng-init="startup()">
-		<div class="content_title">
-			<h3>修改文章</h3>
-		</div>
-		<div class="post">
-			<div class="container-fluid">
-				<div class="row-fluid">
-					<div class="span10">
-						<form class="form-horizontal" name="posteditForm" novalidate>
-							<div class="control-group">
-								<label for="post_title">标题*</label>
-								<input type="text" id="post_title" name="post_title" ng-model="post_title" required placeholder="标题">
-							</div>
-							<div class="control-group">
-								<label for="term_id1">分类目录</label>
-								<select id="term_id1" name="term_id1" ng-model="term_id1"
-								        ng-options="row.term_taxonomy_id as row.slug for row in allCategory">
-								</select>
-							</div>
-							<div class="control-group">
-								<label for="term_id2">添加标签</label>
-
-								<select id="term_id2" name="term_id2" ng-model="term_id2"
-								        ng-options="row.term_taxonomy_id as row.slug for row in allTag">
-								</select>
-
-							</div>
-							<div class="control-group">
-								<label for="post_content">内容*</label>
-
-								<div id="editormd">
-									<textarea id="post_content" name="post_content"></textarea>
-								</div>
-
-							</div>
-							<div class="text-center">
-								<button class="btn btn-primary" type="button" ng-click="postEdit()"
-								        ng-disabled="postnewForm.$invalid">submit
-								</button>
-							</div>
-							<div class="text-center"></div>
-						</form>
+	<div ng-controller="PostEditCtrl" ng-init="startup()">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<span class="h4">修改文章</span>
+			</div>
+			<div class="panel-body">
+				<form name="posteditForm" novalidate>
+					<div class="form-group pull-in clearfix">
+						<div class="col-sm-6">
+							<label for="post_title">标题*</label>
+							<input type="text" class="form-control" id="post_title" name="post_title" ng-model="post_title" required placeholder="标题">
+						</div>
 					</div>
-				</div>
+
+					<div class="form-group">
+						<label for="post_content">内容*</label>
+
+						<div id="editormd">
+							<textarea id="post_content" class="form-control" name="post_content"></textarea>
+						</div>
+
+					</div>
+					<div class="form-group pull-in clearfix">
+						<div class="col-sm-6">
+							<label for="term_id1">分类目录</label>
+							<select id="term_id1" class="form-control" name="term_id1" ng-model="term_id1"
+							        ng-options="row.term_taxonomy_id as row.slug for row in allCategory">
+							</select>
+						</div>
+					</div>
+					<div class="form-group pull-in clearfix">
+						<div class="col-sm-6">
+							<label for="term_id2">添加标签</label>
+
+							<select id="term_id2" class="form-control" name="term_id2" ng-model="term_id2"
+							        ng-options="row.term_taxonomy_id as row.slug for row in allTag">
+							</select>
+						</div>
+					</div>
+					<div class="text-center">
+						<button class="btn btn-info" type="button" ng-click="postEdit()"
+						        ng-disabled="posteditForm.$invalid">submit
+						</button>
+					</div>
+					<div class="text-center"></div>
+				</form>
 			</div>
 		</div>
 	</div>

@@ -2,7 +2,13 @@ var app = angular.module("app", [
 	"ngRoute",
 	"oc.lazyLoad",
 	"ui.bootstrap",
+	"ngStorage",
+	"ui.select"
 ]);
+
+app.config(function (uiSelectConfig) {
+	uiSelectConfig.dropdownPosition = 'down';
+});
 /**
  * 系统错误分类
  * 9开头为系统及服务器错误
@@ -22,11 +28,16 @@ function configRemote($remoteProvider) {
 			return true;
 		}
 	});
+
 	$remoteProvider.setSendBeforeFn(function (config) {
 		console.log('setSendBeforeFn');
+		$("#overlay").show(); //showLoading
 	});
 	$remoteProvider.setSendAfterFn(function (config) {
 		console.log('setSendAfterFn');
+		setTimeout(function () { //hideLoading
+			$("#overlay").hide();
+		}, 300);
 	});
 	$remoteProvider.setErrorCallback(function (data, status, headers, config) {
 		var $rootScope = angular.element("body").scope();

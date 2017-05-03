@@ -65,6 +65,48 @@
 			}
 		};
 	}]);
+	app.directive('uiFullscreen', ['$document', '$window', function ($document, $window) {
+		return {
+			restrict: 'AC',
+			template: '<i class="fa fa-expand fa-fw text"></i><i class="fa fa-compress fa-fw text-active"></i>',
+			link: function (scope, el, attr) {
+				el.addClass('hide');
+				if (IsPC()) {
+					// disable on ie11
+					if (screenfull.enabled && !navigator.userAgent.match(/Trident.*rv:11\./)) {
+						el.removeClass('hide');
+					}
+					el.on('click', function () {
+						var target;
+						attr.target && ( target = $(attr.target)[0] );
+						screenfull.toggle(target);
+					});
+					//兼容IE9修改
+					screenfull.raw && $document.on(screenfull.raw.fullscreenchange, function () {
+						if (screenfull.isFullscreen) {
+							el.addClass('active');
+						} else {
+							el.removeClass('active');
+						}
+					});
+				}
+				function IsPC() {
+					var userAgentInfo = navigator.userAgent;
+					var Agents = new Array("Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod");
+					var flag = true;
+					for (var v = 0; v < Agents.length; v++) {
+						if (userAgentInfo.indexOf(Agents[v]) > 0) {
+							flag = false;
+							break;
+						}
+					}
+					return flag;
+				}
+
+			}
+		};
+	}]);
+
 })(window, angular);
 (function (window, vx, undefined) {
 	'use strict';
@@ -98,7 +140,9 @@
 						template.append(firstNode);
 						vx.forEach(menus, function (temp1, index) {
 							var temp_level1, temp_level2, level1_link, level2_link, level3_link, menuList2, menuList3;
-
+							if(temp1.ignore){
+								return false;
+							}
 							temp_level1 = $(spaceLine + "<li class='level1'></li>");
 							level1_link = $(
 								'<a class="auto"> ' +
@@ -115,6 +159,9 @@
 							if (menuList2 && menuList2.length > 0) {
 								nav_ul2 = $("<ul style='display: none;' class='nav nav-list2 nav-sub dk'></ul>");
 								vx.forEach(menuList2, function (temp2, index) {
+									if(temp2.ignore){
+										return false;
+									}
 									temp_level2 = $(spaceLine + "<li class='level2'></li>");
 									var hasChild = false;
 									menuList3 = temp2.MenuList;

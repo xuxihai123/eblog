@@ -5,7 +5,7 @@
 			"ActionName": "文章",
 			"Level": "1",
 			"root": "Post",
-			"icon":"file-text",
+			"icon": "file-text",
 			"MenuList": [
 				{
 					"ActionName": "写文章",
@@ -26,6 +26,12 @@
 					"ActionName": "文章标签",
 					"Level": "2",
 					"ActionId": "PostTag"
+				},
+				{
+					"ActionName": "编辑文章",
+					"Level": "2",
+					"ActionId": "PostEdit",
+					"RouteUrl": "/PostEdit/:PostId"
 				}
 			]
 		},
@@ -33,7 +39,7 @@
 			"ActionName": "页面",
 			"Level": "1",
 			"root": "Page",
-			"icon":"file-text-o",
+			"icon": "file-text-o",
 			"MenuList": [
 				{
 					"ActionName": "所有页面",
@@ -43,6 +49,11 @@
 					"ActionName": "新建页面",
 					"Level": "2",
 					"ActionId": "PageAdd"
+				}, {
+					"ActionName": "编辑页面",
+					"Level": "2",
+					"ActionId": "PageEdit",
+					"RouteUrl": "/PageEdit/:PostId"
 				}
 			]
 		},
@@ -50,12 +61,17 @@
 			"ActionName": "评论",
 			"Level": "1",
 			"root": "Comment",
-			"icon":"comment",
+			"icon": "comment",
 			"MenuList": [
 				{
 					"ActionName": "评论列表",
 					"Level": "2",
 					"ActionId": "CommentList"
+				}, {
+					"ActionName": "评论审核",
+					"Level": "2",
+					"ActionId": "CommentApprove",
+					"RouteUrl": "/CommentApprove/:CommentId"
 				}
 			]
 		},
@@ -63,7 +79,7 @@
 			"ActionName": "用户",
 			"Level": "1",
 			"root": "User",
-			"icon":"users",
+			"icon": "users",
 			"MenuList": [
 				{
 					"ActionName": "用户添加",
@@ -79,6 +95,12 @@
 					"ActionName": "用户信息",
 					"Level": "2",
 					"ActionId": "UserInfo"
+				},
+				{
+					"ActionName": "用户编辑",
+					"Level": "2",
+					"ActionId": "UserEdit",
+					"RouteUrl": "/UserEdit/:UserId"
 				}
 			]
 		},
@@ -86,7 +108,7 @@
 			"ActionName": "设置",
 			"Level": "1",
 			"root": "Setting",
-			"icon":"cog",
+			"icon": "cog",
 			"MenuList": [
 				{
 					"ActionName": "个性设置",
@@ -160,18 +182,6 @@
 		$routeProvider.when("/Welcome", {
 			templateUrl: 'htmls/Welcome/Welcome.html'
 		});
-		$routeProvider.when("/PostEdit/:PostId", {
-			templateUrl: 'htmls/Post/PostEdit/PostEdit.html'
-		});
-		$routeProvider.when("/PageEdit/:PostId", {
-			templateUrl: 'htmls/Page/PageEdit/PageEdit.html'
-		});
-		$routeProvider.when("/CommentApprove/:CommentId", {
-			templateUrl: 'htmls/Comment/CommentApprove/CommentApprove.html'
-		});
-		$routeProvider.when("/UserEdit/:UserId", {
-			templateUrl: 'htmls/User/UserEdit/UserEdit.html'
-		});
 		//遍历菜单生成路由
 		function registerRoute(base, Menu) {
 			base = base || "htmls";
@@ -180,16 +190,23 @@
 				if (temp_node.MenuList && temp_node.MenuList.length > 0) {
 					registerRoute(base + "/" + temp_node.root, temp_node.MenuList);
 				} else {
-					$routeProvider.when("/" + temp_node.ActionId, {
-						templateUrl: base + "/" + temp_node.ActionId + "/" + temp_node.ActionId + ".html"
-					});
-					functions.push(Menu[i]);
+					if (temp_node.RouteUrl) {
+						temp_node.ignore = true;
+						$routeProvider.when(temp_node.RouteUrl, {
+							templateUrl: base + "/" + temp_node.ActionId + "/" + temp_node.ActionId + ".html"
+						});
+					} else {
+						$routeProvider.when("/" + temp_node.ActionId, {
+							templateUrl: base + "/" + temp_node.ActionId + "/" + temp_node.ActionId + ".html"
+						});
+						functions.push(Menu[i]);
+					}
 				}
 			}
 		}
 
 		var functions = [];
-		angular.getFunctions=function() {
+		angular.getFunctions = function () {
 			return functions;
 		};
 		registerRoute(null, Menu);

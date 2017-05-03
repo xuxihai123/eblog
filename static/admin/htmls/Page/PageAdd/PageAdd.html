@@ -1,29 +1,32 @@
 <div oc-lazy-load="htmls/Page/PageAdd/PageAdd.js">
-	<div class="wrapper-md" ng-controller="PageAddCtrl" ng-init="startup()">
+	<div ng-controller="PageAddCtrl" ng-init="startup()">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<span class="h4">编辑页面</span>
+				<span class="h4">新建页面</span>
 			</div>
 			<div class="panel-body">
-				<p class="text-muted">如果您需要帮助，请填写如下信息。</p>
-				<div class="form-group pull-in clearfix">
-					<div class="col-sm-12">
-						<label>标题*</label>
-						<input type="text" class="form-control" id="post_title" name="post_title" ng-model="post_title" required
-						       placeholder="标题">
+				<form name="pageNewForm" novalidate>
+					<div class="form-group pull-in clearfix">
+						<div class="col-sm-6">
+							<label>标题*</label>
+							<input type="text" class="form-control" id="post_title" name="post_title"
+							       ng-model="post_title" required
+							       placeholder="标题">
+						</div>
+						<div class="col-sm-6"></div>
 					</div>
-					<div class="col-sm-12">
+					<div class="form-group">
 						<label>内容*</label>
 						<div id="editormd">
 							<textarea id="post_content" name="post_content"></textarea>
 						</div>
 					</div>
 					<div class="text-center">
-						<button class="btn btn-success" type="button" ng-click="pageNew()"
-						        ng-disabled="postnewForm.$invalid">submit
+						<button class="btn btn-info" type="button" ng-click="pageNew()"
+						        ng-disabled="pageNewForm.$invalid">submit
 						</button>
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 	</div>

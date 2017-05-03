@@ -1,37 +1,34 @@
 <div oc-lazy-load="htmls/Page/PageEdit/PageEdit.js">
-	<div class="mainContent" ng-controller="PageEditCtrl" ng-init="startup()">
-		<div class="content_title">
-			<h3>编辑页面 </h3>
-		</div>
-		<div class="post">
-			<div class="container-fluid">
-				<div class="row-fluid">
-					<div class="span10">
-						<form class="form-horizontal" name="postnewForm" novalidate>
-							<div class="control-group">
-								<label for="post_title">标题*</label>
-								<input type="text" id="post_title" name="post_title" ng-model="post_title" required
-								       placeholder="标题">
-							</div>
-							<div class="control-group">
-								<label for="post_content">内容*</label>
-
-								<div id="editormd">
-									<textarea id="post_content" name="post_content"></textarea>
-								</div>
-
-							</div>
-							<div class="text-center" id="subbtn">
-								<button class="btn btn-primary" type="button" ng-click="pageEdit()"
-								        ng-disabled="postnewForm.$invalid">submit
-								</button>
-							</div>
-							<div class="text-center"></div>
-						</form>
+	<div ng-controller="PageEditCtrl" ng-init="startup()">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<span class="h4">编辑页面</span>
+			</div>
+			<div class="panel-body">
+				<form name="pageEditForm" novalidate>
+					<p class="text-muted">如果您需要帮助，请填写如下信息。</p>
+					<div class="form-group pull-in clearfix">
+						<div class="col-sm-6">
+							<label>标题*</label>
+							<input type="text" class="form-control" id="post_title" name="post_title"
+							       ng-model="post_title" required
+							       placeholder="标题">
+						</div>
 					</div>
-				</div>
+					<div class="form-group">
+						<label>内容*</label>
+						<div id="editormd">
+							<textarea class="form-control" id="post_content" name="post_content"></textarea>
+						</div>
+					</div>
+					<div class="text-center">
+						<button class="btn btn-info" type="button" ng-click="pageEdit()"
+						        ng-disabled="pageEditForm.$invalid">submit
+						</button>
+					</div>
+					<div class="text-center"></div>
+				</form>
 			</div>
 		</div>
-
 	</div>
 </div>

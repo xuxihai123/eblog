@@ -1,5 +1,9 @@
-<div id="adminmenu" ng-include="'htmls/Common/Menu.html'"></div>
-<div id="admincontent">
-	<div id="bread" ng-include="'htmls/Common/Bread.html'"></div>
-	<div class="mainContent" ng-view></div>
+<div class="app-content">
+	<a href class="off-screen-toggle hide" ui-toggle-class="off-screen" data-target=".app-aside"></a>
+	<ul class="breadcrumb" ng-show="$Bread&&$Bread.length==3">
+		<li class="home"><a href="" ng-click="goto('/')"><i class="fa fa-home"></i>&nbsp;&nbsp;<span ng-bind="$Bread[0]"></span></a></li>
+		<li><a><span ng-bind="$Bread[1]"></span></a></li>
+		<li class="active"><a><span ng-bind="$Bread[2]"></span></a></li>
+	</ul>
+	<div class="app-content-body fade-in-up" ng-view></div>
 </div>

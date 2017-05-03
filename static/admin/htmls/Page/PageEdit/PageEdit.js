@@ -10,7 +10,7 @@ function PageEditCtrl($scope, $remote,$routeParams) {
 			$("#post_content").val(data.post_content);
 		});
 		var testEditor = editormd("editormd", {
-			width: "90%",
+			width: "auto",
 			height: 640,
 			syncScrolling: "single",
 			path: "lib/plugins/editor/",

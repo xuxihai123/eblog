@@ -2,7 +2,7 @@ PageAddCtrl.$inject = ["$scope", "$remote"];
 function PageAddCtrl($scope, $remote) {
 	$scope.startup = function () {
 		var testEditor = editormd("editormd", {
-			width: "90%",
+			width: "auto",
 			height: 640,
 			syncScrolling: "single",
 			path: "lib/plugins/editor/",
