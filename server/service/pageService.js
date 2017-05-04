@@ -22,28 +22,17 @@ module.exports = {
 			});
 		});
 	},
-	updatePage: function (user, key) {
+	updatePage: function (post2) {
 		return new Promise(function (resolve, reject) {
-			if (key) {
-				User.findOne({
-					where: {
-						user_login: username
-					}
-				}).then(function (result) {
-					if (result === null) {
-						reject({
-							errorMessage: "用户不已存在！"
-						});
-					} else {
-						resolve(this.updateUser(user));
-					}
-				});
-			} else {
-				reject({
-					errorMessage: "key...is need！"
-				})
-			}
-
+			postDao.getById(post2.ID).then(function (post) {
+				if (post === null) {
+					reject({
+						errorMessage: "post不存在！"
+					});
+				} else {
+					resolve(postDao.update(post2));
+				}
+			});
 		});
 	},
 	getPage: function (postId) {

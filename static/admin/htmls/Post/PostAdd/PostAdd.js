@@ -50,7 +50,6 @@ function PostAddCtrl($scope, $remote) {
 	$scope.multipleTag = {};
 	$scope.multipleCategory.selectedCategoryWithGroupBy = [];
 	$scope.multipleTag.selectedTagWithGroupBy = [];
-
 	$scope.postAdd = function () {
 		var post_content = $("#post_content").val();
 		if (!post_content) {
@@ -61,9 +60,9 @@ function PostAddCtrl($scope, $remote) {
 		}
 		var pargs = {
 			post_title: $scope.post_title,
-			term_id1: $scope.term_id1,
-			term_id2: $scope.term_id2,
-			post_content: post_content,
+			multipleCategory: $scope.multipleCategory.selectedCategoryWithGroupBy,
+			multipleTag: $scope.multipleTag.selectedTagWithGroupBy,
+			post_content: post_content
 		};
 		$remote.post("admin/addPost.do", pargs, function (data) {
 			if (data.success == "ok") {

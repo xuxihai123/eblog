@@ -47,7 +47,7 @@ exports.doAjax=function() {
 			var post_id = req_pargs.post_id;
 			var post_title = req_pargs.post_title;
 			var post_content = req_pargs.post_content;
-			PageService.update({
+			PageService.updatePage({
 				ID: post_id,
 				post_title: post_title,
 				post_content: post_content

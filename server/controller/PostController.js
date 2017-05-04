@@ -9,19 +9,15 @@ exports.doAjax = function () {
 		"/admin/addPost.do": function (req, res, next) {
 			var req_pargs = req.body;
 			var post_title = req_pargs.post_title;
-			var term_taxonomy_id1 = req_pargs.term_id1;
-			var term_taxonomy_id2 = req_pargs.term_id2;
+			var multipleCategory = req_pargs.multipleCategory;
+			var multipleTag = req_pargs.multipleTag;
 			var post_content = req_pargs.post_content;
 			var relation = [];
-			if (term_taxonomy_id1) {
-				relation.push({
-					term_taxonomy_id: term_taxonomy_id1
-				});
+			if (multipleCategory&&multipleCategory.length>0) {
+				relation.concat(multipleCategory);
 			}
-			if (term_taxonomy_id2) {
-				relation.push({
-					term_taxonomy_id: term_taxonomy_id2
-				});
+			if (multipleTag&&multipleTag.length>0) {
+				relation.concat(multipleTag);
 			}
 			var user = req.session.user;
 			postService.addPost({

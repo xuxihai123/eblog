@@ -40,7 +40,12 @@ function PostEditCtrl($scope, $remote, $routeParams) {
 			imageUploadURL: "./php/upload.php",
 		});
 	};
-
+	$scope.$category = {};
+	$scope.$tag = {};
+	$scope.multipleCategory = {};
+	$scope.multipleTag = {};
+	$scope.multipleCategory.selectedCategoryWithGroupBy = [];
+	$scope.multipleTag.selectedTagWithGroupBy = [];
 	$scope.postEdit = function () {
 		var post_content = $("#post_content").val();
 		if (!post_content) {
