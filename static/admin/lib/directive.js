@@ -192,7 +192,7 @@
 					}
 
 					function bindEvent(template) {
-						var last;
+						// var last;
 						//branch
 						template.delegate(".level1 >a", "click", function () {
 							if ($(this).hasClass("home")) {
@@ -214,9 +214,9 @@
 						});
 						//leaf
 						template.delegate(".level2 >a", "click", function () {
-							if (this === last) {
-								return false;
-							}
+							// if (this === last) {
+							// 	return false;
+							// }
 							var item = $(this).data("$item");
 							var callback = function () {
 								fn($scope, {$item: item});
@@ -224,7 +224,7 @@
 							$scope.$apply(callback);
 							template.find(".level2").removeClass("active");
 							$(this).parent().addClass("active");
-							last = this;
+							// last = this;
 						});
 					}
 				}

@@ -1,5 +1,11 @@
 PostEditCtrl.$inject = ["$scope", "$remote", "$routeParams"];
 function PostEditCtrl($scope, $remote, $routeParams) {
+	$scope.$category = {};
+	$scope.$tag = {};
+	$scope.multipleCategory = {};
+	$scope.multipleTag = {};
+	$scope.multipleCategory.selectedCategoryWithGroupBy = [];
+	$scope.multipleTag.selectedTagWithGroupBy = [];
 	$scope.startup = function () {
 		if ($routeParams.PostId) {
 			$scope.PostId = $routeParams.PostId;
@@ -9,7 +15,16 @@ function PostEditCtrl($scope, $remote, $routeParams) {
 			};
 			$remote.post("admin/getPost.do", pargs, function (data) {
 				$scope.post_title = data.post_title;
-				$scope.term_id1 = data.term_taxonomy_id;
+				if(data.categoryList){
+					$scope.multipleCategory.selectedCategoryWithGroupBy = data.categoryList.map(function (temp) {
+						return temp.term_taxonomy_id;
+					});
+				}
+				if(data.tagList){
+					$scope.multipleTag.selectedTagWithGroupBy = data.tagList.map(function (temp) {
+						return temp.term_taxonomy_id;
+					});
+				}
 				$scope.term_id2 = data.term_id2;
 				$("#post_content").val(data.post_content);
 			});
@@ -40,12 +55,7 @@ function PostEditCtrl($scope, $remote, $routeParams) {
 			imageUploadURL: "./php/upload.php",
 		});
 	};
-	$scope.$category = {};
-	$scope.$tag = {};
-	$scope.multipleCategory = {};
-	$scope.multipleTag = {};
-	$scope.multipleCategory.selectedCategoryWithGroupBy = [];
-	$scope.multipleTag.selectedTagWithGroupBy = [];
+
 	$scope.postEdit = function () {
 		var post_content = $("#post_content").val();
 		if (!post_content) {

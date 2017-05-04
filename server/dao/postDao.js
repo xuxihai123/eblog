@@ -12,8 +12,8 @@ module.exports = {
 			function reject2(err, connection) {
 				connection.rollback(function () {
 					console.log('rollback.........');
-					reject(err);
 					connection && connection.release();
+					reject(err);
 				});
 			}
 			sqlhelp.getConnection(function (err, connection) {

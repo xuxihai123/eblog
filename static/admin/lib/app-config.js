@@ -30,11 +30,11 @@ function configRemote($remoteProvider) {
 	});
 
 	$remoteProvider.setSendBeforeFn(function (config) {
-		console.log('setSendBeforeFn');
+		// console.log('setSendBeforeFn');
 		$("#overlay").show(); //showLoading
 	});
 	$remoteProvider.setSendAfterFn(function (config) {
-		console.log('setSendAfterFn');
+		// console.log('setSendAfterFn');
 		setTimeout(function () { //hideLoading
 			$("#overlay").hide();
 		}, 300);

@@ -14,10 +14,20 @@ exports.doAjax = function () {
 			var post_content = req_pargs.post_content;
 			var relation = [];
 			if (multipleCategory&&multipleCategory.length>0) {
-				relation.concat(multipleCategory);
+				multipleCategory.forEach(function (temp) {
+					relation.push({
+						term_taxonomy_id: temp
+					});
+				});
+				// relation.push.apply(relation,multipleCategory);
 			}
 			if (multipleTag&&multipleTag.length>0) {
-				relation.concat(multipleTag);
+				multipleTag.forEach(function (temp) {
+					relation.push({
+						term_taxonomy_id: temp
+					});
+				});
+				// relation.push.apply(relation,multipleTag);
 			}
 			var user = req.session.user;
 			postService.addPost({
