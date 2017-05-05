@@ -10,6 +10,7 @@
 		"css/extra.css"
 	];
 	var jsFiles = [
+		"lib/min/angular-1.3.20.js",
 		"lib/min/angular-route.js",
 		"lib/min/oclazyload.js",
 		"lib/min/extend.js",

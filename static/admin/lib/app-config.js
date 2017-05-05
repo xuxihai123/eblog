@@ -6,9 +6,6 @@ var app = angular.module("app", [
 	"ui.select"
 ]);
 
-app.config(function (uiSelectConfig) {
-	uiSelectConfig.dropdownPosition = 'down';
-});
 /**
  * 系统错误分类
  * 9开头为系统及服务器错误
