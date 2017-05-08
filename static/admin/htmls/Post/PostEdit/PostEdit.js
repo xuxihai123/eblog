@@ -14,19 +14,22 @@ function PostEditCtrl($scope, $remote, $routeParams) {
 				post_id: $scope.PostId
 			};
 			$remote.post("admin/getPost.do", pargs, function (data) {
-				$scope.post_title = data.post_title;
-				if(data.categoryList){
-					$scope.multipleCategory.selectedCategoryWithGroupBy = data.categoryList.map(function (temp) {
-						return temp.term_taxonomy_id;
-					});
-				}
-				if(data.tagList){
-					$scope.multipleTag.selectedTagWithGroupBy = data.tagList.map(function (temp) {
-						return temp.term_taxonomy_id;
-					});
-				}
-				$scope.term_id2 = data.term_id2;
-				$("#post_content").val(data.post_content);
+				setTimeout(function () {
+					$scope.post_title = data.post_title;
+					if (data.categoryList) {
+						$scope.multipleCategory.selectedCategoryWithGroupBy = data.categoryList.map(function (temp) {
+							return temp.term_taxonomy_id;
+						});
+					}
+					if (data.tagList) {
+						$scope.multipleTag.selectedTagWithGroupBy = data.tagList.map(function (temp) {
+							return temp.term_taxonomy_id;
+						});
+					}
+					$scope.term_id2 = data.term_id2;
+					$("#post_content").val(data.post_content);
+					$scope.$apply();
+				});
 			});
 		}
 		$remote.post("admin/getAllCategory.do", {}, function (data) {
