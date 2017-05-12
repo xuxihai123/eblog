@@ -27,7 +27,37 @@ function PostEditCtrl($scope, $remote, $routeParams) {
 						});
 					}
 					$scope.term_id2 = data.term_id2;
-					$("#post_content").val(data.post_content);
+					// $("#post_content").val(data.post_content);
+					var testEditor = editormd("editormd", {
+						width: "auto",
+						height: 640,
+						syncScrolling: "single",
+						path: "lib/plugins/editor/",
+						theme: "default",
+						previewTheme: "default",
+						editorTheme: "default",
+						codeFold: true,
+						//syncScrolling : false,
+						saveHTMLToTextarea: true,    // 保存 HTML 到 Textarea
+						searchReplace: true,
+						watch: false,                // 关闭实时预览
+						htmlDecode: "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启
+						taskList: true,
+						imageUpload: true,
+						imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+						imageUploadURL: "./php/upload.php",
+						onfullscreen: function () {
+							console.log('fullscreen');
+							$("body").addClass("editor-fullscreen");
+							$("#subbtn").hide();
+						},
+						value:data.post_content,
+						onfullscreenExit: function () {
+							console.log('onfullscreenExit');
+							$("body").removeClass("editor-fullscreen");
+							$("#subbtn").show();
+						}
+					});
 					$scope.$apply();
 				});
 			});
@@ -38,25 +68,7 @@ function PostEditCtrl($scope, $remote, $routeParams) {
 		$remote.post("admin/getAllTag.do", {}, function (data) {
 			$scope.allTag = data;
 		});
-		var testEditor = editormd("editormd", {
-			width: "auto",
-			height: 640,
-			syncScrolling: "single",
-			path: "lib/plugins/editor/",
-			theme: "default",
-			previewTheme: "default",
-			editorTheme: "default",
-			codeFold: true,
-			//syncScrolling : false,
-			saveHTMLToTextarea: true,    // 保存 HTML 到 Textarea
-			searchReplace: true,
-			watch: false,                // 关闭实时预览
-			htmlDecode: "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启
-			taskList: true,
-			imageUpload: true,
-			imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-			imageUploadURL: "./php/upload.php",
-		});
+
 	};
 
 	$scope.postEdit = function () {
