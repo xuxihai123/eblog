@@ -5,7 +5,7 @@ app.controller('AppCtrl', ['$scope', '$localStorage', function ($scope, $localSt
 	// config
 	$scope.app = {
 		name: 'x373241884y',
-		version: '2.4.7',
+		version: '0.0.1',
 		// for chart colors
 		color: {
 			primary: '#7266ba',
@@ -17,11 +17,11 @@ app.controller('AppCtrl', ['$scope', '$localStorage', function ($scope, $localSt
 			dark: '#3a3f51',
 			black: '#1c2b36'
 		},
-		settings: {
-			themeID: 8,
-			navbarHeaderColor: 'bg-info',//bg-black
-			navbarCollapseColor: 'bg-info',
-			asideColor: 'bg-light',
+	settings: {
+			themeID: 2,
+			navbarHeaderColor: 'bg-white-only',//bg-black
+			navbarCollapseColor: 'bg-white-only',
+			asideColor: 'bg-black',
 			headerFixed: true,
 			asideFixed: true,
 			asideFolded: false,
