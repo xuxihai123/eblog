@@ -21,7 +21,7 @@ body.custom-background {
     max-width: 1200px;
     margin: 0 auto;
     position: relative;
-    background: #fff;
+    background: #131c22;
     overflow: hidden;
 }
 
@@ -41,13 +41,13 @@ body.custom-background {
     position: relative;
     color: rgba(255, 255, 255, 0.5);
     background-color: #131c22;
-    margin-bottom: -9999px;
-    padding-bottom: 9999px;
+    /*margin-bottom: -9999px;*/
+    /*padding-bottom: 9999px;*/
 }
 #left .star{
   width: 30px;
-  margin-bottom: -9999px;
-  padding-bottom: 9999px;
+  margin-bottom: -2000px;
+  padding-bottom: 2000px;
   float: left;
   background: url(images/left_star.jpg) #131c22 repeat left top;
 }
@@ -58,14 +58,16 @@ body.custom-background {
     position: relative;
     color: rgba(255, 255, 255, 0.5);
     padding: 0;
-    margin-bottom: -9999px;
-    padding-bottom: 9999px;
+    /*margin-bottom: -9999px;*/
+    /*padding-bottom: 9999px;*/
 
 }
 #right {
     width: 75%;
     float: left;
-    background-color: #f2f2f2;
+    background-color: #fff;
+    position: relative;
+    padding-bottom: 79px;
 }
 
 #left .widget {
@@ -286,6 +288,10 @@ body.custom-background {
     padding: 30px;
     font-size: 12px;
     background: #eee;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    width: 100%;
 }
 
 #foot a {

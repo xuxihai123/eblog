@@ -1,3 +1,11 @@
+function scrollToId(id){
+	document.getElementById(id).scrollIntoView();
+	return false;
+}
+$(document).ready(function () {
+	var leftHeight = $('#left').height();
+	$("#right").css("min-height", leftHeight);
+});
 function hereDoc(f) {
 	return f.toString().replace(/^[^\/]+\/\*!?\s?/, '').replace(/\*\/[^\/]+$/, '');
 }

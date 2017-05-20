@@ -21,7 +21,7 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
         </div>
 
         <div class="entry-content" itemprop="articleBody">
-            <div id="article_content" class="article_content">
+            <div id="article_content" class="article_content markdown-body">
                 <%- utils.marked(post.post_content) %>
             </div>
         </div>

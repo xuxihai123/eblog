@@ -26,7 +26,7 @@ form .form-group input[type=text].ng-invalid, .form-horizontal .form-group input
 .editor-fullscreen .editormd {
     z-index: 9998;
 }
-.editormd a {
+.editormd .editormd-preview-close-btn {
     display: none;
 }
 

@@ -9,6 +9,8 @@
     <link rel='stylesheet' href='//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css'/>
     <!--<link rel='stylesheet' href='/css/bootstrap-responsive.min.css'/>-->
     <link rel='stylesheet' href='/css/themes/default/index.css'/>
+    <!--<link rel='stylesheet' href='/css/themes/winter/index.css'/>-->
+    <link rel='stylesheet' href='/css/marked/github.css'/>
     <link rel="stylesheet" href="/css/prettify-me.css"/>
     <link rel="stylesheet" href="/js/jquery-stars/all.css">
 
@@ -50,7 +52,7 @@
 	$(window).load(function () {
 		$("pre").addClass("prettyprint linenums");//如果其他地方也要用到pre，我们可以再加一个父标签的选择器来区分
 		prettyPrint();//代替body上的onload事件加载该方法
-		$(document).snowfall({image: "/images/flake.png", maxSize: 15});
+//		$(document).snowfall({image: "/images/flake.png", maxSize: 15});
 	});
 
 	jQuery(document.body).jstars({

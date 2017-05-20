@@ -1,4 +1,19 @@
 var marked = require("marked");
+var slugify = require('uslug');
+
+marked.Renderer.prototype.heading = function(text, level, raw) {
+	return '<h'
+		+ level
+		+ ' id="'
+		+ this.options.headerPrefix
+		+ slugify(raw, '-')
+		+ '">'
+		+ text
+		+ '</h'
+		+ level
+		+ '>\n';
+};
+var toc = require('marked-toc');
 
 marked.setOptions({
 	renderer: new marked.Renderer(),
@@ -38,12 +53,20 @@ function cutMaxTitle(str, length) {
 }
 
 function postSnippet(str) {
-	return cutMaxTitle(str,200);
+	return cutMaxTitle(str, 200);
 }
 
 exports.dateFormat = formatDate;
 
 exports.cutMaxTitle = cutMaxTitle;
 exports.postSnippet = postSnippet;
+function slugify(text) {
+	return text.replace(/[\s\t\r\n]+/g, '_');
+}
 
-exports.marked = marked;
+exports.marked = function (mdStr) {
+	var tocHtml = toc(mdStr);
+	tocHtml = tocHtml.replace(/^\s+/, '');
+	mdStr = mdStr.replace(/\[TOC\]/, tocHtml+'\n');
+	return marked(mdStr);
+};

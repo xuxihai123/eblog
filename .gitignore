@@ -1,2 +1,4 @@
 /.idea
 /node_modules
+/static/admin/css/core*
+/static/admin/lib/min/all*
