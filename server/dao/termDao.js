@@ -61,8 +61,48 @@ module.exports = {
 		return sqlhelp.query(sql, term.term_id);
 	},
 	update: function (term) {
-		var sql = "update wp_terms set name = ?, slug = ? where term_id=?";
-		return sqlhelp.query(sql, [term.name, term.slug, term.term_id]);
+		var conn;
+		return new Promise(function (resolve, reject) {
+			function reject2(err, connection) {
+				return connection.rollback(function () {
+					console.log('rollback.........');
+					reject(err);
+					connection && connection.release();
+				});
+			}
+			sqlhelp.getConnection(function (err, connection) {
+				conn = connection;
+				if (err) {
+					return reject2(err, conn);
+				}
+				connection.beginTransaction(function (err) {
+					if (err) {
+						return reject2(err, conn);
+					}
+					var term2 = new Term(term);
+					connection.query("update wp_terms set name = ?, slug = ? where term_id=?",[term2.name,term2.slug,term.term_id], function (err, okPacket) {
+						if (err) {
+							return reject2(err, conn);
+						}
+						var taxonomy = term.termTaxonomy;
+						connection.query("update wp_term_taxonomy set description = ? where term_id=?", [taxonomy.description,taxonomy.term_id], function (err, okPacket) {
+							if (err) {
+								reject(err, conn);
+							} else {
+								connection.commit(function (err) {
+									if (err) {
+										reject2(err, conn);
+									} else {
+										resolve(okPacket);
+									}
+								});
+
+							}
+						});
+					});
+				});
+			});
+		});
 	},
 	getById: function (term_id) {
 		var sql = 'select * from wp_terms where term_id=' + sqlhelp.escape(term_id);

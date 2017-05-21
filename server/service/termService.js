@@ -64,20 +64,14 @@ module.exports = {
 			}
 			termDao.getById(termId).then(function (term) {
 				if (term) {
-					if (term.termTaxonomy.count > 0) {
-						reject({
-							errorMessage: "不能删除，该分类下的文章数不为0！"
+					return termDao.remove(term).then(function (result) {
+							cache.getAllCategory.dirty = true;
+							cache.getAllTags.dirty = true;
+							resolve(result);
+						},
+						function (error) {
+							reject(error);
 						});
-					} else {
-						return termDao.remove(term).then(function (result) {
-								cache.getAllCategory.dirty = true;
-								cache.getAllTags.dirty = true;
-								resolve(result);
-							},
-							function (error) {
-								reject(error);
-							});
-					}
 				} else {
 					reject({
 						errorMessage: "term未找到!"
@@ -92,30 +86,23 @@ module.exports = {
 	updateCategory: function (term) {
 		return new Promise(function (resolve, reject) {
 			if (term.term_id && term.name && term.slug) {
-				transaction().then(
-					function (t) {
-						termDao.update(term, t).then(function (result) {
-							var termTaxonomy = {
-								term_id: term.term_id,
-								parent: term.parent || 0,
-								description: term.description
-							};
-							return taxonomyDao.update(termTaxonomy, t);
-						}).then(function (result) {
-							t.commit().then(function () {
-								cache.getAllCategory.dirty = true;
-								resolve(result);
-							});
-						}, function (error) {
-							t.rollback(function () {
-								reject(error);
-							});
+				termDao.getById(term.term_id).then(function (term2) {
+					if(term2){
+						term.termTaxonomy = {
+							term_id: term.term_id,
+							description: term.description
+						};
+						termDao.update(term).then(function (result) {
+							resolve(result);
+						}).caught(function (error) {
+							reject(error);
 						});
-
-					},
-					function (error) {
-						reject(error);
-					});
+					}else{
+						reject({
+							errorMessage: "该分类不存在!"
+						});
+					}
+				});
 			} else {
 				reject({
 					errorMessage: "分类ID,分类名和别名不能为空!"
@@ -127,29 +114,19 @@ module.exports = {
 	updateTag: function (term) {
 		return new Promise(function (resolve, reject) {
 			if (term.term_id && term.name && term.slug) {
-				transaction().then(
-					function (t) {
-						termDao.update(term, t).then(function (result) {
-							var termTaxonomy = {
-								term_id: term.term_id,
-								description: term.description
-							};
-							return taxonomyDao.update(termTaxonomy, t);
-						}).then(function (result) {
-							t.commit().then(function () {
-								cache.getAllCategory.dirty = true;
-								resolve(result);
-							});
-						}, function (error) {
-							t.rollback(function () {
-								reject(error);
-							});
+				termDao.getById(term.term_id).then(function (term2) {
+					if(term2){
+						termDao.update(term).then(function (result) {
+							resolve(result);
+						}).caught(function (error) {
+							reject(error);
 						});
-
-					},
-					function (error) {
-						reject(error);
-					});
+					}else{
+						reject({
+							errorMessage: "该标签不存在!"
+						});
+					}
+				});
 			} else {
 				reject({
 					errorMessage: "标签ID,标签名和别名不能为空!"

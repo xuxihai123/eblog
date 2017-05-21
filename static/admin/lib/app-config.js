@@ -47,7 +47,7 @@ function configRemote($remoteProvider) {
 			});
 		} else {
 			$rootScope.$alert({
-				title: data.errorType + "[" + data.errorCode + "]",
+				title: "错误码[" + data.errorCode + "]",
 				content: data.errorMessage
 			});
 		}

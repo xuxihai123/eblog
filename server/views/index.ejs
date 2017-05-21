@@ -13,8 +13,8 @@
     <link rel='stylesheet' href='/css/marked/github.css'/>
     <link rel="stylesheet" href="/css/prettify-me.css"/>
     <link rel="stylesheet" href="/js/jquery-stars/all.css">
-
-
+    <link rel="stylesheet" href="https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css"/>
+    <script src="https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
 </head>
 <body class="custom-background">
 <div id="page">
@@ -50,7 +50,9 @@
 <script src="/js/banner.js"></script>
 </body>
 <script type="text/javascript">
+	NProgress.inc();
 	$(window).load(function () {
+		NProgress.done();
 		$("pre").addClass("prettyprint linenums");//如果其他地方也要用到pre，我们可以再加一个父标签的选择器来区分
 		prettyPrint();//代替body上的onload事件加载该方法
 //		$(document).snowfall({image: "/images/flake.png", maxSize: 15});

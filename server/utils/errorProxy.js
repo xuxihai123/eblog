@@ -17,6 +17,7 @@ function Proxy(errorObj) { //foreground 前台标志
 	if(req.xhr){
 		errorObj = errorObj || {};
 		errorObj.errorCode = exceptMap["DefaultExcept"];
+		errorObj.errorMessage = "系统异常";
 		response.json(errorObj);
 	}else{
 		return response.render("500");
