@@ -419,3 +419,18 @@ body.custom-background {
 .post_taginfo{
     text-align: left;
 }
+
+
+.gotop{
+    position: fixed;
+    bottom:20px;
+    right: 20px;
+    z-index: 9999;
+}
+.gotop a {
+    font-size: 30px;
+    color:dodgerblue
+}
+.gotop.disabled a {
+    color: darkgray;
+}
