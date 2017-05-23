@@ -8,7 +8,7 @@ module.exports = {
 	addPost: function (post) {
 		return new Promise(function (resolve, reject) {
 			post.post_type = 'post';
-			post.post_status = 'publish';
+			post.post_status =post.post_status|| 'publish';
 			return postDao.create(post).then(function (result) {
 				cache.findArticleArchive.dirty = true;
 				return resolve(result);
@@ -35,11 +35,12 @@ module.exports = {
 						errorMessage: "post不存在！"
 					});
 				} else {
-					if(post.term_taxonomy_id!=post2.Cttid){
-						resolve(Promise.all([postDao.updateCategory(post2),resolve(postDao.update(post2))]))
-					}else{
-						resolve(postDao.update(post2));
+					if(post2.post_status){
+						post.post_status = post2.post_status;
 					}
+					post.post_title = post2.post_title;
+					post.post_content = post2.post_content;
+					resolve(postDao.update(post));
 				}
 			});
 
@@ -88,7 +89,7 @@ module.exports = {
 	/**前台服务**/
 	findPostPageModel: function (offset, limit) {
 		return new Promise(function (resolve, reject) {
-			return postDao.getPageModel1(offset, limit).then(function (pageModel) {
+			return postDao.getPostListA(offset, limit).then(function (pageModel) {
 				resolve(pageModel);
 			}, function (error) {
 				reject(error);

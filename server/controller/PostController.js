@@ -12,6 +12,7 @@ exports.doAjax = function () {
 			var multipleCategory = req_pargs.multipleCategory;
 			var multipleTag = req_pargs.multipleTag;
 			var post_content = req_pargs.post_content;
+			var post_status = req_pargs.post_status;
 			var relation = [];
 			if (multipleCategory&&multipleCategory.length>0) {
 				multipleCategory.forEach(function (temp) {
@@ -34,6 +35,7 @@ exports.doAjax = function () {
 				post_author: user.ID,
 				post_title: post_title,
 				post_content: post_content,
+				post_status: post_status,
 				post_date: new Date(),
 				post_date_gmt: new Date(),
 				termRelations: relation
@@ -65,6 +67,7 @@ exports.doAjax = function () {
 			var term_taxonomy_id1 = req_pargs.term_id1;
 			var term_taxonomy_id2 = req_pargs.term_id2;
 			var post_content = req_pargs.post_content;
+			var post_status = req_pargs.post_status;
 			var relation = [];
 			if (term_taxonomy_id2) {
 				relation.push({
@@ -75,6 +78,7 @@ exports.doAjax = function () {
 				ID: post_id,
 				post_title: post_title,
 				post_content: post_content,
+				post_status: post_status,
 				Cttid: term_taxonomy_id1,
 				tagsUpdate:relation
 			}).then(function (result) {

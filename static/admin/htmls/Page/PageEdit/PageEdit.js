@@ -7,6 +7,7 @@ function PageEditCtrl($scope, $remote,$routeParams) {
 		};
 		$remote.post("admin/getPage.do",pargs,function(data) {
 			$scope.post_title = data.post_title;
+			$scope.post_status = data.post_status;
 			// $("#post_content").val(data.post_content);
 			var testEditor = editormd("editormd", {
 				width: "auto",
@@ -51,16 +52,11 @@ function PageEditCtrl($scope, $remote,$routeParams) {
 
 	$scope.pageEdit = function () {
 		var post_content = $("#post_content").val();
-		if (!post_content) {
-			$scope.$alert({
-				title: "错误！",
-				content: "请填写页面内容！"
-			});
-		}
 		var pargs = {
 			post_id:$scope.PostId,
 			post_title: $scope.post_title,
 			post_content: post_content,
+			post_status: $scope.post_status
 		};
 		$remote.post("admin/updatePage.do", pargs, function (data) {
 			if (data.success == "ok") {

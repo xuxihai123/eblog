@@ -16,6 +16,7 @@ function PostEditCtrl($scope, $remote, $routeParams) {
 			$remote.post("admin/getPost.do", pargs, function (data) {
 				setTimeout(function () {
 					$scope.post_title = data.post_title;
+					$scope.post_status = data.post_status;
 					if (data.categoryList) {
 						$scope.multipleCategory.selectedCategoryWithGroupBy = data.categoryList.map(function (temp) {
 							return temp.term_taxonomy_id;
@@ -83,7 +84,8 @@ function PostEditCtrl($scope, $remote, $routeParams) {
 			post_title: $scope.post_title,
 			term_id1: $scope.term_id1,
 			term_id2: $scope.term_id2,
-			post_content: post_content
+			post_content: post_content,
+			post_status: $scope.post_status
 		};
 		pargs.post_id = $scope.PostId;
 		$remote.post("admin/updatePost.do", pargs, function (data) {

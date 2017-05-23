@@ -8,7 +8,7 @@ var postSql = {
 	//删除文章或页面
 	delete: "delete  from wp_posts where ID=?",
 	//更新文章
-	update: "update wp_posts set post_title = ?, post_content = ? where ID=?",
+	update: "update wp_posts set post_title = ?, post_content = ?,post_status = ? where ID=?",
 	//update category
 	updateCategory: "update wp_term_relationships set term_taxonomy_id=? where object_id=?",
 	//获取文章
@@ -29,13 +29,18 @@ var postSql = {
 	"from wp_terms as T1,wp_term_relationships as T2,wp_posts as T3 " +
 	"where T1.slug=? and T1.term_id=T2.term_taxonomy_id and T2.object_id=T3.ID and T3.post_status=\'publish\' " +
 	"order by post_date desc",
+	//首页列表
+	getPostListA: "select T1.ID,post_title,user_login,post_type,menu_order,comment_count,post_date,post_status " +
+	"from wp_posts as T1 " +
+	"left join wp_users as T2 on T1.post_author=T2.ID " +
+	"where post_type='post' and post_status=\'publish\' order by T1.post_date desc",
 	//获取所有文章，用于后台管理
-	getPostPageModel: "select T1.ID,post_title,user_login,post_type,menu_order,comment_count,post_date " +
+	getPostPageModel: "select T1.ID,post_title,user_login,post_type,menu_order,comment_count,post_date,post_status " +
 	"from wp_posts as T1 " +
 	"left join wp_users as T2 on T1.post_author=T2.ID " +
 	"where post_type='post' order by T1.post_date desc",
 	//获取所有页面，用于后台管理
-	getPagePageModel: "select T1.ID,post_title,user_login,post_type,menu_order,comment_count,post_date " +
+	getPagePageModel: "select T1.ID,post_title,user_login,post_type,menu_order,comment_count,post_date,post_status " +
 	"from wp_posts as T1 " +
 	"left join wp_users as T2 on T1.post_author=T2.ID " +
 	"where post_type='page' order by T1.post_date desc",
@@ -65,7 +70,7 @@ var postSql = {
 	"where post_type=\'post\' and post_status=\'publish\' " +
 	"order by post_date desc limit 6",
 	//获取最新的6则页面(左侧关于...)
-	findNewestPage: "select ID, post_title,post_status,post_date from wp_posts  where post_type=\'page\' order by post_date desc limit 6"
+	findNewestPage: "select ID, post_title,post_status,post_date from wp_posts  where post_type=\'page\' and post_status=\'publish\' order by post_date desc limit 6"
 };
 var termSql = {
 	//通过分类查找文章带分页

@@ -6,10 +6,12 @@ exports.doAjax=function() {
 			var req_pargs = req.body;
 			var post_title = req_pargs.post_title;
 			var post_content = req_pargs.post_content;
+			var post_status = req_pargs.post_status;
 			PageService.addPage({
 				post_author: req.session.user.ID,
 				post_title: post_title,
 				post_content: post_content,
+				post_status: post_status,
 				post_date: new Date(),
 				post_date_gmt: new Date()
 			}).then(function (result) {
@@ -47,9 +49,11 @@ exports.doAjax=function() {
 			var post_id = req_pargs.post_id;
 			var post_title = req_pargs.post_title;
 			var post_content = req_pargs.post_content;
+			var post_status = req_pargs.post_status;
 			PageService.updatePage({
 				ID: post_id,
 				post_title: post_title,
+				post_status: post_status,
 				post_content: post_content
 			}).then(function (result) {
 				res.json({

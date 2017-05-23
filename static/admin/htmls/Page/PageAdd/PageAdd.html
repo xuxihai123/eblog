@@ -13,7 +13,13 @@
 							       ng-model="post_title" required
 							       placeholder="标题">
 						</div>
-						<div class="col-sm-6"></div>
+						<div class="col-sm-6">
+							<label for="post_title">发布*</label>
+							<label class="radio">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio"  ng-model="post_status" value="publish" ng-checked="true"><span>是 </span>
+								&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio"  ng-model="post_status" value="draft"><span>否 </span>
+							</label>
+						</div>
 					</div>
 					<div class="form-group">
 						<label>内容*</label>

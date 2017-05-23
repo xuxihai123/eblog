@@ -1,6 +1,7 @@
 PageAddCtrl.$inject = ["$scope", "$remote"];
 function PageAddCtrl($scope, $remote) {
 	$scope.startup = function () {
+		$("#post_content").val('');
 		var testEditor = editormd("editormd", {
 			width: "auto",
 			height: 640,
@@ -50,6 +51,7 @@ function PageAddCtrl($scope, $remote) {
 		var pargs = {
 			post_title: $scope.post_title,
 			post_content: post_content,
+			post_status: $scope.post_status
 		};
 		$remote.post("admin/addPage.do", pargs, function (data) {
 			if (data.success == "ok") {

@@ -31,10 +31,15 @@ module.exports = {
 							return reject2(err, conn);
 						}
 						var termRelations =obj.termRelations,values=[];
-						termRelations.forEach(function (temp) {
-							temp.object_id=okPacket.insertId;
-							values.push([okPacket.insertId, temp.term_taxonomy_id,0]);
-						});
+						if(termRelations.length>0){
+							termRelations.forEach(function (temp) {
+								temp.object_id=okPacket.insertId;
+								values.push([okPacket.insertId, temp.term_taxonomy_id,0]);
+							});
+						}else{
+							values.push([okPacket.insertId, 1,0]);
+						}
+
 						connection.query(termRelationshipSql.saveMulti, [values], function (err, okPacket) {
 							if (err) {
 								reject2(err, conn);
@@ -76,7 +81,7 @@ module.exports = {
 		return sqlhelp.query(postSqls.delete, post.ID);
 	},
 	update: function (post) {
-		return sqlhelp.query(postSqls.update, [post.post_title, post.post_content, post.ID]);
+		return sqlhelp.query(postSqls.update, [post.post_title, post.post_content, post.post_status,post.ID]);
 	},
 	updateCategory:function (post) {
 		return sqlhelp.query(postSqls.updateCategory, [post.term_taxonomy_id,post.ID]);
@@ -95,6 +100,9 @@ module.exports = {
 	},
 	getNext: function (id) {
 		return sqlhelp.queryOne(postSqls.getNext, [id]);
+	},
+	getPostListA: function (offset, limit) {
+		return pagehelp.getPageModel(offset, limit, postSqls.getPostListA);
 	},
 	getPageModel1: function (offset, limit) {
 		return pagehelp.getPageModel(offset, limit, postSqls.getPostPageModel);

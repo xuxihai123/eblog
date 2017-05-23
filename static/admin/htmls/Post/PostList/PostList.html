@@ -14,6 +14,7 @@
 						<th>标签</th>
 						<th>评论数</th>
 						<th>日期</th>
+						<th>状态</th>
 						<th>操作</th>
 					</tr>
 					</thead>
@@ -25,6 +26,7 @@
 						<td><span ng-bind="post.tag_name"></span></td>
 						<td><span ng-bind="post.comment_count"></span></td>
 						<td><span ng-bind="post.post_date|date:'yyyy-MM-dd'"></span></td>
+						<td><span ng-bind="post.post_status"></span></td>
 						<td>
 							<a href="" ng-click="editPost(post)"><i class="fa fa-edit text-info"></i></a>&nbsp;&nbsp;
 							<a href=""  ng-click="deletePost(post)"><i class="fa fa-remove text-info"></i></a>

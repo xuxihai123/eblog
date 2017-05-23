@@ -5,7 +5,7 @@ module.exports = {
 	addPage: function (post) {
 		return new Promise(function (resolve, reject) {
 			post.post_type = 'page';
-			post.post_status = 'publish';
+			post.post_status = post.post_status||'publish';
 			return postDao.createPage(post).then(function (result) {
 				return resolve(result);
 			}, function (error) {
@@ -24,13 +24,18 @@ module.exports = {
 	},
 	updatePage: function (post2) {
 		return new Promise(function (resolve, reject) {
-			postDao.getById(post2.ID).then(function (post) {
+			postDao.getPageById(post2.ID).then(function (post) {
 				if (post === null) {
 					reject({
 						errorMessage: "post不存在！"
 					});
 				} else {
-					resolve(postDao.update(post2));
+					if(post2.post_status){
+						post.post_status = post2.post_status;
+					}
+					post.post_title = post2.post_title;
+					post.post_content = post2.post_content;
+					resolve(postDao.update(post));
 				}
 			});
 		});

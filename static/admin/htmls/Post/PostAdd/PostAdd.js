@@ -7,6 +7,7 @@ function PostAddCtrl($scope, $remote) {
 		$remote.post("admin/getAllTag.do", {}, function (data) {
 			$scope.allTag = data;
 		});
+		$("#post_content").val('');
 		var testEditor = editormd("editormd", {
 			width: "auto",
 			height: 640,
@@ -62,7 +63,8 @@ function PostAddCtrl($scope, $remote) {
 			post_title: $scope.post_title,
 			multipleCategory: $scope.multipleCategory.selectedCategoryWithGroupBy,
 			multipleTag: $scope.multipleTag.selectedTagWithGroupBy,
-			post_content: post_content
+			post_content: post_content,
+			post_status: $scope.post_status
 		};
 		$remote.post("admin/addPost.do", pargs, function (data) {
 			if (data.success == "ok") {
