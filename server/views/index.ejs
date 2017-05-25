@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= locals.title || '小海个人博客' %> -记录一个小码农成长之路的个人博客网站</title>
+    <%
+    var seoMessage = doSEO(request);
+    %>
+    <title><%= seoMessage.title %> </title>
     <meta charset="UTF-8">
-    <meta name="keywords" content="<%= locals.keywords || '程序员,码农,成长之路,养成计划' %>,小海博客，个人博客,x373241884y博客">
-    <meta name="description" content="<%= locals.description || '回首当初' %>，作为一个程序员的生活点滴，经验总结!记录by小海!">
-    <meta name="author" content="小海,x373241884y">
+    <meta name="keywords" content="<%= seoMessage.keywords %>">
+    <meta name="description" content="<%= seoMessage.description %>">
+    <meta name="author" content="x373241884y">
     <link rel='stylesheet' href='//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css'/>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css"/>
     <!--<link rel='stylesheet' href='/css/bootstrap-responsive.min.css'/>-->
     <link rel='stylesheet' href='/css/themes/default/index.css'/>
     <!--<link rel='stylesheet' href='/css/themes/winter/index.css'/>-->
     <link rel='stylesheet' href='/css/marked/github.css'/>
     <link rel="stylesheet" href="/css/prettify-me.css"/>
     <link rel="stylesheet" href="/js/jquery-stars/all.css">
-    <link rel="stylesheet" href="https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css"/>
+
     <script src="https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
 </head>
 <body class="custom-background">

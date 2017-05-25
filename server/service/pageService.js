@@ -15,7 +15,7 @@ module.exports = {
 	},
 	removePage: function (postID) {
 		return new Promise(function (resolve, reject) {
-			postDao.remove({ID:postID}).then(function (result) {
+			postDao.removePage({ID:postID}).then(function (result) {
 				resolve(result);
 			},function(error){
 				reject(error);
@@ -35,7 +35,7 @@ module.exports = {
 					}
 					post.post_title = post2.post_title;
 					post.post_content = post2.post_content;
-					resolve(postDao.update(post));
+					resolve(postDao.updatePage(post));
 				}
 			});
 		});
@@ -43,7 +43,11 @@ module.exports = {
 	getPage: function (postId) {
 		return new Promise(function (resolve, reject) {
 			postDao.getPageById(postId).then(function (post) {
-				resolve(post);
+				if(post){
+					resolve(post);
+				}else{
+					reject(Error('页面不存在'));
+				}
 			}, function (error) {
 				reject(error);
 			});

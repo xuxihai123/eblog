@@ -17,15 +17,13 @@ exports.index = function () {
 			var limit = Number(req.query.limit) || 5;
 			Promise.all([postService.findPostPageModel(offset, limit),
 				termService.getAllCategory(),
-				termService.getAllTags(),
 				postService.findArticleArchive(),
 				postService.findLastestPost(),
 				pageService.findLastestPage()])
-				.spread(function (postPageModel, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
+				.spread(function (postPageModel, categoryList, articleArchList, postNewestList, pageNewestList) {
 					req.postNewestList = postNewestList;
 					req.articleArchList = articleArchList;
 					req.categoryList = categoryList;
-					req.tagsList = tagsList;
 					req.pageNewestList = pageNewestList;
 					req.home = {
 						type: "list",
@@ -55,13 +53,11 @@ exports.search = function () {
 			}
 			Promise.all([postService.findPostByWordPageModel(offset, limit, word),
 				termService.getAllCategory(),
-				termService.getAllTags(),
 				postService.findArticleArchive(),
 				postService.findLastestPost(),
 				pageService.findLastestPage()])
-				.spread(function (pageModel, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
+				.spread(function (pageModel, categoryList, articleArchList, postNewestList, pageNewestList) {
 					req.categoryList = categoryList;
-					req.tagsList = tagsList;
 					req.articleArchList = articleArchList;
 					req.postNewestList = postNewestList;
 					req.pageNewestList = pageNewestList;
@@ -71,6 +67,8 @@ exports.search = function () {
 						word: word,
 						pageModel: pageModel
 					};
+					var title = word+'-关键字搜索';
+					var type = '搜索结果';
 					return res.render("index");
 				}).caught(function (error) {
 				res.errorProxy(error);
@@ -93,24 +91,22 @@ exports.indexPost = function () {
 				postService.findNext(postID),
 				commentService.findAllByPostId(postID),
 				termService.getAllCategory(),
-				termService.getAllTags(),
 				postService.findArticleArchive(),
 				postService.findLastestPost(),
 				pageService.findLastestPage()])
-				.spread(function (post, prevPost, nextPost, commentList, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
+				.spread(function (post, prevPost, nextPost, commentList, categoryList, articleArchList, postNewestList, pageNewestList) {
 					req.previewPost = post;
 					req.prevPost = prevPost;
 					req.nextPost = nextPost;
 					req.commentList = commentList;
 					req.categoryList = categoryList;
-					req.tagsList = tagsList;
 					req.articleArchList = articleArchList;
 					req.postNewestList = postNewestList;
 					req.pageNewestList = pageNewestList;
 					req.home = {
 						type: "article"
 					};
-					return res.render("index", {"title": req.previewPost.post_title});
+					return res.render("index");
 				}).caught(function (error) {
 				res.errorProxy(error);
 			});
@@ -129,21 +125,19 @@ exports.indexPage = function () {
 
 			Promise.all([pageService.getPage(id),
 				termService.getAllCategory(),
-				termService.getAllTags(),
 				postService.findArticleArchive(),
 				postService.findLastestPost(),
 				pageService.findLastestPage()])
-				.spread(function (post, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
+				.spread(function (post, categoryList, articleArchList, postNewestList, pageNewestList) {
 					req.previewPost = post;
 					req.categoryList = categoryList;
-					req.tagsList = tagsList;
 					req.articleArchList = articleArchList;
 					req.postNewestList = postNewestList;
 					req.pageNewestList = pageNewestList;
 					req.home = {
 						type: "page"
 					};
-					return res.render("index", {"title": post.name});
+					return res.render("index");
 				}).caught(function (error) {
 				res.errorProxy(error);
 			});
@@ -165,11 +159,10 @@ exports.indexArchive = function () {
 			var month = req.params[1];
 			Promise.all([postService.findByArchivePageModel(offset, limit, {year: year, month: month}),
 				termService.getAllCategory(),
-				termService.getAllTags(),
 				postService.findArticleArchive(),
 				postService.findLastestPost(),
 				pageService.findLastestPage()])
-				.spread(function (pageModel, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
+				.spread(function (pageModel, categoryList, articleArchList, postNewestList, pageNewestList) {
 					req.home = {
 						type: "list",
 						listType:"archive",
@@ -178,11 +171,10 @@ exports.indexArchive = function () {
 						pageModel: pageModel
 					};
 					req.categoryList = categoryList;
-					req.tagsList = tagsList;
 					req.articleArchList = articleArchList;
 					req.postNewestList = postNewestList;
 					req.pageNewestList = pageNewestList;
-					res.render("index");
+					return res.render("index");
 				}).caught(function (error) {
 				res.errorProxy(error);
 			});
@@ -205,11 +197,10 @@ exports.indexCategory = function () {
 			Promise.all([postService.findByCategoryPageModel(offset, limit, pargs1),
 				termService.getBySlug(pargs1),
 				termService.getAllCategory(),
-				termService.getAllTags(),
 				postService.findArticleArchive(),
 				postService.findLastestPost(),
 				pageService.findLastestPage()])
-				.spread(function (pageModel, term, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
+				.spread(function (pageModel, term, categoryList, articleArchList, postNewestList, pageNewestList) {
 					req.home = {
 						type:"list",
 						listType: "category",
@@ -217,11 +208,10 @@ exports.indexCategory = function () {
 						pageModel: pageModel
 					};
 					req.categoryList = categoryList;
-					req.tagsList = tagsList;
 					req.articleArchList = articleArchList;
 					req.postNewestList = postNewestList;
 					req.pageNewestList = pageNewestList;
-					res.render("index", {"title": term.name});
+					return res.render("index");
 				}).caught(function (error) {
 				res.errorProxy(error);
 			});
@@ -244,11 +234,10 @@ exports.indexTag = function () {
 			Promise.all([postService.findByCategoryPageModel(offset, limit, pargs1),
 				termService.getBySlug(pargs1),
 				termService.getAllCategory(),
-				termService.getAllTags(),
 				postService.findArticleArchive(),
 				postService.findLastestPost(),
 				pageService.findLastestPage()])
-				.spread(function (pageModel, term, categoryList, tagsList, articleArchList, postNewestList, pageNewestList) {
+				.spread(function (pageModel, term, categoryList, articleArchList, postNewestList, pageNewestList) {
 					req.home = {
 						type:"list",
 						listType: "tag",
@@ -256,11 +245,10 @@ exports.indexTag = function () {
 						pageModel: pageModel
 					};
 					req.categoryList = categoryList;
-					req.tagsList = tagsList;
 					req.articleArchList = articleArchList;
 					req.postNewestList = postNewestList;
 					req.pageNewestList = pageNewestList;
-					res.render("index", {"title": term.name});
+					return res.render("index");
 				}).caught(function (error) {
 				res.errorProxy(error);
 			});

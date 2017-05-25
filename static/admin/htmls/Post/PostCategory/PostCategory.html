@@ -59,7 +59,7 @@
 									<td><span ng-bind="row.slug"></span></td>
 									<td><span ng-bind="row.count"></span></td>
 									<td><a href="" ng-click="editCategoryPre(row)"><i class="fa fa-edit text-info"></i></a>&nbsp;&nbsp;
-										<a href="" ng-click="deleteCategory(row)"><i class="fa fa-remove text-info"></i></a>
+										<a ng-if="row.slug!='uncategorized'" href="" ng-click="deleteCategory(row)"><i class="fa fa-remove text-info"></i></a>
 									</td>
 								</tr>
 								</tbody>

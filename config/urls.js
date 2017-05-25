@@ -3,6 +3,7 @@ var path = require("path");
 module.exports = function (app, settings) {
 	var serverPath = settings.serverPath;
 	var viewUtils = require(path.resolve(serverPath, "utils/viewUtils.js"));
+	var seoUtils = require(path.resolve(serverPath, "utils/seoUtils.js"));
 	var errorProxy = require(path.resolve(serverPath, "utils/errorProxy.js"));
 
 	configRoute();
@@ -97,6 +98,7 @@ module.exports = function (app, settings) {
 				done = callback;
 			}
 			options.utils = viewUtils;
+			options.doSEO = seoUtils;
 			render.apply(res, [view, options, done]);
 		};
 	}

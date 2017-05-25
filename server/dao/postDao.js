@@ -6,92 +6,98 @@ var sqlhelp = require('../utils/sqlHelper');
 var postSqls = require("./SQLTemplate").postSql;
 var termRelationshipSql = require("./SQLTemplate").termRelationshipSql;
 module.exports = {
-	create: function (obj) {
-		var conn;
+	createPost: function (obj) {
 		return new Promise(function (resolve, reject) {
-			function reject2(err, connection) {
-				connection.rollback(function () {
-					console.log('rollback.........');
-					connection && connection.release();
-					reject(err);
-				});
-			}
-			sqlhelp.getConnection(function (err, connection) {
-				conn = connection;
-				if (err) {
-					return reject2(err, conn);
-				}
-				connection.beginTransaction(function (err) {
-					if (err) {
-						return reject2(err, conn);
-					}
-					var post = new Post(obj);
-					connection.query(postSqls.save, post, function (err, okPacket) {
-						if (err) {
-							return reject2(err, conn);
-						}
-						var termRelations =obj.termRelations,values=[];
-						if(termRelations.length>0){
-							termRelations.forEach(function (temp) {
-								temp.object_id=okPacket.insertId;
-								values.push([okPacket.insertId, temp.term_taxonomy_id,0]);
-							});
-						}else{
-							values.push([okPacket.insertId, 1,0]);
-						}
-
-						connection.query(termRelationshipSql.saveMulti, [values], function (err, okPacket) {
-							if (err) {
-								reject2(err, conn);
-							} else {
-								connection.commit(function (err) {
-									if (err) {
-										reject2(err, conn);
-									} else {
-										resolve(okPacket);
-									}
-								});
-
-							}
+			sqlhelp.withTransaction(function (connection) {
+				var post = new Post(obj);
+				return connection.queryAsync(postSqls.save, post).then(function (okPacket) {
+					var termRelations = obj.termRelations, values = [];
+					if (termRelations.length > 0) {
+						termRelations.forEach(function (temp) {
+							values.push([okPacket.insertId, temp, 0]);
 						});
-					});
+					} else {
+						values.push([okPacket.insertId, 1, 0]);
+					}
+					return connection.queryAsync(termRelationshipSql.saveMulti, [values]);
 				});
+			}).then(function (result) {
+				resolve(result)
+			}).caught(function (err) {
+				reject(err);
 			});
 		});
 
 	},
 	createPage: function (obj) {
+		var post = new Post(obj);
+		return sqlhelp.query(postSqls.save, post);
+	},
+	removePost: function (post) {
 		return new Promise(function (resolve, reject) {
-			sqlhelp.getConnection(function (err, connection) {
-				if (err) {
-					return reject(err);
-				}
-				var post = new Post(obj);
-				connection.query(postSqls.save, post, function (err, okPacket) {
-					if (err) {
-						return reject(err);
-					}
-					resolve(okPacket);
+			sqlhelp.withTransaction(function (connection) {
+				return connection.queryAsync(postSqls.delete, post.ID).then(function (okPacket) {
+					return connection.queryAsync(termRelationshipSql.deleteRelations, post.ID);
 				});
+			}).then(function (result) {
+				resolve(result)
+			}).caught(function (err) {
+				reject(err);
 			});
 		});
-
 	},
-	remove: function (post) {
+	removePage: function (post) {
 		return sqlhelp.query(postSqls.delete, post.ID);
 	},
-	update: function (post) {
-		return sqlhelp.query(postSqls.update, [post.post_title, post.post_content, post.post_status,post.ID]);
+	updatePost: function (obj) {
+		return new Promise(function (resolve, reject) {
+
+			sqlhelp.withTransaction(function (connection) {
+				return connection.queryAsync(postSqls.update, [obj.post_title, obj.post_content, obj.post_status, obj.ID])
+					.then(function (okPacket) {
+						var termRelations = obj.termRelations, oldTermRelations = obj.oldTermRelations, values = [], deleteIndex = [];
+						termRelations.forEach(function (temp) {
+							if (oldTermRelations.indexOf(temp) < 0) {
+								values.push([obj.ID, temp, 0]);
+							}
+						});
+						oldTermRelations.forEach(function (temp) {
+							if (termRelations.indexOf(temp) < 0) {
+								deleteIndex.push(temp);
+							}
+						});
+						console.log(deleteIndex.join(','));
+						if (values.length > 0 && deleteIndex.length > 0) {
+							return connection.queryAsync(termRelationshipSql.saveMulti, [values]).then(function (okPacket) {
+								return connection.queryAsync(termRelationshipSql.deleteMuti, deleteIndex.join(','));
+							});
+						} else if (values.length > 0) {
+							return connection.queryAsync(termRelationshipSql.saveMulti, [values]);
+						} else if (deleteIndex.length > 0) {
+							return connection.queryAsync(termRelationshipSql.deleteMuti, deleteIndex.join(','));
+						} else {
+							return Promise.resolve(okPacket);
+						}
+					});
+			}).then(function (result) {
+				resolve(result)
+			}).caught(function (err) {
+				reject(err);
+			});
+		});
 	},
-	updateCategory:function (post) {
-		return sqlhelp.query(postSqls.updateCategory, [post.term_taxonomy_id,post.ID]);
+	updatePage: function (post) {
+		return sqlhelp.query(postSqls.update, [post.post_title, post.post_content, post.post_status, post.ID]);
+	},
+	updateCategory: function (post) {
+		return sqlhelp.query(postSqls.updateCategory, [post.term_taxonomy_id, post.ID]);
 	},
 	getById: function (id) {
 		return sqlhelp.queryOne(postSqls.getById, [id]);
 	},
-	getPostTerms:function (id) {
-        return sqlhelp.query(postSqls.getPostTerms, [id]);
-    },
+	getPostTerms: function (id) {
+		return sqlhelp.query(postSqls.getPostTerms, [id]);
+	},
 	getPageById: function (id) {
 		return sqlhelp.queryOne(postSqls.getPageById, [id]);
 	},

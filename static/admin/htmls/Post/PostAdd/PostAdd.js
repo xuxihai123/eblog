@@ -61,8 +61,7 @@ function PostAddCtrl($scope, $remote) {
 		}
 		var pargs = {
 			post_title: $scope.post_title,
-			multipleCategory: $scope.multipleCategory.selectedCategoryWithGroupBy,
-			multipleTag: $scope.multipleTag.selectedTagWithGroupBy,
+			termRelations:[].concat($scope.multipleCategory.selectedCategoryWithGroupBy).concat($scope.multipleTag.selectedTagWithGroupBy),
 			post_content: post_content,
 			post_status: $scope.post_status
 		};

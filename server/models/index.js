@@ -1,6 +1,11 @@
 'use strict';
 var mysql = require('mysql');
 var Promise = require('bluebird');
+// so we require and promisifyAll them manually
+Promise.promisifyAll(mysql);
+Promise.promisifyAll(require("mysql/lib/Connection").prototype);
+Promise.promisifyAll(require("mysql/lib/Pool").prototype);
+
 var env = process.env.NODE_ENV || 'development';
 var config = require(__dirname + '/../../config/config.json')[env];
 
@@ -27,14 +32,12 @@ module.exports = {
 	Comment:Comment,
 	testOk:function () {
 		return new Promise(function (resolve,reject) {
-			pool.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
-				if (error) {
-					reject(error);
-				}else{
-					console.log('The solution is: ', results[0].solution);
-					process.dbpool = pool;
-					resolve(results[0].solution);
-				}
+			pool.queryAsync('SELECT 1 + 1 AS solution').then(function (results) {
+				console.log('The solution is: ', results[0].solution);
+				process.dbpool = pool;
+				resolve(results[0].solution);
+			}).caught(function (err) {
+				reject(err);
 			});
 		});
 	}

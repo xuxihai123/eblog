@@ -3,11 +3,11 @@
  */
 var userSql = {};
 var postSql = {
-	//添加文章
+	//添加文章/页面
 	save: "insert into wp_posts set ?",
 	//删除文章或页面
 	delete: "delete  from wp_posts where ID=?",
-	//更新文章
+	//更新文章/页面
 	update: "update wp_posts set post_title = ?, post_content = ?,post_status = ? where ID=?",
 	//update category
 	updateCategory: "update wp_term_relationships set term_taxonomy_id=? where object_id=?",
@@ -26,8 +26,8 @@ var postSql = {
 	getNext: "select * from wp_posts where ID>? and post_type=\'post\' and post_status=\'publish\' order by ID  limit 1",
 	//通过分类查找文章带分页
 	findByCategoryPageModel: "select * " +
-	"from wp_terms as T1,wp_term_relationships as T2,wp_posts as T3 " +
-	"where T1.slug=? and T1.term_id=T2.term_taxonomy_id and T2.object_id=T3.ID and T3.post_status=\'publish\' " +
+	"from wp_terms as T1,wp_term_taxonomy as T2,wp_term_relationships as T3,wp_posts as T4 " +
+	"where T1.slug=? and T1.term_id=T2.term_id and T2.term_taxonomy_id=T3.term_taxonomy_id and T3.object_id=T4.ID and T4.post_status=\'publish\' " +
 	"order by post_date desc",
 	//首页列表
 	getPostListA: "select T1.ID,post_title,user_login,post_type,menu_order,comment_count,post_date,post_status " +
@@ -75,8 +75,8 @@ var postSql = {
 var termSql = {
 	//通过分类查找文章带分页
 	findByTermPageModel: "select * " +
-	"from wp_terms as T1,wp_term_relationships as T2,wp_posts as T3 " +
-	"where T1.slug=? and T1.term_id=T2.term_taxonomy_id and T2.object_id=T3.ID and T3.post_status=\'publish\' " +
+	"from wp_terms as T1,wp_term_taxonomy as T2,wp_term_relationships as T3,wp_posts as T4 " +
+	"where T1.slug=? and T1.term_id=T2.term_id and T2.term_taxonomy_id=T3.term_taxonomy_id and T3.object_id=T4.ID and T4.post_status=\'publish\' " +
 	"order by post_date desc",
 	getAllCategory: "select * from wp_terms as T1,wp_term_taxonomy as T2 " +
 	"where T1.term_id=T2.term_id and T2.taxonomy=\'category\'" +
@@ -84,11 +84,15 @@ var termSql = {
 	getAllTags: "select * from wp_terms as T1,wp_term_taxonomy as T2 " +
 	"where T1.term_id=T2.term_id and T2.taxonomy='post_tag'" +
 	"order by T1.name",
-	getCategoryPage: "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id and T2.taxonomy='category'",
-	getTagPage: "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id and T2.taxonomy=\'post_tag\'"
+	getCategoryPage: "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id and T2.taxonomy='category' order by T1.term_id desc",
+	getTagPage: "select * from wp_terms as T1,wp_term_taxonomy as T2 where T1.term_id=T2.term_id and T2.taxonomy=\'post_tag\' order by T1.term_id desc"
 };
 var termRelationshipSql = {
-	saveMulti: "insert into wp_term_relationships(object_id,term_taxonomy_id,term_order) VALUES ?"
+	saveMulti: "insert into wp_term_relationships(object_id,term_taxonomy_id,term_order) VALUES ?",
+	//delete multiple
+	deleteMuti: "delete  from wp_term_relationships where term_taxonomy_id IN(?)",
+	//delete One
+	deleteRelations:"delete from wp_term_relationships where object_id = ?"
 };
 module.exports = {
 	userSql: userSql,

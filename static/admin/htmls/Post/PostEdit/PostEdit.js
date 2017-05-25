@@ -79,11 +79,11 @@ function PostEditCtrl($scope, $remote, $routeParams) {
 				title: "错误！",
 				content: "请填写文章内容！"
 			});
+			return false;
 		}
 		var pargs = {
 			post_title: $scope.post_title,
-			term_id1: $scope.term_id1,
-			term_id2: $scope.term_id2,
+			termRelations:[].concat($scope.multipleCategory.selectedCategoryWithGroupBy).concat($scope.multipleTag.selectedTagWithGroupBy),
 			post_content: post_content,
 			post_status: $scope.post_status
 		};

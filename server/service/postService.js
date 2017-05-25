@@ -9,7 +9,15 @@ module.exports = {
 		return new Promise(function (resolve, reject) {
 			post.post_type = 'post';
 			post.post_status =post.post_status|| 'publish';
-			return postDao.create(post).then(function (result) {
+
+			var termIdArray = post.termRelations;
+			if(termIdArray&&termIdArray.length){
+				post.termRelations = termIdArray;
+			}else{
+				post.termRelations = [];
+			}
+
+			return postDao.createPost(post).then(function (result) {
 				cache.findArticleArchive.dirty = true;
 				return resolve(result);
 			}, function (error) {
@@ -19,7 +27,16 @@ module.exports = {
 	},
 	removePost: function (postID) {
 		return new Promise(function (resolve, reject) {
-			postDao.remove({ID: postID}).then(function (result) {
+			postDao.getById(postID).then(function (post) {
+				if (post === null) {
+					reject({
+						errorMessage: "post不存在！"
+					});
+				} else {
+					resolve(postDao.removePost(post));
+				}
+			});
+			postDao.removePost({ID: postID}).then(function (result) {
 				cache.findArticleArchive.dirty = true;
 				resolve(result);
 			}, function (error) {
@@ -40,7 +57,19 @@ module.exports = {
 					}
 					post.post_title = post2.post_title;
 					post.post_content = post2.post_content;
-					resolve(postDao.update(post));
+					post.termRelations=post2.termRelations||[];
+					postDao.getPostTerms(post2.ID).then(function (terms) {
+						if(terms&&terms.length>0){
+							post.oldTermRelations=terms.map(function (temp) {
+								return temp.term_taxonomy_id;
+							});
+						}else{
+							post.oldTermRelations=[];
+						}
+						resolve(postDao.updatePost(post));
+					}).caught(function (err) {
+						reject(err);
+					});
 				}
 			});
 

@@ -9,27 +9,8 @@ exports.doAjax = function () {
 		"/admin/addPost.do": function (req, res, next) {
 			var req_pargs = req.body;
 			var post_title = req_pargs.post_title;
-			var multipleCategory = req_pargs.multipleCategory;
-			var multipleTag = req_pargs.multipleTag;
 			var post_content = req_pargs.post_content;
 			var post_status = req_pargs.post_status;
-			var relation = [];
-			if (multipleCategory&&multipleCategory.length>0) {
-				multipleCategory.forEach(function (temp) {
-					relation.push({
-						term_taxonomy_id: temp
-					});
-				});
-				// relation.push.apply(relation,multipleCategory);
-			}
-			if (multipleTag&&multipleTag.length>0) {
-				multipleTag.forEach(function (temp) {
-					relation.push({
-						term_taxonomy_id: temp
-					});
-				});
-				// relation.push.apply(relation,multipleTag);
-			}
 			var user = req.session.user;
 			postService.addPost({
 				post_author: user.ID,
@@ -38,7 +19,7 @@ exports.doAjax = function () {
 				post_status: post_status,
 				post_date: new Date(),
 				post_date_gmt: new Date(),
-				termRelations: relation
+				termRelations: req_pargs.termRelations
 			}).then(function (result) {
 				res.json({
 					success: "ok",
@@ -64,23 +45,14 @@ exports.doAjax = function () {
 			var req_pargs = req.body;
 			var post_id = req_pargs.post_id;
 			var post_title = req_pargs.post_title;
-			var term_taxonomy_id1 = req_pargs.term_id1;
-			var term_taxonomy_id2 = req_pargs.term_id2;
 			var post_content = req_pargs.post_content;
 			var post_status = req_pargs.post_status;
-			var relation = [];
-			if (term_taxonomy_id2) {
-				relation.push({
-					term_taxonomy_id: term_taxonomy_id2
-				});
-			}
 			postService.updatePost({
 				ID: post_id,
 				post_title: post_title,
 				post_content: post_content,
 				post_status: post_status,
-				Cttid: term_taxonomy_id1,
-				tagsUpdate:relation
+				termRelations:req_pargs.termRelations
 			}).then(function (result) {
 				res.json({
 					success: "ok",

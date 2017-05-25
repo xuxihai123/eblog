@@ -38,6 +38,9 @@ function configRemote($remoteProvider) {
 	});
 	$remoteProvider.setErrorCallback(function (data, status, headers, config) {
 		var $rootScope = angular.element("body").scope();
+		if(!data){
+			return;
+		}
 		if (data.errorCode == "999999") { //会话超时或未登录
 			window.location.href = "index.html";
 		} else if (data.errorCode == "591000") {

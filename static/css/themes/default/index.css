@@ -462,3 +462,17 @@ body.custom-background {
 .gotop.disabled a {
     color: darkgray;
 }
+
+/***for NProgress***/
+#nprogress .bar {
+    background: #F48024;
+}
+
+#nprogress .peg {
+    box-shadow: 0 0 10px #F48024,0 0 5px #F48024;
+}
+
+#nprogress .spinner-icon {
+    border-top-color: #F48024;
+    border-left-color: #F48024;
+}
