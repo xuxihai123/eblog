@@ -124,7 +124,10 @@ module.exports = {
 	getTagPage: function (offset, limit) {
 		return pagehelp.getPageModel(offset, limit, termsqls.getTagPage);
 	},
-	termFindPost:function(offset,limit,slug){
-		return pagehelp.getPageModel(offset, limit, termsqls.findByTermPageModel,[slug]);
+	QryPostByCategory:function(offset,limit,slug){
+		return pagehelp.getPageModel(offset, limit, termsqls.QryPostByCategory,[slug]);
+	},
+	QryPostByTag:function(offset,limit,slug){
+		return pagehelp.getPageModel(offset, limit, termsqls.QryPostByTag,[slug]);
 	}
 };

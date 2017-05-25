@@ -231,7 +231,7 @@ exports.indexTag = function () {
 			var pargs1 = req.params[0];
 			var offset = Number(req.query.start) || 0;
 			var limit = Number(req.query.limit) || 5;
-			Promise.all([postService.findByCategoryPageModel(offset, limit, pargs1),
+			Promise.all([postService.findByTagPageModel(offset, limit, pargs1),
 				termService.getBySlug(pargs1),
 				termService.getAllCategory(),
 				postService.findArticleArchive(),

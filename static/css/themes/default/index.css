@@ -176,16 +176,21 @@ body.custom-background {
 }
 
 #content .post-item, #nav-links, #comments {
-    width: 80%;
+    width: 90%;
     margin: 0 auto;
 }
 
 #content .post-item {
     padding: 50px 0;
+    /*box-shadow: 0 0 5px darkgray,0 0 5px darkgray;*/
 }
-
+#article_content{
+    box-shadow: 0 0 5px darkgray,0 0 5px darkgray;
+}
 #nav-links {
     padding: 20px 0;
+    border-top:1px solid darkgray;
+    /*border-bottom:1px solid darkgray;*/
 }
 
 .hentry {

@@ -81,7 +81,7 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
                     </a>
                 </small>
             </h3>
-            <form  name="post-new" action="/comment/postComment.do" method="post">
+            <form  name="post-new"  class="" action="/comment/postComment.do" method="post">
                 <div class="form-group" style="display: none">
                     <label for="post">post</label>
                     <input id="post" class="form-control" name="post_id" type="text" value="<%= post.ID %>">
@@ -91,22 +91,26 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
                     <input id="clientUrl" class="form-control" name="clientUrl" type="text" value="<%=request.url%>">
                 </div>
                 <div class="form-group">
-                    <label for="content">评论</label>
-                    <textarea name="content" class="form-control" required="required"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="author">姓名 <span class="required">*</span></label>
-                    <input id="author" class="form-control" name="author" type="text" required="required">
-                </div>
-                <div class="form-group">
-                    <label for="email">电子邮件 <span class="required">*</span></label>
-                    <input id="email" class="form-control" name="email" type="email" required="required">
+                    <div class="col-md-6" style="padding-left: 0px">
+                        <label for="author">姓名 <span class="required">*</span></label>
+                        <input id="author" class="form-control" name="author" type="text" required="required">
+                    </div>
+                    <div class="col-md-6" style="padding-left: 0px">
+                        <label for="email">电子邮件 <span class="required">*</span></label>
+                        <input id="email" class="form-control" name="email" type="email" required="required">
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="url">站点</label>
                     <input id="url" class="form-control" name="url" type="url">
                 </div>
-                <div class="btn-div">
+                <div class="form-group">
+                    <label for="content">评论</label>
+                    <textarea name="content"  data-provide="markdown" rows="10" required></textarea>
+                </div>
+
+
+                <div class="btn-div text-right">
                     <button type="submit" id="submit" class="btn" value="">发表评论</button>
                 </div>
             </form>
@@ -125,7 +129,7 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
                     </div>
                     <div class="timeline-comment-body">
                         <div class="comment-by">
-                            <p><%=temp.comment_content%></p>
+                            <p><%- utils.marked(temp.comment_content) %></p>
                         </div>
                         <div class="comment-ft">
                             <span class="label label-info">顶(15)</span>

@@ -74,9 +74,14 @@ var postSql = {
 };
 var termSql = {
 	//通过分类查找文章带分页
-	findByTermPageModel: "select * " +
+	QryPostByCategory: "select * " +
 	"from wp_terms as T1,wp_term_taxonomy as T2,wp_term_relationships as T3,wp_posts as T4 " +
-	"where T1.slug=? and T1.term_id=T2.term_id and T2.term_taxonomy_id=T3.term_taxonomy_id and T3.object_id=T4.ID and T4.post_status=\'publish\' " +
+	"where T1.slug=? and T1.term_id=T2.term_id  and T2.term_taxonomy_id=T3.term_taxonomy_id and T3.object_id=T4.ID and T4.post_status=\'publish\' and T2.taxonomy=\'category\'" +
+	"order by post_date desc",
+	//通过标签查找文章带分页
+	QryPostByTag: "select * " +
+	"from wp_terms as T1,wp_term_taxonomy as T2,wp_term_relationships as T3,wp_posts as T4 " +
+	"where T1.slug=? and T1.term_id=T2.term_id  and T2.term_taxonomy_id=T3.term_taxonomy_id and T3.object_id=T4.ID and T4.post_status=\'publish\' and T2.taxonomy=\'post_tag\'" +
 	"order by post_date desc",
 	getAllCategory: "select * from wp_terms as T1,wp_term_taxonomy as T2 " +
 	"where T1.term_id=T2.term_id and T2.taxonomy=\'category\'" +

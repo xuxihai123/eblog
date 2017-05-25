@@ -169,7 +169,16 @@ module.exports = {
 	},
 	findByCategoryPageModel: function (offset, limit, category) {
 		return new Promise(function (resolve, reject) {
-			return termDao.termFindPost(offset, limit, category).then(function (pageModel) {
+			return termDao.QryPostByCategory(offset, limit, category).then(function (pageModel) {
+				resolve(pageModel);
+			}, function (error) {
+				reject(error);
+			});
+		});
+	},
+	findByTagPageModel: function (offset, limit, category) {
+		return new Promise(function (resolve, reject) {
+			return termDao.QryPostByCategory(offset, limit, category).then(function (pageModel) {
 				resolve(pageModel);
 			}, function (error) {
 				reject(error);
