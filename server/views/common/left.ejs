@@ -3,10 +3,10 @@
     <header id="masthead" class="site-header" role="banner">
         <div class="hgroup">
             <h1 class="site-title display-title">
-                <a href="/" title="x373241884y" rel="home"><span itemprop="name">x373241884y</span></a>
+                <a href="/" title="x373241884y" rel="home"><span itemprop="name"><%=request.autoloadOption.site_name||'站点名称'%></span></a>
             </h1>
 
-            <h2 itemprop="description" class="site-description">绿水本无忧，因风而波涛！</h2>
+            <h2 itemprop="description" class="site-description"><%=request.autoloadOption.site_desc||'又一个Nodejs站点'%></h2>
         </div>
         <nav id="site-navigation" class="navigation main-navigation" role="navigation">
             <div class="nav-menu">

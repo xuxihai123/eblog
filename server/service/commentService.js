@@ -5,47 +5,34 @@ var Promise = require('bluebird');
 module.exports = {
 	addComment:function(comment){
 		return new Promise(function (resolve, reject) {
-			commentDao.create(comment).then(function(result){
+			if(!comment.comment_author||!comment.comment_author_email||!comment.comment_content){
+				reject({
+					errorMessage: "缺少评论必须的字段！"
+				});
+			}
+			if(!comment.comment_author_url){
+				comment.comment_author_url = "http://youke.com";
+			}
+			commentDao.create(comment).then(function (result) {
 				resolve(result);
-			},function(error){
-				reject(error);
-			})
+			}).then(function (err) {
+				reject(err);
+			});
 		});
+
 	},
 	removeComment:function(commentId){
-		return new Promise(function (resolve, reject) {
-			commentDao.remove({comment_ID:commentId}).then(function(result){
-				resolve(result);
-			},function(error){
-				reject(error);
-			})
+		return commentDao.getById(commentId).then(function (comment) {
+			return commentDao.remove(comment);
 		});
 	},
 	findById:function(id){
-		return new Promise(function (resolve, reject) {
-			commentDao.getById(id).then(function (comment) {
-				resolve(comment);
-			}, function (error) {
-				reject(error);
-			});
-		});
+		return commentDao.getById(id);
 	},
 	getPageModel:function(offset,limit){
-		return new Promise(function (resolve, reject) {
-			commentDao.getPageModel(offset,limit).then(function (comments) {
-				resolve(comments);
-			}, function (error) {
-				reject(error);
-			});
-		});
+		return commentDao.getPageModel(offset, limit);
 	},
 	findAllByPostId:function(postId){
-		return new Promise(function (resolve, reject) {
-			commentDao.findAllByPostId(postId).then(function (comments) {
-				resolve(comments);
-			}, function (error) {
-				reject(error);
-			});
-		});
+		return commentDao.findAllByPostId(postId);
 	}
 };

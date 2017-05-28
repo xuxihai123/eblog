@@ -9,7 +9,7 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
 <div id="content" class="site-content" role="main">
     <div class="post-item">
         <div class="entry-header">
-            <h1 class="entry-title" itemprop="name"><%= post.post_title %></h1>
+            <h3 class="entry-title" itemprop="name"><%= post.post_title %></h3>
 
             <div class="entry-meta">
                 <span class="entry-date">
@@ -21,7 +21,7 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
         </div>
 
         <div class="entry-content" itemprop="articleBody">
-            <div id="article_content" class="article_content markdown-body">
+            <div class="markdown-body">
                 <%- utils.marked(post.post_content) %>
             </div>
         </div>

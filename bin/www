@@ -22,7 +22,7 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-models.testOk().then(function() {
+models.bootstarp().then(function() {
 	startApplication();
 });
 

@@ -3,6 +3,7 @@ var postService = services.PostService;
 var termService = services.TermService;
 var pageService = services.PageService;
 var commentService = services.CommentService;
+var optionService = services.OptionService;
 var Promise = require('bluebird');
 /**
  * 首页
@@ -19,8 +20,9 @@ exports.index = function () {
 				termService.getAllCategory(),
 				postService.findArticleArchive(),
 				postService.findLastestPost(),
-				pageService.findLastestPage()])
-				.spread(function (postPageModel, categoryList, articleArchList, postNewestList, pageNewestList) {
+				pageService.findLastestPage(),
+				optionService.autoloadOption()])
+				.spread(function (postPageModel, categoryList, articleArchList, postNewestList, pageNewestList,option) {
 					req.postNewestList = postNewestList;
 					req.articleArchList = articleArchList;
 					req.categoryList = categoryList;
@@ -30,6 +32,7 @@ exports.index = function () {
 						listType:"index",
 						pageModel: postPageModel
 					};
+					req.autoloadOption = option;
 					return res.render("index");
 				}).caught(function (error) {
 				res.errorProxy(error);
@@ -55,8 +58,9 @@ exports.search = function () {
 				termService.getAllCategory(),
 				postService.findArticleArchive(),
 				postService.findLastestPost(),
-				pageService.findLastestPage()])
-				.spread(function (pageModel, categoryList, articleArchList, postNewestList, pageNewestList) {
+				pageService.findLastestPage(),
+				optionService.autoloadOption()])
+				.spread(function (pageModel, categoryList, articleArchList, postNewestList, pageNewestList,option) {
 					req.categoryList = categoryList;
 					req.articleArchList = articleArchList;
 					req.postNewestList = postNewestList;
@@ -67,6 +71,7 @@ exports.search = function () {
 						word: word,
 						pageModel: pageModel
 					};
+					req.autoloadOption = option;
 					var title = word+'-关键字搜索';
 					var type = '搜索结果';
 					return res.render("index");
@@ -93,8 +98,9 @@ exports.indexPost = function () {
 				termService.getAllCategory(),
 				postService.findArticleArchive(),
 				postService.findLastestPost(),
-				pageService.findLastestPage()])
-				.spread(function (post, prevPost, nextPost, commentList, categoryList, articleArchList, postNewestList, pageNewestList) {
+				pageService.findLastestPage(),
+				optionService.autoloadOption()])
+				.spread(function (post, prevPost, nextPost, commentList, categoryList, articleArchList, postNewestList, pageNewestList,option) {
 					req.previewPost = post;
 					req.prevPost = prevPost;
 					req.nextPost = nextPost;
@@ -106,6 +112,7 @@ exports.indexPost = function () {
 					req.home = {
 						type: "article"
 					};
+					req.autoloadOption = option;
 					return res.render("index");
 				}).caught(function (error) {
 				res.errorProxy(error);
@@ -127,8 +134,9 @@ exports.indexPage = function () {
 				termService.getAllCategory(),
 				postService.findArticleArchive(),
 				postService.findLastestPost(),
-				pageService.findLastestPage()])
-				.spread(function (post, categoryList, articleArchList, postNewestList, pageNewestList) {
+				pageService.findLastestPage(),
+				optionService.autoloadOption()])
+				.spread(function (post, categoryList, articleArchList, postNewestList, pageNewestList,option) {
 					req.previewPost = post;
 					req.categoryList = categoryList;
 					req.articleArchList = articleArchList;
@@ -137,6 +145,7 @@ exports.indexPage = function () {
 					req.home = {
 						type: "page"
 					};
+					req.autoloadOption = option;
 					return res.render("index");
 				}).caught(function (error) {
 				res.errorProxy(error);
@@ -161,8 +170,9 @@ exports.indexArchive = function () {
 				termService.getAllCategory(),
 				postService.findArticleArchive(),
 				postService.findLastestPost(),
-				pageService.findLastestPage()])
-				.spread(function (pageModel, categoryList, articleArchList, postNewestList, pageNewestList) {
+				pageService.findLastestPage(),
+				optionService.autoloadOption()])
+				.spread(function (pageModel, categoryList, articleArchList, postNewestList, pageNewestList,option) {
 					req.home = {
 						type: "list",
 						listType:"archive",
@@ -174,6 +184,7 @@ exports.indexArchive = function () {
 					req.articleArchList = articleArchList;
 					req.postNewestList = postNewestList;
 					req.pageNewestList = pageNewestList;
+					req.autoloadOption = option;
 					return res.render("index");
 				}).caught(function (error) {
 				res.errorProxy(error);
@@ -199,8 +210,9 @@ exports.indexCategory = function () {
 				termService.getAllCategory(),
 				postService.findArticleArchive(),
 				postService.findLastestPost(),
-				pageService.findLastestPage()])
-				.spread(function (pageModel, term, categoryList, articleArchList, postNewestList, pageNewestList) {
+				pageService.findLastestPage(),
+				optionService.autoloadOption()])
+				.spread(function (pageModel, term, categoryList, articleArchList, postNewestList, pageNewestList,option) {
 					req.home = {
 						type:"list",
 						listType: "category",
@@ -211,6 +223,7 @@ exports.indexCategory = function () {
 					req.articleArchList = articleArchList;
 					req.postNewestList = postNewestList;
 					req.pageNewestList = pageNewestList;
+					req.autoloadOption = option;
 					return res.render("index");
 				}).caught(function (error) {
 				res.errorProxy(error);
@@ -236,8 +249,9 @@ exports.indexTag = function () {
 				termService.getAllCategory(),
 				postService.findArticleArchive(),
 				postService.findLastestPost(),
-				pageService.findLastestPage()])
-				.spread(function (pageModel, term, categoryList, articleArchList, postNewestList, pageNewestList) {
+				pageService.findLastestPage(),
+				optionService.autoloadOption()])
+				.spread(function (pageModel, term, categoryList, articleArchList, postNewestList, pageNewestList,option) {
 					req.home = {
 						type:"list",
 						listType: "tag",
@@ -248,6 +262,7 @@ exports.indexTag = function () {
 					req.articleArchList = articleArchList;
 					req.postNewestList = postNewestList;
 					req.pageNewestList = pageNewestList;
+					req.autoloadOption = option;
 					return res.render("index");
 				}).caught(function (error) {
 				res.errorProxy(error);

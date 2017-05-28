@@ -178,7 +178,7 @@ module.exports = {
 	},
 	findByTagPageModel: function (offset, limit, category) {
 		return new Promise(function (resolve, reject) {
-			return termDao.QryPostByCategory(offset, limit, category).then(function (pageModel) {
+			return termDao.QryPostByTag(offset, limit, category).then(function (pageModel) {
 				resolve(pageModel);
 			}, function (error) {
 				reject(error);

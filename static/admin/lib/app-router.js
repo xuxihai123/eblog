@@ -111,6 +111,11 @@
 			"icon": "cog",
 			"MenuList": [
 				{
+					"ActionName": "应用设置",
+					"Level": "2",
+					"ActionId": "AppSetting"
+				},
+				{
 					"ActionName": "个性设置",
 					"Level": "2",
 					"ActionId": "PersonSetting"
