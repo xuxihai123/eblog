@@ -85,7 +85,7 @@ var termSql = {
 	"order by post_date desc",
 	getAllCategory: "select * from wp_terms as T1,wp_term_taxonomy as T2 " +
 	"where T1.term_id=T2.term_id and T2.taxonomy=\'category\'" +
-	"order by T1.name",
+	"order by T1.term_id",
 	getAllTags: "select * from wp_terms as T1,wp_term_taxonomy as T2 " +
 	"where T1.term_id=T2.term_id and T2.taxonomy='post_tag'" +
 	"order by T1.name",

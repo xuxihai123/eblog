@@ -93,6 +93,7 @@ module.exports = {
 							description: term.description
 						};
 						termDao.update(term).then(function (result) {
+							cache.getAllCategory.dirty == true;
 							resolve(result);
 						}).caught(function (error) {
 							reject(error);
@@ -117,6 +118,7 @@ module.exports = {
 				termDao.getById(term.term_id).then(function (term2) {
 					if(term2){
 						termDao.update(term).then(function (result) {
+							cache.getAllTags.dirty = true;
 							resolve(result);
 						}).caught(function (error) {
 							reject(error);
