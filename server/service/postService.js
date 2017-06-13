@@ -57,6 +57,8 @@ module.exports = {
 					}
 					post.post_title = post2.post_title;
 					post.post_content = post2.post_content;
+					post.post_modified = post2.post_modified;
+					post.post_modified_gmt = post2.post_modified_gmt;
 					post.termRelations=post2.termRelations||[];
 					postDao.getPostTerms(post2.ID).then(function (terms) {
 						if(terms&&terms.length>0){

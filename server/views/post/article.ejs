@@ -6,7 +6,8 @@ var categoryList = post.categoryList;
 var tagList = post.tagList;
 var commentList=request.commentList;
 var url = utils.dateFormat(post.post_date, "yyyy/MM/");
-var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
+var date = utils.dateFormat(post.post_date, "yyyy年MM月dd HH:mm:ss");
+var lastModify = utils.dateFormat(post.post_modified, "yyyy年MM月dd HH:mm:ss");
 %>
 <h1 class="page-title">文章分类:
     <%categoryList.forEach(function(temp,index){%>
@@ -40,14 +41,22 @@ var date = utils.dateFormat(post.post_date, "yyyy年MM月dd");
                 <%- utils.marked(post.post_content) %>
             </div>
         </div>
-        <%if(tagList.length>0){%>
+        <div class="entry-footer">
+            <%if(tagList.length>0){%>
             <div class="post_taginfo">
                 <span class="label label-default">标签:</span>
                 <%tagList.forEach(function(temp,index){%>
                 <span class="label label-info"><a href="/tag/<%= temp.slug %>"><%=temp.name%></a></span>
                 <%})%>
             </div>
-        <%}%>
+            <%}%>
+            <div class="entry-meta text-right hidden-xs">
+                <span class="entry-date">
+                    上一次编辑:
+                    <time class="entry-date published"><%= lastModify %></time>
+                </span>
+            </div>
+        </div>
     </div>
 
     <% if(post.post_type == "post"){ %>

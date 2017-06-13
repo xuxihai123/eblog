@@ -15,8 +15,18 @@ body .markdown-body {
     font-size: 13px;
     line-height: 18px;
     color: #737373;
-    padding: 20px;
     box-shadow: 0 0 5px darkgray,0 0 5px darkgray;
+}
+
+@media (min-width: 768px) {
+    .markdown-body{
+        padding: 20px;
+    }
+}
+@media (max-width: 767px) {
+    .markdown-body{
+        padding: 1rem;
+    }
 }
 
 .markdown-body a {
@@ -69,6 +79,10 @@ body .markdown-body {
 
 .markdown-body h6 {
     font-size: 13px;
+}
+.markdown-body >ul:first-child {
+    padding-left: 1.5rem;
+    font-size: 1.5rem;
 }
 .markdown-body ul, .markdown-body ol {
     padding-left: 2em;

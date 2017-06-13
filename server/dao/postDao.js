@@ -53,7 +53,12 @@ module.exports = {
 		return new Promise(function (resolve, reject) {
 
 			sqlhelp.withTransaction(function (connection) {
-				return connection.queryAsync(postSqls.update, [obj.post_title, obj.post_content, obj.post_status, obj.ID])
+				return connection.queryAsync(postSqls.update, [obj.post_title,
+					obj.post_content,
+					obj.post_status,
+					obj.post_modified,
+					obj.post_modified_gmt,
+					obj.ID])
 					.then(function (okPacket) {
 						var termRelations = obj.termRelations, oldTermRelations = obj.oldTermRelations, values = [], deleteIndex = [];
 						termRelations.forEach(function (temp) {

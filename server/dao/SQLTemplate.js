@@ -8,7 +8,7 @@ var postSql = {
 	//删除文章或页面
 	delete: "delete  from wp_posts where ID=?",
 	//更新文章/页面
-	update: "update wp_posts set post_title = ?, post_content = ?,post_status = ? where ID=?",
+	update: "update wp_posts set post_title = ?, post_content = ?,post_status = ?,post_modified=?,post_modified_gmt=? where ID=?",
 	//update category
 	updateCategory: "update wp_term_relationships set term_taxonomy_id=? where object_id=?",
 	//获取文章
