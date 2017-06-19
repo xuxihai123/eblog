@@ -42,7 +42,8 @@ function PostAddCtrl($scope, $remote) {
 				console.log('onfullscreenExit');
 				$("body").removeClass("editor-fullscreen");
 				$("#subbtn").show();
-			}
+			},
+			value:''
 		});
 	};
 	$scope.$category = {};

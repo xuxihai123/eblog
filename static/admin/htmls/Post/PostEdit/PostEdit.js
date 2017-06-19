@@ -44,6 +44,10 @@ function PostEditCtrl($scope, $remote, $routeParams) {
 						watch: false,                // 关闭实时预览
 						htmlDecode: "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启
 						taskList: true,
+						toolbarIcons: function () {
+							// Or return editormd.toolbarModes[name]; // full, simple, mini
+							return ["undo", "redo", "|", "bold", "hr", "||", "watch", "fullscreen", "preview", "testIcon"];
+						},
 						imageUpload: true,
 						imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
 						imageUploadURL: "./php/upload.php",
