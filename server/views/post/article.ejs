@@ -7,7 +7,11 @@ var tagList = post.tagList;
 var commentList=request.commentList;
 var url = utils.dateFormat(post.post_date, "yyyy/MM/");
 var date = utils.dateFormat(post.post_date, "yyyy年MM月dd HH:mm:ss");
-var lastModify = utils.dateFormat(post.post_modified, "yyyy年MM月dd HH:mm:ss");
+var lastModify = post.post_modified;
+if("0000-00-00 00:00:00"==lastModify){
+    lastModify = post.post_date;
+}
+lastModify = utils.dateFormat(lastModify, "yyyy年MM月dd HH:mm:ss")
 %>
 <h1 class="page-title">文章分类:
     <%categoryList.forEach(function(temp,index){%>
