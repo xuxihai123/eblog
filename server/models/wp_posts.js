@@ -40,8 +40,8 @@ function Post(post) {
 	this.post_name = post.post_name || "";
 	this.to_ping = post.to_ping || "NULL";
 	this.pinged = post.pinged || "NULL";
-	this.post_modified = post.post_modified || "0000-00-00 00:00:00";
-	this.post_modified_gmt = post.post_modified_gmt || "0000-00-00 00:00:00";
+	this.post_modified = post.post_modified;
+	this.post_modified_gmt = post.post_modified_gmt;
 	this.post_content_filtered = post.post_content_filtered || "NULL";
 	this.post_parent = post.post_parent || 0;
 	this.guid = post.guid || "";

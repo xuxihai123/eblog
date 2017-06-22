@@ -12,15 +12,16 @@ exports.doAjax = function () {
 			var post_content = req_pargs.post_content;
 			var post_status = req_pargs.post_status;
 			var dt=new Date();
+			var gmt = new Date(dt.setMinutes(dt.getMinutes() + 480));
 			var user = req.session.user;
 			postService.addPost({
 				post_author: user.ID,
 				post_title: post_title,
 				post_content: post_content,
 				post_status: post_status,
-				post_date: dt.setMinutes( dt.getMinutes() + 480), //本地时间为dt+8*60
+				post_date: gmt, //本地时间为dt+8*60
 				post_date_gmt: dt, //假设系统时间以GMT时间为准
-				post_modified: dt.setMinutes( dt.getMinutes() + 480), //本地时间为dt+8*60
+				post_modified: gmt, //本地时间为dt+8*60
 				post_modified_gmt: dt, //假设系统时间以GMT时间为准
 				termRelations: req_pargs.termRelations
 			}).then(function (result) {
@@ -51,12 +52,13 @@ exports.doAjax = function () {
 			var post_content = req_pargs.post_content;
 			var post_status = req_pargs.post_status;
 			var dt=new Date();
+			var gmt = new Date(dt.setMinutes(dt.getMinutes() + 480));
 			postService.updatePost({
 				ID: post_id,
 				post_title: post_title,
 				post_content: post_content,
 				post_status: post_status,
-				post_modified: dt.setMinutes( dt.getMinutes() + 480), //本地时间为dt+8*60
+				post_modified: gmt, //本地时间为dt+8*60
 				post_modified_gmt: dt, //假设系统时间以GMT时间为准
 				termRelations:req_pargs.termRelations
 			}).then(function (result) {

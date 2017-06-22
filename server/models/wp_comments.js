@@ -25,8 +25,8 @@ function Comment(comment) {
 	this.comment_author_email = comment.comment_author_email;
 	this.comment_author_url = comment.comment_author_url;
 	this.comment_author_IP = comment.comment_author_IP;
-	this.comment_date = comment.comment_date || "0000-00-00 00:00:00";
-	this.comment_date_gmt = comment.comment_date_gmt || "0000-00-00 00:00:00";
+	this.comment_date = comment.comment_date;
+	this.comment_date_gmt = comment.comment_date_gmt;
 	this.comment_content = comment.comment_content;
 	this.comment_karma = comment.comment_karma || 0;
 	this.comment_approved = comment.comment_approved || 0;

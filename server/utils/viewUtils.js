@@ -26,6 +26,9 @@ marked.setOptions({
 	smartypants: false
 });
 function formatDate(date, style) { //date format util
+	if(typeof date.getFullYear!=="function"){
+		date = new Date(date);
+	}
 	var y = date.getFullYear();
 	var M = "0" + (date.getMonth() + 1);
 	M = M.substring(M.length - 2);

@@ -16,9 +16,7 @@ exports.doPost = function () {
 			//计算或出来
 			var comment_author_IP = req.headers.host.replace(/\:\d+/, "");
 			var dt = new Date;
-			dt.setMinutes(dt.getMinutes() + dt.getTimezoneOffset()); // 当前时间(分钟) + 时区偏移(分钟)
-			var comment_date = util.format(new Date(), "yyyy-MM-dd HH:mm:ss");
-			var comment_date_gmt = util.format(dt, "yyyy-MM-dd HH:mm:ss");
+			var gmt = new Date(dt.setMinutes(dt.getMinutes() + 480));
 			var comment_agent = req.headers["user-agent"];
 			var user_id = req.session.user && req.session.user.user_login;
 			commentService.addComment({
@@ -30,8 +28,8 @@ exports.doPost = function () {
 				comment_parent: comment_parent,
 				comment_author_IP: comment_author_IP,
 				comment_agent: comment_agent,
-				comment_date: comment_date,
-				comment_date_gmt: comment_date_gmt,
+				comment_date: dt,
+				comment_date_gmt: gmt,
 				user_id: user_id
 			}).then(function (result) {
 				return res.render("result/success", {"title": "Express", "prevUrl": "/"});
