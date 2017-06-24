@@ -21,12 +21,11 @@ function testManyCreate() {
 			};
 			postDao.create2(post, trans).then(function (result) {
 				trans.commit().then(function () {
-					console.log('okok....');
+					logger.info('okok....');
 				});
 			}, function (error) {
-				console.log(error);
 				trans.rollback(function () {
-					console.log(error);
+					logger.error(error);
 				});
 			});
 		});

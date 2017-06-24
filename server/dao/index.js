@@ -7,6 +7,7 @@ var TaxonomyDao = require('./taxonomyDao');
 var CommentDao = require('./commentDao');
 var OptionDao = require('./optionDao');
 var sequelize = models.sequelize;
+var logger = require('../utils/logger');
 module.exports = {
 	UserDao:UserDao,
 	PostDao:PostDao,
@@ -15,7 +16,7 @@ module.exports = {
 	CommentDao:CommentDao,
 	OptionDao:OptionDao,
 	transaction:function() {
-		console.log('start transcation------------');
+		logger.info('start transcation------------');
 		return sequelize.transaction.apply(sequelize, arguments);
 	}
 };

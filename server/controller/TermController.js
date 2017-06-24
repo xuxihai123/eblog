@@ -1,6 +1,6 @@
 var termService = require('../service').TermService;
 //分类管理
-exports.doAjax = function () {
+exports.doPost = function () {
 	return {
 		"/admin/addCategory.do": function (req, res, next) {
 			var req_pargs = req.body;

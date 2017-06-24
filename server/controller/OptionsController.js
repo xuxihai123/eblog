@@ -4,7 +4,7 @@ var optionsService = require('../service').OptionService;
  * @returns {Function}
  */
 //ajax接口
-exports.doAjax = function () {
+exports.doPost = function () {
 	return {
 		"/admin/addOption.do": function (req, res, next) {
 			var req_pargs = req.body;

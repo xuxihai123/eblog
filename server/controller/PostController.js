@@ -4,7 +4,7 @@ var postService = require('../service').PostService;
  * @returns {Function}
  */
 //管理接口
-exports.doAjax = function () {
+exports.doPost = function () {
 	return {
 		"/admin/addPost.do": function (req, res, next) {
 			var req_pargs = req.body;

@@ -4,7 +4,7 @@ var userService = require('../service').UserService;
  * @returns {Function}
  */
 //ajax接口
-exports.doAjax = function () {
+exports.doPost = function () {
 	return {
 		"/user/login.do": function (req, res, next) {
 			var req_pargs = req.body;
@@ -141,8 +141,6 @@ exports.doAjax = function () {
 				display_name: req_pargs.display_name,
 				user_nicename: req_pargs.user_nicename
 			};
-			console.log(newUser.oldpassword);
-			console.log(newUser.newpassword);
 			userService.updateUser(newUser).then(function (user) {
 				res.json({
 					"success": "ok",

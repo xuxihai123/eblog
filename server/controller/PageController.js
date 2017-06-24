@@ -1,6 +1,6 @@
 var PageService = require('../service').PageService;
 //管理接口
-exports.doAjax=function() {
+exports.doPost=function() {
 	return {
 		"/admin/addPage.do": function (req, res, next) {
 			var req_pargs = req.body;

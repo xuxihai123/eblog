@@ -34,7 +34,6 @@ exports.doPost = function () {
 			}).then(function (result) {
 				return res.render("result/success", {"title": "Express", "prevUrl": "/"});
 			}, function (error) {
-				console.log(error);
 				res.render("result/error", {"title": "Express", error: error, "prevUrl": "/"});
 			});
 		}
@@ -42,7 +41,7 @@ exports.doPost = function () {
 };
 
 //管理接口
-exports.doAjax = function () {
+exports.doPost = function () {
 	return {
 		"/admin/commentlist.do": function (req, res, next) {
 			var req_pargs = req.body;

@@ -1,23 +1,19 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-
-var config = require('./config');
+var config = require('config-lite');
 
 var app = express();
-
-
+var server = require('./server');
 // view engine setup
 app.set('views', path.join(__dirname, 'server/views'));
 app.set('view engine', 'ejs'); //设置视图引擎。
 
-
 // uncomment after placing your favicon in /public
-app.use(logger('dev'));
+app.use(require('morgan')('dev', {"stream": server.logger.stream}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
@@ -26,28 +22,26 @@ app.use(express.static(path.join(__dirname, 'static')));
 app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
 
 app.use(session({
-	secret: 'blog.xxh123',
-	name: "blog.xxh",
+	secret: config.session.secret,
+	name: config.session.name,
 	resave: false,
 	saveUninitialized: true,
-	cookie: {secure: false, maxAge: 1000 * 60 * 30}
+	cookie: config.session.cookie
 }));
 
-config(app);
+app.readyPromise = server(app);
+app.logger = server.logger;
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
 	var err = new Error('Not Found');
-	err.status = 404;
-	console.info("Not Found "+req.url);
-	res.errorProxy("404", err);
+	res.errorProxy(err, 404);
 	//next(err);
 });
 
 app.use(function (err, req, res, next) {
 	res.status(err.status || 500);
-	console.error(err.stack);
-	res.errorProxy("500", err);
+	res.errorProxy(err, 500);
 });
 
 module.exports = app;
