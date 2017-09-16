@@ -50,11 +50,15 @@ exports.doPost=function() {
 			var post_title = req_pargs.post_title;
 			var post_content = req_pargs.post_content;
 			var post_status = req_pargs.post_status;
+			var dt=new Date();
+			var gmt = new Date(dt.setMinutes(dt.getMinutes() + 480));
 			PageService.updatePage({
 				ID: post_id,
 				post_title: post_title,
 				post_status: post_status,
-				post_content: post_content
+				post_content: post_content,
+				post_modified: gmt, //本地时间为dt+8*60
+				post_modified_gmt: dt, //假设系统时间以GMT时间为准
 			}).then(function (result) {
 				res.json({
 					success: "ok",

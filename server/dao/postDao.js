@@ -92,7 +92,7 @@ module.exports = {
 		});
 	},
 	updatePage: function (post) {
-		return sqlhelp.query(postSqls.update, [post.post_title, post.post_content, post.post_status, post.ID]);
+		return sqlhelp.query(postSqls.update, [post.post_title, post.post_content, post.post_status,post.post_modified,post.post_modified_gmt, post.ID]);
 	},
 	updateCategory: function (post) {
 		return sqlhelp.query(postSqls.updateCategory, [post.term_taxonomy_id, post.ID]);
