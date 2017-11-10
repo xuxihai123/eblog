@@ -12,16 +12,16 @@ var logger = require('./logger');
 var pool = mysql.createPool(config.url);
 
 module.exports = {
-	bootstrap: function () {
-		var self = this;
-		return new Promise(function (resolve, reject) {
-			pool.queryAsync('SELECT 1 + 1 AS solution').then(function (results) {
-				logger.info('The solution is: ', results[0].solution);
-				process.dbpool = pool;
-				resolve(results[0].solution);
-			}).caught(function (err) {
-				reject(err);
-			});
-		});
-	}
+    bootstrap: function () {
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            pool.queryAsync('SELECT 1 + 1 AS solution').then(function (results) {
+                logger.debug('The solution is: ', results[0].solution);
+                process.dbpool = pool;
+                resolve(results[0].solution);
+            }).caught(function (err) {
+                reject(err);
+            });
+        });
+    }
 };

@@ -11,10 +11,16 @@ var exceptMap = {
 
 
 function Proxy(errorObj, errorCode) { //foreground 前台标志
-	logger.error('[errorProxy]:' + errorObj.stack);
-
+	logger.debug('response error proxy ...');
 	var response = this;
-	if (errorCode == 404 || errorCode == 500) {
+	var req = response.req;
+	var url = req.url;
+	if (errorCode === 404) {
+		return response.status(404).render("404");
+	}
+	logger.error('[errorProxy]: from request url :' + req.url + ' =>' + errorObj.stack);
+
+	if (errorCode == 500) {
 		return response.render(errorCode + "");
 	} else {
 		if (errorObj == "sqlInject") {
