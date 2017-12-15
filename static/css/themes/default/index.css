@@ -505,3 +505,7 @@ body.custom-background {
 #respond input:focus:invalid, textarea:focus:invalid {
     background:url("images/cancel.png") no-repeat 98% 7px;
 }
+
+.aplayer .aplayer-list ol li.aplayer-list-light {
+    color: blue;
+}
