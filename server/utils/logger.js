@@ -1,4 +1,4 @@
-var config = require('config-lite');
+var config = require('config-light')();
 
 var winston = require('winston');
 var dateUtils = require('./dateutils');

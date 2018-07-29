@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var config = require('config-lite');
+var config = require('config-light')();
 
 var app = express();
 var server = require('./server');

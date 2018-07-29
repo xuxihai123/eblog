@@ -6,7 +6,7 @@ Promise.promisifyAll(mysql);
 Promise.promisifyAll(require("mysql/lib/Connection").prototype);
 Promise.promisifyAll(require("mysql/lib/Pool").prototype);
 
-var config = require('config-lite');
+var config = require('config-light')();
 var logger = require('./logger');
 
 var pool = mysql.createPool(config.url);
