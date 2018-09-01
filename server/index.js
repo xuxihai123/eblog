@@ -21,7 +21,8 @@ function extendContext(app) {
 	var errorProxy = require('./utils/errorProxy.js');
 	//重写render方法，给所有的render view添加request,response,session
 	var render = app.response.render;
-	app.response.errorProxy = function () {
+	app.response.errorProxy = function (err) {
+    console.log(err);
 		errorProxy.apply(this, arguments);
 	};
 	app.response.render = function (view, options, callback) {
