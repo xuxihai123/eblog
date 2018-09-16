@@ -1,7 +1,7 @@
 'use strict';
 /************************************************配置************************************************/
 // 源码、备份、预生产和生产环境路径
-var root = "./static/admin/";
+var root = "./core/client/";
 
 // 读取要压缩的js和css文件列表
 var jsFiles = require(root+'/lib/load-dev.js').jsFiles;
