@@ -32,10 +32,8 @@ function Proxy(errorObj, errorCode) { //foreground 前台标志
 			if (errorObj.code === "ER_DUP_ENTRY") {
 				errorObj.errorCode = exceptMap["SqlException"];
 				errorObj.errorMessage = "已存在该条记录！";
-			} else {
-				errorObj.errorCode = exceptMap["DefaultExcept"];
-				errorObj.errorMessage = "系统异常";
 			}
+			
 			response.json(errorObj);
 		} else {
 			return response.render("500");

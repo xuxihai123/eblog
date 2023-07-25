@@ -14,6 +14,7 @@ module.exports = {
 				if (user) {
 					if (user.user_pass !== password) {
 						reject({
+							errorCode: "600404",
 							errorMessage: "密码错误！"
 						});
 					} else {
